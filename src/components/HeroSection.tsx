@@ -3,7 +3,7 @@ import { ArrowDown } from 'lucide-react';
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 hero-bg overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-20 hero-bg overflow-hidden">
       {/* Grid Background */}
       <div className="absolute inset-0 grid-lines opacity-30" />
       
