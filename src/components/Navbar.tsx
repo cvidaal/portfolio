@@ -1,35 +1,36 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Github, Linkedin, Menu, X } from 'lucide-react';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Github, Linkedin, Menu, X } from "lucide-react";
 
 const navLinks = [
-  { label: 'Proyectos', href: '#proyectos' },
-  { label: 'Sobre mí', href: '#sobre-mi' },
-  { label: 'Stack', href: '#stack' },
-  { label: 'Contacto', href: '#contacto' },
+  { label: "Stack", href: "#stack" },
+  { label: "Proyectos", href: "#proyectos" },
+  { label: "Sobre mí", href: "#sobre-mi" },
+  { label: "Contacto", href: "#contacto" },
 ];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleNavClick = (href: string) => {
     setIsOpen(false);
     const element = document.querySelector(href);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
-      <div 
+      <div
         className="backdrop-blur-xl border-b border-border/30"
         style={{
-          background: 'linear-gradient(180deg, hsl(220 15% 8% / 0.9), hsl(220 15% 5% / 0.8))',
+          background:
+            "linear-gradient(180deg, hsl(220 15% 8% / 0.9), hsl(220 15% 5% / 0.8))",
         }}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -41,7 +42,7 @@ const Navbar = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              Carlos Vidal
+              Carlos Vidal;
             </motion.button>
 
             {/* Desktop Navigation - Center */}
@@ -62,7 +63,7 @@ const Navbar = () => {
             {/* Desktop Right Section */}
             <div className="hidden md:flex items-center gap-4">
               <motion.a
-                href="https://github.com"
+                href="https://github.com/cvidaal"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-foreground transition-colors duration-300"
@@ -72,7 +73,7 @@ const Navbar = () => {
                 <Github className="w-5 h-5" />
               </motion.a>
               <motion.a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/carlosvidaldev/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-foreground transition-colors duration-300"
@@ -82,7 +83,7 @@ const Navbar = () => {
                 <Linkedin className="w-5 h-5" />
               </motion.a>
               <motion.button
-                onClick={() => handleNavClick('#contacto')}
+                onClick={() => handleNavClick("#contacto")}
                 className="ml-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-primary-foreground hover:shadow-button transition-all duration-300"
                 whileHover={{ scale: 1.03, y: -1 }}
                 whileTap={{ scale: 0.98 }}
@@ -97,7 +98,11 @@ const Navbar = () => {
               className="md:hidden p-2 text-foreground"
               whileTap={{ scale: 0.95 }}
             >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </motion.button>
           </div>
         </div>
@@ -108,12 +113,13 @@ const Navbar = () => {
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
             className="md:hidden overflow-hidden backdrop-blur-xl border-b border-border/30"
             style={{
-              background: 'linear-gradient(180deg, hsl(220 15% 8% / 0.95), hsl(220 15% 5% / 0.95))',
+              background:
+                "linear-gradient(180deg, hsl(220 15% 8% / 0.95), hsl(220 15% 5% / 0.95))",
             }}
           >
             <div className="px-6 py-6 space-y-4">
@@ -129,7 +135,7 @@ const Navbar = () => {
                   {link.label}
                 </motion.button>
               ))}
-              
+
               <div className="pt-4 border-t border-border/30 flex items-center gap-4">
                 <motion.a
                   href="https://github.com"
@@ -150,7 +156,7 @@ const Navbar = () => {
                   <Linkedin className="w-5 h-5" />
                 </motion.a>
                 <motion.button
-                  onClick={() => handleNavClick('#contacto')}
+                  onClick={() => handleNavClick("#contacto")}
                   className="ml-auto px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-primary-foreground"
                   whileTap={{ scale: 0.98 }}
                 >

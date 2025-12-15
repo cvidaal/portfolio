@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { motion, useSpring } from 'framer-motion';
+import { useEffect, useState } from "react";
+import { motion, useSpring } from "framer-motion";
 
 const CursorGlow = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
+
   const springConfig = { damping: 25, stiffness: 150 };
   const x = useSpring(0, springConfig);
   const y = useSpring(0, springConfig);
@@ -15,8 +15,8 @@ const CursorGlow = () => {
       y.set(e.clientY);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [x, y]);
 
   return (
@@ -25,9 +25,10 @@ const CursorGlow = () => {
       style={{
         x,
         y,
-        translateX: '-50%',
-        translateY: '-50%',
-        background: 'radial-gradient(circle, hsl(185 100% 50% / 0.4), hsl(260 80% 60% / 0.2), transparent 70%)',
+        translateX: "-50%",
+        translateY: "-50%",
+        background:
+          "radial-gradient(circle, hsl(185 100% 50% / 0.4), hsl(260 80% 60% / 0.2), transparent 70%)",
       }}
     />
   );

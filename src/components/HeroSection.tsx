@@ -1,16 +1,16 @@
-import { motion } from 'framer-motion';
-import { ArrowDown } from 'lucide-react';
+import { motion } from "framer-motion";
+import { ArrowDown } from "lucide-react";
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-20 hero-bg overflow-hidden">
       {/* Grid Background */}
       <div className="absolute inset-0 grid-lines opacity-30" />
-      
+
       {/* Gradient Orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse-glow" />
       <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/10 rounded-full blur-[100px] animate-pulse-glow delay-500" />
-      
+
       <div className="relative z-10 text-center max-w-5xl mx-auto">
         {/* Badge */}
         <motion.div
@@ -20,7 +20,10 @@ const HeroSection = () => {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 mb-8"
         >
           <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          <span className="text-sm font-mono text-primary">Disponible para proyectos</span>
+          <span className="text-sm font-mono text-primary flex items-center gap-2">
+            Disponible para proyectos{" "}
+            <span className="animate-wave text-lg">👋</span>
+          </span>
         </motion.div>
 
         {/* Main Title */}
@@ -42,7 +45,7 @@ const HeroSection = () => {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 font-mono"
         >
-          Fusionando diseño estratégico con ejecución técnica impecable
+          Desarrollando soluciones web y móviles completas, de principio a fin.
         </motion.p>
 
         {/* CTA Button */}

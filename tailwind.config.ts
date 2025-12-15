@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -53,9 +58,9 @@ export default {
         },
       },
       fontFamily: {
-        display: ['Syne', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
-        sans: ['Syne', 'sans-serif'],
+        display: ["Syne", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
+        sans: ["Syne", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -98,6 +103,10 @@ export default {
           "0%": { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        marquee: {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(calc(-100% - 2rem))" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -107,6 +116,7 @@ export default {
         shimmer: "shimmer 3s linear infinite",
         "fade-up": "fade-up 0.8s ease-out forwards",
         "scale-in": "scale-in 0.5s ease-out forwards",
+        marquee: "marquee 40s linear infinite",
       },
     },
   },

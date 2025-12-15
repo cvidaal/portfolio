@@ -1,10 +1,20 @@
-import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 const socialLinks = [
-  { name: 'LinkedIn', icon: Linkedin, href: '#', label: 'Conectar en LinkedIn' },
-  { name: 'GitHub', icon: Github, href: '#', label: 'Ver repositorios' },
-  { name: 'Email', icon: Mail, href: 'mailto:carlos@vidal.dev', label: 'Enviar email' },
+  {
+    name: "LinkedIn",
+    icon: Linkedin,
+    href: "#",
+    label: "Conectar en LinkedIn",
+  },
+  { name: "GitHub", icon: Github, href: "#", label: "Ver repositorios" },
+  {
+    name: "Email",
+    icon: Mail,
+    href: "mailto:carlos@vidal.dev",
+    label: "Enviar email",
+  },
 ];
 
 const Footer = () => {
@@ -12,7 +22,7 @@ const Footer = () => {
     <footer id="contacto" className="relative py-20 px-6">
       {/* Top Border Gradient */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-      
+
       <div className="max-w-4xl mx-auto text-center">
         {/* CTA */}
         <motion.div
@@ -26,7 +36,8 @@ const Footer = () => {
             ¿Tienes un proyecto en mente?
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Siempre estoy abierto a discutir nuevos proyectos, ideas creativas o oportunidades de colaboración.
+            Siempre estoy abierto a discutir nuevos proyectos, ideas creativas o
+            oportunidades de colaboración.
           </p>
         </motion.div>
 
@@ -47,9 +58,9 @@ const Footer = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 + index * 0.1 }}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.15,
-                boxShadow: '0 0 30px hsl(185 100% 50% / 0.3)'
+                boxShadow: "0 0 30px hsl(185 100% 50% / 0.3)",
               }}
               whileTap={{ scale: 0.95 }}
               className="glass-card p-4 rounded-xl group"
@@ -67,9 +78,7 @@ const Footer = () => {
           transition={{ delay: 0.5 }}
           className="text-muted-foreground text-sm font-mono"
         >
-          <p>
-            Diseñado y desarrollado con <span className="text-primary">❤</span> por Carlos Vidal
-          </p>
+          <p>Diseñado y desarrollado por Carlos Vidal</p>
           <p className="mt-2 text-muted-foreground/60">
             © {new Date().getFullYear()} · Todos los derechos reservados
           </p>
