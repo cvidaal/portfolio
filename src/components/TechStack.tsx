@@ -1,37 +1,7 @@
 import { motion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import AutoScroll from "embla-carousel-auto-scroll";
-import {
-  FaReact,
-  FaNodeJs,
-  FaPython,
-  FaJs,
-  FaGitAlt,
-  FaDocker,
-  FaAws,
-} from "react-icons/fa";
-import {
-  SiTypescript,
-  SiFlutter,
-  SiMongodb,
-  SiPostgresql,
-  SiFirebase,
-} from "react-icons/si";
-
-const skills = [
-  { icon: FaReact, name: "React", color: "hsl(185 100% 50%)" },
-  { icon: FaNodeJs, name: "Node.js", color: "hsl(140 70% 50%)" },
-  { icon: FaPython, name: "Python", color: "hsl(45 90% 55%)" },
-  { icon: FaJs, name: "JavaScript", color: "hsl(50 95% 55%)" },
-  { icon: SiTypescript, name: "TypeScript", color: "hsl(210 90% 55%)" },
-  { icon: SiFlutter, name: "Flutter", color: "hsl(200 100% 55%)" },
-  { icon: SiMongodb, name: "MongoDB", color: "hsl(120 40% 50%)" },
-  { icon: SiPostgresql, name: "PostgreSQL", color: "hsl(216 70% 50%)" },
-  { icon: FaGitAlt, name: "Git", color: "hsl(10 80% 60%)" },
-  { icon: FaDocker, name: "Docker", color: "hsl(200 80% 60%)" },
-  { icon: FaAws, name: "AWS", color: "hsl(30 90% 55%)" },
-  { icon: SiFirebase, name: "Firebase", color: "hsl(35 90% 55%)" },
-];
+import { skills } from "@/data/skills";
 
 const TechStack = () => {
   // useEmblaCarousel

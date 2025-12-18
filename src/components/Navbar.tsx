@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Github, Linkedin, Menu, X } from "lucide-react";
+import { Download, Github, Linkedin, Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "Stack", href: "#stack" },
@@ -88,8 +88,23 @@ const Navbar = () => {
                 whileHover={{ scale: 1.03, y: -1 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Hablemos
+                Contactar
               </motion.button>
+              {/* CV Download Button */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+              >
+                <a
+                  href="/CarlosVidalSanchez.pdf"
+                  download="CarlosVidalSanchez.pdf"
+                  className="glow-button-outline-header inline-flex items-center gap-2 font-display font-semibold"
+                >
+                  CV
+                  <Download className="w-5 h-5" />
+                </a>
+              </motion.div>
             </div>
 
             {/* Mobile Menu Button */}
@@ -138,7 +153,7 @@ const Navbar = () => {
 
               <div className="pt-4 border-t border-border/30 flex items-center gap-4">
                 <motion.a
-                  href="https://github.com"
+                  href="https://github.com/cvidaal"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 text-muted-foreground hover:text-foreground transition-colors duration-300"
@@ -147,7 +162,7 @@ const Navbar = () => {
                   <Github className="w-5 h-5" />
                 </motion.a>
                 <motion.a
-                  href="https://linkedin.com"
+                  href="https://linkedin.com/in/carlosvidaldev"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 text-muted-foreground hover:text-foreground transition-colors duration-300"
@@ -160,7 +175,7 @@ const Navbar = () => {
                   className="ml-auto px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-primary-foreground"
                   whileTap={{ scale: 0.98 }}
                 >
-                  Hablemos
+                  Contactar
                 </motion.button>
               </div>
             </div>

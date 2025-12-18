@@ -1,22 +1,58 @@
-import { motion } from 'framer-motion';
-import BentoCard from './BentoCard';
+import { motion } from "framer-motion";
+import BentoCard from "./BentoCard";
+import { getSkillByName } from "@/data/skills";
+import { Button } from "./ui/button";
 
 interface ProjectCardProps {
   title: string;
   description: string;
   image: string;
   technologies: string[];
-  size?: 'large' | 'medium' | 'small';
+  link?: string;
+  link_android?: string;
+  link_ios?: string;
+  link_code?: string;
+  size?: "large" | "medium" | "small";
   delay?: number;
 }
 
 const sizeClasses = {
-  large: 'col-span-2 row-span-2',
-  medium: 'col-span-1 row-span-2',
-  small: 'col-span-1 row-span-1',
+  large: "col-span-2 row-span-2",
+  medium: "col-span-1 row-span-2",
+  small: "col-span-1 row-span-1",
 };
 
-const ProjectCard = ({ title, description, image, technologies, size = 'medium', delay = 0 }: ProjectCardProps) => {
+const buttonLink = (
+  link: string,
+  text: string,
+  className?: string,
+  variant: "default" | "glow" | "glow-outline" = "glow"
+) => {
+  return (
+    <Button
+      className={className || "w-1/2 md:w-auto mr-2"}
+      variant={variant}
+      asChild
+    >
+      <a href={link} target="_blank" rel="noopener noreferrer">
+        {text}
+      </a>
+    </Button>
+  );
+};
+
+const ProjectCard = ({
+  title,
+  description,
+  image,
+  technologies,
+  size = "medium",
+  link,
+  link_code,
+  link_ios,
+  link_android,
+  delay = 0,
+}: ProjectCardProps) => {
   return (
     <BentoCard className={`${sizeClasses[size]} overflow-hidden`} delay={delay}>
       <div className="relative h-full">
@@ -31,7 +67,7 @@ const ProjectCard = ({ title, description, image, technologies, size = 'medium',
         </div>
 
         {/* Content */}
-        <div className="relative h-full flex flex-col justify-end p-6 md:p-8">
+        <div className="relative z-10 h-full flex flex-col justify-end p-6 md:p-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -50,13 +86,52 @@ const ProjectCard = ({ title, description, image, technologies, size = 'medium',
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: delay + 0.3 }}
-            className="flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            className="flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none group-hover:pointer-events-auto"
           >
-            {technologies.map((tech) => (
-              <span key={tech} className="skill-tag">
-                {tech}
-              </span>
-            ))}
+            {technologies.map((tech) => {
+              const skill = getSkillByName(tech);
+              const Icon = skill?.icon;
+              return (
+                <span
+                  key={tech}
+                  className="skill-tag flex items-center gap-1.5 h-full"
+                >
+                  {Icon && (
+                    <Icon
+                      className="w-3.5 h-3.5"
+                      style={{ color: skill.color }}
+                    />
+                  )}
+                  <span>{tech}</span>
+                </span>
+              );
+            })}
+          </motion.div>
+
+          {/* Links - Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: delay + 0.3 }}
+            className="flex flex-wrap mt-4 gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none group-hover:pointer-events-auto"
+          >
+            {link && buttonLink(link, "Ver Proyecto")}
+            {link_code &&
+              buttonLink(
+                link_code,
+                "Ver Código",
+                "w-full md:w-auto mr-2",
+                "glow-outline"
+              )}
+            {link_ios &&
+              buttonLink(link_ios, "Ver App iOS", "w-full md:w-auto mr-2")}
+            {link_android &&
+              buttonLink(
+                link_android,
+                "Ver App Android",
+                "w-full md:w-auto mr-2",
+                "glow-outline"
+              )}
           </motion.div>
         </div>
       </div>

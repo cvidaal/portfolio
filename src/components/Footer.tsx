@@ -5,14 +5,19 @@ const socialLinks = [
   {
     name: "LinkedIn",
     icon: Linkedin,
-    href: "#",
+    href: "https://linkedin.com/in/carlosvidaldev",
     label: "Conectar en LinkedIn",
   },
-  { name: "GitHub", icon: Github, href: "#", label: "Ver repositorios" },
+  {
+    name: "GitHub",
+    icon: Github,
+    href: "https://github.com/cvidaal",
+    label: "Ver repositorios",
+  },
   {
     name: "Email",
     icon: Mail,
-    href: "mailto:carlos@vidal.dev",
+    href: "mailto:carlosvidal.developer@gmail.com",
     label: "Enviar email",
   },
 ];

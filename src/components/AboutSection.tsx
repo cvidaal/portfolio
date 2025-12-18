@@ -1,12 +1,15 @@
-import { motion } from 'framer-motion';
-import profilePhoto from '@/assets/profile-photo.jpg';
+import { motion } from "framer-motion";
+import profilePhoto from "@/assets/profile.jpg";
 
 const AboutSection = () => {
   return (
-    <section id="sobre-mi" className="relative py-24 md:py-32 px-6 overflow-hidden">
+    <section
+      id="sobre-mi"
+      className="relative py-24 md:py-32 px-6 overflow-hidden"
+    >
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
-      
+
       <div className="max-w-6xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0 }}
@@ -25,7 +28,7 @@ const AboutSection = () => {
             <div className="relative aspect-[4/5] max-w-md mx-auto md:mx-0">
               {/* Glow Effect Behind */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/20 rounded-2xl blur-3xl opacity-50 scale-90" />
-              
+
               {/* Image Container */}
               <div className="relative glass-card overflow-hidden rounded-2xl h-full">
                 <img
@@ -45,7 +48,9 @@ const AboutSection = () => {
                 transition={{ delay: 0.5 }}
                 className="absolute -bottom-4 -right-4 md:right-8 glass-card px-4 py-3 rounded-xl"
               >
-                <span className="font-mono text-sm text-primary">5+ años de experiencia</span>
+                <span className="font-mono text-sm text-primary">
+                  FullStack Developer
+                </span>
               </motion.div>
             </div>
           </motion.div>
@@ -61,20 +66,25 @@ const AboutSection = () => {
             <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-foreground mb-6">
               Código con <span className="text-gradient">propósito</span>
             </h2>
-            
+
             <div className="space-y-4 text-muted-foreground">
               <p className="text-lg">
-                Creo que el mejor código es el que resuelve problemas reales sin añadir complejidad innecesaria. 
-                Mi filosofía: <span className="text-foreground font-medium">elegancia en la simplicidad</span>.
+                Creo que el mejor código es el que resuelve problemas reales sin
+                añadir complejidad innecesaria. Mi filosofía:{" "}
+                <span className="text-foreground font-medium">
+                  elegancia en la simplicidad
+                </span>
+                .
               </p>
               <p>
-                Cada proyecto es una oportunidad de fusionar creatividad con ingeniería. Me especializo en 
-                crear experiencias digitales que no solo funcionan perfectamente, sino que 
+                Cada proyecto es una oportunidad de fusionar creatividad con
+                ingeniería. Me especializo en crear experiencias digitales que
+                no solo funcionan perfectamente, sino que
                 <span className="text-primary"> inspiran</span>.
               </p>
               <p>
-                Desde startups ágiles hasta empresas consolidadas, he liderado el desarrollo de productos 
-                que impactan a miles de usuarios diariamente.
+                Estoy en la etapa de aprendizaje y crecimiento constante, y
+                disfruto cada desafío que me propone la tecnología.
               </p>
             </div>
 
@@ -87,7 +97,8 @@ const AboutSection = () => {
               className="mt-8 pl-6 border-l-2 border-primary/50"
             >
               <p className="font-mono text-sm text-muted-foreground italic">
-                "La tecnología debe ser invisible. Lo que el usuario recuerda es cómo le hiciste sentir."
+                "El único modo de hacer un gran trabajo es amar lo que haces."
+                <span className="text-primary"> Steve Jobs</span>
               </p>
             </motion.blockquote>
           </motion.div>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Download } from "lucide-react";
 
 const HeroSection = () => {
   return (
@@ -48,20 +48,37 @@ const HeroSection = () => {
           Desarrollando soluciones web y móviles completas, de principio a fin.
         </motion.p>
 
-        {/* CTA Button */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-        >
-          <a
-            href="#proyectos"
-            className="glow-button inline-flex items-center gap-3 font-display font-semibold"
+        <div className="flex items-center gap-4 justify-center">
+          {/* CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
           >
-            Ver Proyectos
-            <ArrowDown className="w-5 h-5" />
-          </a>
-        </motion.div>
+            <a
+              href="#proyectos"
+              className="glow-button inline-flex items-center gap-3 font-display font-semibold"
+            >
+              Ver Proyectos
+              <ArrowDown className="w-5 h-5" />
+            </a>
+          </motion.div>
+          {/* CV Download Button */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
+            <a
+              href="/CarlosVidal_FullStack_CV.pdf"
+              download="CarlosVidal_FullStack_CV.pdf"
+              className="glow-button-outline inline-flex items-center gap-3 font-display font-semibold"
+            >
+              Descargar CV
+              <Download className="w-5 h-5" />
+            </a>
+          </motion.div>
+        </div>
       </div>
 
       {/* Scroll Indicator */}

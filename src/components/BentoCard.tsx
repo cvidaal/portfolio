@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { ReactNode } from 'react';
+import { motion } from "framer-motion";
+import { ReactNode } from "react";
 
 interface BentoCardProps {
   className?: string;
@@ -7,7 +7,7 @@ interface BentoCardProps {
   delay?: number;
 }
 
-const BentoCard = ({ className = '', children, delay = 0 }: BentoCardProps) => {
+const BentoCard = ({ className = "", children, delay = 0 }: BentoCardProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -15,7 +15,7 @@ const BentoCard = ({ className = '', children, delay = 0 }: BentoCardProps) => {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, delay }}
       whileHover={{ y: -5 }}
-      className={`glass-card animated-border group ${className}`}
+      className={`glass-card animated-border group relative hover:z-20 ${className}`}
     >
       {children}
     </motion.div>
