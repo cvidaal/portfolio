@@ -37,6 +37,13 @@ He utilizado un stack moderno para asegurar velocidad de carga y mantenibilidad:
 
 ---
 
+# 📬 Contacto
+Si te gusta lo que ves o quieres hablar sobre una colaboración:
+
+- LinkedIn: linkedin.com/in/carlosvidaldev\
+- Email: carlosvidal.developer@gmail.com
+- Web: cvidal.dev
+
 ## 🔧 Instalación y Desarrollo
 
 Si quieres ver cómo está construido por dentro:
