@@ -97,8 +97,8 @@ const Navbar = () => {
                 transition={{ duration: 0.5, delay: 0.7 }}
               >
                 <a
-                  href="/CarlosVidalSanchez.pdf"
-                  download="CarlosVidalSanchez.pdf"
+                  href="/CarlosVidal_FullStack_CV.pdf"
+                  download="CarlosVidal_FullStack_CV.pdf"
                   className="glow-button-outline-header inline-flex items-center gap-2 font-display font-semibold"
                 >
                   CV
