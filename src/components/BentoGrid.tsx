@@ -3,6 +3,7 @@ import ProjectCard from "./ProjectCard";
 import acelerikPreview from "@/assets/acelerik.png";
 import benditaBurgerPreview from "@/assets/benditaburger_app.png";
 import junglaMagicPreview from "@/assets/jungamagica_reservas.png";
+import tallerManagerPreview from "@/assets/tallermanager.png";
 
 const projects = [
   {
@@ -33,7 +34,16 @@ const projects = [
     link: "https://www.loom.com/share/d0b4e7cb46d14452903e83ac6e888f02",
     link_code: "https://github.com/cvidaal/jungla-admin",
     technologies: ["React", "Tailwind CSS", "n8n", "Supabase"],
+    size: "medium" as const,
+  },
+  {
+    title: "Taller Manager - Sistema de Gestión de Taller Mecánico",
+    description: "Sistema de gestión de taller mecánico.",
+    image: tallerManagerPreview,
+    technologies: ["React", "Node.js", "Prisma", "Tailwind CSS", "Supabase"],
     size: "large" as const,
+    link: "https://taller-saas.vercel.app/login",
+    link_code: "https://github.com/cvidaal/taller-saas",
   },
 ];
 
@@ -54,14 +64,15 @@ const BentoGrid = () => {
           </h2>
         </motion.div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-[200px] md:auto-rows-[220px]">
+        {/* Bento Grid: en móvil columna simple (todas las cards visibles); en desktop grid bento */}
+        <div className="flex flex-col gap-4 md:grid md:grid-cols-3 md:gap-6 md:auto-rows-[220px]">
           {/* Featured Project - Large */}
           <ProjectCard {...projects[0]} delay={0.1} />
 
           {/* Medium Projects */}
           <ProjectCard {...projects[1]} delay={0.3} />
           <ProjectCard {...projects[2]} delay={0.4} />
+          <ProjectCard {...projects[3]} delay={0.5} />
         </div>
       </div>
     </section>

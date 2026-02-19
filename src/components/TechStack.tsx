@@ -10,7 +10,7 @@ const TechStack = () => {
   ]);
 
   return (
-    <section id="stack" className="relative py-24 overflow-hidden">
+    <section id="stack" className="relative py-10 md:py-24 overflow-hidden">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
