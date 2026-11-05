@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base
+  title="Página no encontrada · Carlos Vidal"
+  description="La página que buscas no existe."
+  path="/404"
+>
+  <main class="nf">
+    <p class="code">404</p>
+    <h1>Esta página no existe</h1>
+    <a href="/">Volver al inicio</a>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem 1.25rem;
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+  .code { color: var(--accent); margin: 0; }
+  h1 { font-size: clamp(2rem, 8vw, 3.5rem); }
+  a { color: var(--paper); text-decoration-color: var(--accent); text-underline-offset: 4px; width: fit-content; }
+</style>

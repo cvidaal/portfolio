@@ -25,3 +25,9 @@ dist-ssr
 
 # Superpowers scratch
 .superpowers/
+
+# Astro / tests
+.astro/
+test-results/
+playwright-report/
+.lighthouseci/

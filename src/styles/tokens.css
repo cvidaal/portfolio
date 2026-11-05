@@ -1,0 +1,13 @@
+:root {
+  --bg: #101012;
+  --paper: #F1EDE6;
+  --accent: #E4251B;
+  --ink: #D8261C;
+  --ink-light: #F0A193;
+  --line: #2E2E33;
+  --card: #17171A;
+  --muted: #9A968F;
+
+  --font-display: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
