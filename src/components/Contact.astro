@@ -1,0 +1,36 @@
+---
+import { t } from '../i18n';
+const email = t('contacto.email');
+const linkedin = t('contacto.linkedin');
+const github = t('contacto.github');
+---
+<div class="wrap contact">
+  <div class="term mono" role="group" aria-label={t('contacto.peticion')}>
+    <p class="req"><span class="prompt" aria-hidden="true">$ </span>{t('contacto.peticion')}</p>
+    <p class="res"><span class="ok">{t('contacto.estado')}</span></p>
+    <pre>{'{'}
+  "email": "<a href={`mailto:${email}`}>{email}</a>",
+  "linkedin": "<a href={linkedin} rel="noopener">{linkedin}</a>",
+  "github": "<a href={github} rel="noopener">{github}</a>"
+{'}'}</pre>
+    <button type="button" class="copy" data-email={email} data-copied={t('contacto.copiado')} aria-label={`${t('contacto.copiar')}: ${email}`}>
+      <span class="copy-txt" aria-hidden="true">{t('contacto.copiar')}</span>
+    </button>
+    <span class="sr-only" role="status" aria-live="polite" id="copy-status"></span>
+  </div>
+</div>
+<script>
+  import '../scripts/copy-email';
+</script>
+<style>
+  .contact { padding-block: 40px 56px; }
+  .term { background: var(--card); border: 1px solid var(--line); padding: 20px 22px; font-size: 13px; max-width: 760px; }
+  p { margin: 0; }
+  .prompt { color: var(--accent); }
+  .ok { color: var(--accent-hi); font-weight: 600; }
+  .res { margin: 4px 0 10px; }
+  pre { margin: 0 0 16px; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; color: #d9d4cc; }
+  pre a { color: var(--paper); }
+  .copy { font: 600 12px var(--font-mono); background: var(--accent-hi); color: var(--bg); border: 0; padding: 10px 14px; cursor: pointer; }
+  .copy:hover { background: var(--paper); }
+</style>

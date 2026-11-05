@@ -1,6 +1,7 @@
 ---
 import '@fontsource-variable/bricolage-grotesque/wght.css';
 import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/600.css';
 import '../styles/global.css';
 
 interface Props {
@@ -37,7 +38,8 @@ const image = ogImage.startsWith('http') ? ogImage : `${SITE}${ogImage}`;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
   </head>
-  <body>
+  <body id="top">
+    <a class="skip" href="#main">Saltar al contenido</a>
     <slot />
   </body>
 </html>

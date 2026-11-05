@@ -1,0 +1,32 @@
+---
+import { t } from '../i18n';
+const puntos = ['exp.topdoctors.punto1', 'exp.topdoctors.punto2', 'exp.topdoctors.punto3'] as const;
+---
+<div class="wrap exp">
+  <article class="job">
+    <header>
+      <h3>{t('exp.topdoctors.empresa')}</h3>
+      <p class="mono meta">{t('exp.topdoctors.puesto')} · {t('exp.topdoctors.fechas')} · {t('exp.topdoctors.lugar')}</p>
+    </header>
+    <ul class="mono">
+      {puntos.map((k) => <li>{t(k)}</li>)}
+    </ul>
+  </article>
+  <article class="job">
+    <header>
+      <h3>{t('exp.ulandu.empresa')}</h3>
+      <p class="mono meta">{t('exp.ulandu.puesto')} · {t('exp.ulandu.fechas')}</p>
+    </header>
+    <p class="desc">{t('exp.ulandu.descripcion')} <a class="mono" href="#proyectos">{t('exp.ulandu.enlace')}</a></p>
+  </article>
+</div>
+<style>
+  .exp { display: grid; gap: 18px; padding-block: 40px; }
+  .job { background: var(--card); border: 1px solid var(--line); padding: 22px 24px; }
+  h3 { font-size: clamp(28px, 6vw, 38px); letter-spacing: -0.035em; }
+  .meta { color: var(--muted); font-size: 12px; margin: 8px 0 14px; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 13px; color: #d9d4cc; }
+  li::before { content: '→ '; color: var(--accent); }
+  .desc { margin: 0; color: #d9d4cc; }
+  .desc a { font-size: 12px; color: var(--accent-hi); white-space: nowrap; }
+</style>

@@ -1,0 +1,13 @@
+---
+import { t } from '../i18n';
+import Ph from './Ph.astro';
+import { isPlaceholder } from '../lib/placeholder';
+const texto = t('sobre.texto');
+---
+<div class="wrap about">
+  <p>{isPlaceholder(texto) ? <Ph text={texto} /> : texto}</p>
+</div>
+<style>
+  .about { padding-block: 40px; max-width: 760px; }
+  p { margin: 0; font-size: clamp(18px, 3vw, 22px); line-height: 1.5; }
+</style>
