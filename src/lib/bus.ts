@@ -9,7 +9,10 @@ export interface BusEvents {
   /** Punto de pantalla al que mirar; null = volver a seguir al ratón. */
   'avatar:look': { x: number; y: number } | null;
   'avatar:cosmetics': Cosmetics;
+  /** Se abre el tablero: el avatar pausa sus gestos sueltos y reacciona al juego. */
   'game:open': undefined;
+  /** Se cierra el tablero. */
+  'game:close': undefined;
 }
 export type BusType = keyof BusEvents;
 type Args<K extends BusType> = BusEvents[K] extends undefined ? [] : [detail: BusEvents[K]];

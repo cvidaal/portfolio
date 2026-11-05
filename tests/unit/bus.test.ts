@@ -22,12 +22,15 @@ describe('bus', () => {
     const { emit, on } = await import('../../src/lib/bus');
     let winks = 0; let opened = 0; const looks: unknown[] = [];
     on('avatar:wink', () => winks++);
+    let closed = 0;
     on('game:open', () => opened++);
+    on('game:close', () => closed++);
     on('avatar:look', (d) => looks.push(d));
-    emit('avatar:wink'); emit('game:open');
+    emit('avatar:wink'); emit('game:open'); emit('game:close');
     emit('avatar:look', { x: 10, y: 20 }); emit('avatar:look', null);
     expect(winks).toBe(1);
     expect(opened).toBe(1);
+    expect(closed).toBe(1);
     expect(looks).toEqual([{ x: 10, y: 20 }, null]);
   });
 });

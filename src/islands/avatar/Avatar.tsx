@@ -8,7 +8,7 @@ import { IDLE_POSES, K_LOOK, K_POSE, POSES, lookOffset, step, type Pose, type Po
 
 interface Props {
   layers: Layers;
-  /** Parpadeo y gestos automáticos. En móvil empieza en false y se activa con game:open. */
+  /** Parpadeo y gestos automáticos (escritorio). En el resto se activan solo mientras el juego está abierto. */
   auto: boolean;
   /** Gancho para pintar accesorios (Task 7). */
   accessories?: AccessoryHook;
@@ -45,7 +45,10 @@ export default function Avatar({ layers, auto, accessories }: Props) {
       offs.push(() => t.removeEventListener(type, l, o));
     }
 
-    let autoOn = auto;
+    // El juego marca <html data-game="open"> antes de emitir game:open: si el evento llegó mientras
+    // se descargaban las capas, el avatar lo sabe igualmente al montarse.
+    let gameOpen = document.documentElement.dataset.game === 'open';
+    let autoOn = auto || gameOpen;
     let look = { x: 0, y: 0 }, target = { x: 0, y: 0 };
     let lookPoint: { x: number; y: number } | null = null;
     let lastMouse: { x: number; y: number; t: number } | null = null;
@@ -100,7 +103,8 @@ export default function Avatar({ layers, auto, accessories }: Props) {
       later(blink, 2800 + Math.random() * 3600);
     }
     function idle() {
-      if (autoOn && !reduce() && !document.hidden && !hoverCta && performance.now() > until) {
+      // con el juego abierto no hay gestos sueltos: solo reacciona a la partida
+      if (autoOn && !gameOpen && !reduce() && !document.hidden && !hoverCta && performance.now() > until) {
         emit('avatar:pose', { name: IDLE_POSES[Math.floor(Math.random() * IDLE_POSES.length)], ms: 1200 + Math.random() * 700 });
       }
       later(idle, 3200 + Math.random() * 2800);
@@ -174,7 +178,9 @@ export default function Avatar({ layers, auto, accessories }: Props) {
       on('avatar:wink', wink),
       on('avatar:look', (p) => { lookPoint = p; retarget(); }),
       on('avatar:cosmetics', (c) => setCosmetics(c)),
-      on('game:open', () => { autoOn = true; }),
+      on('game:open', () => { gameOpen = true; autoOn = true; }),
+      // al cerrar: en escritorio vuelven los gestos; en el resto se paran
+      on('game:close', () => { gameOpen = false; autoOn = auto; }),
     );
 
     setCosmetics(cosmetics);
