@@ -17,7 +17,9 @@ describe('i18n', () => {
     expect(all).not.toMatch(/FullStack_CV/);
   });
   it('sin emojis', () => {
-    expect(Object.values(es).join(' ')).not.toMatch(/\p{Extended_Pictographic}/u);
+    // ▶ (botón del juego, literal de la spec) y © no son emojis de interfaz
+    const sin = Object.values(es).join(' ').replace(/[▶©]/g, '');
+    expect(sin).not.toMatch(/\p{Extended_Pictographic}/u);
   });
   it('CV y contacto', () => {
     expect(t('cv.href')).toBe('/CarlosVidal_Backend_CV.pdf');
