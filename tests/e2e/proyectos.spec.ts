@@ -81,3 +81,13 @@ test('el índice marca la sección que se lee', async ({ page }) => {
   await page.evaluate(() => document.querySelector('#testing')!.scrollIntoView());
   await expect(page.locator('nav.toc a[aria-current]')).toHaveText('Testing');
 });
+
+test('Acelerik: estado honesto y mock del bot etiquetado', async ({ page }) => {
+  await page.goto('/proyectos/acelerik-booking');
+  await expect(page.locator('dl.meta-row')).toContainText('Demo (acceso bajo petición)');
+  await expect(page.locator('body')).not.toContainText('Demo pública');
+  await expect(page.locator('body')).toContainText('Go es el lenguaje con el que programo');
+  await page.goto('/');
+  await expect(page.locator('#proyectos')).not.toContainText('Demo pública');
+  await expect(page.locator('#proyectos article').nth(1).locator('.ej')).toHaveText('Ejemplo');
+});

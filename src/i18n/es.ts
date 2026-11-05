@@ -51,6 +51,7 @@ export const es = {
   // Proyectos (textos de la sección; el contenido va en src/content/proyectos)
   'proyectos.verCaso': 'Ver caso de estudio',
   'proyectos.verTiendas': 'Ver en las tiendas',
+  'proyectos.bot.ejemplo': 'Ejemplo',
   'proyectos.bot.audio': '"Ponme 10 barras más para mañana"',
   'proyectos.bot.audioDuracion': '0:07',
   'proyectos.bot.respuesta': 'Le apunto para el viernes 30/10: 10 barras más. ¿Está bien?',
