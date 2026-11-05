@@ -1,0 +1,250 @@
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<style>
+  .site { --acc:#E4251B; --paper:#F1EDE6; --bg:#101012; --card:#17171A; --line:#2E2E33; --mut:#9A968F;
+    background:var(--bg); color:var(--paper); font-family:'Bricolage Grotesque',sans-serif; border-radius:6px; overflow:hidden; max-width:1100px; }
+  .site * { box-sizing:border-box; }
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .lbl { font:600 10.5px 'JetBrains Mono',monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--mut); }
+  .tabs { display:flex; gap:6px; margin:0 0 12px; }
+  .tabs button { font:600 12px 'JetBrains Mono',monospace; background:#1c1c20; color:#F1EDE6; border:1px solid #3A3A3E; padding:7px 12px; cursor:pointer; }
+  .tabs button.on { background:#E4251B; color:#101012; border-color:#E4251B; }
+
+  /* separador tipo cartel */
+  .poster { background:var(--acc); color:var(--bg); padding:34px 48px 26px; position:relative; overflow:hidden; }
+  .poster h2 { margin:0; font-size:118px; line-height:.82; font-weight:800; letter-spacing:-.05em; text-transform:uppercase; }
+  .poster .meta { position:absolute; right:48px; bottom:28px; text-align:right; font:600 12px 'JetBrains Mono',monospace; }
+  .poster::after { content:''; position:absolute; right:-50px; top:-120px; width:230px; height:230px;
+    background:repeating-linear-gradient(45deg, rgba(16,16,18,.9) 0 3px, transparent 3px 10px); border-radius:50%; }
+
+  /* tarjetas */
+  .projects { padding:40px 48px 48px; display:grid; grid-template-columns: repeat(6,1fr); gap:18px; }
+  .card { grid-column: span 3; background:var(--card); border:1px solid var(--line); display:flex; flex-direction:column; cursor:pointer; transition: transform .25s, border-color .25s; position:relative; }
+  .card.feature { grid-column: 1 / -1; display:grid; grid-template-columns: 1.25fr 1fr; }
+  .card:hover { transform: translateY(-4px); border-color:var(--paper); }
+  .card .num { position:absolute; left:16px; top:12px; z-index:2; font:600 11px 'JetBrains Mono',monospace; background:var(--bg); padding:2px 6px; }
+
+  .riso { position:relative; overflow:hidden; background:var(--paper); aspect-ratio: 16/10; }
+  .feature .riso { aspect-ratio:auto; min-height:340px; }
+  .riso img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:left top; filter:grayscale(1) contrast(1.2); mix-blend-mode:multiply; transition: transform .5s; }
+  .riso::after { content:''; position:absolute; inset:0; background:var(--acc); mix-blend-mode:lighten; transition: opacity .35s; }
+  .riso::before { content:''; position:absolute; inset:0; z-index:1; background:repeating-linear-gradient(45deg, rgba(228,37,27,.0) 0 6px, rgba(228,37,27,.18) 6px 8px); pointer-events:none; transition: opacity .35s; }
+  .card:hover .riso::after, .card:hover .riso::before { opacity:0; }
+  .card:hover .riso img { filter:none; mix-blend-mode:normal; transform: scale(1.03) translate(3px,-2px); }
+
+  .body { padding:22px 24px 22px; display:flex; flex-direction:column; gap:12px; flex:1; }
+  .tag { display:inline-flex; gap:8px; align-items:center; font:600 10.5px 'JetBrains Mono',monospace; color:var(--acc); letter-spacing:.06em; text-transform:uppercase; }
+  .tag i { width:7px; height:7px; background:var(--acc); display:inline-block; }
+  .card h3 { margin:0; font-size:34px; line-height:.95; font-weight:800; letter-spacing:-.035em; }
+  .feature h3 { font-size:46px; }
+  .hook { margin:0; font-size:16px; line-height:1.35; color:#D9D4CC; }
+  .facts { list-style:none; margin:4px 0 0; padding:0; display:grid; gap:6px; font:12px 'JetBrains Mono',monospace; color:var(--mut); }
+  .facts li::before { content:'→ '; color:var(--acc); }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; }
+  .chips span { font:600 10.5px 'JetBrains Mono',monospace; border:1px solid #3A3A3E; padding:3px 7px; color:var(--paper); }
+  .go { margin-top:10px; font:600 12px 'JetBrains Mono',monospace; display:flex; justify-content:space-between; border-top:1px solid var(--line); padding-top:12px; }
+  .go b { color:var(--acc); transition: transform .2s; display:inline-block; }
+  .card:hover .go b { transform: translateX(6px); }
+
+  .wa { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; gap:8px; padding:22px; z-index:2; }
+  .bub { background:#fff; color:#111; border-radius:10px; padding:8px 11px; font:13px 'Bricolage Grotesque',sans-serif; box-shadow:2px 2px 0 var(--acc); max-width:80%; }
+  .bub.me { align-self:flex-end; background:var(--bg); color:var(--paper); box-shadow:2px 2px 0 var(--acc); }
+  .bub .au { font:11px 'JetBrains Mono',monospace; }
+  .riso img.pani-logo { inset:auto; right:16px; top:14px; width:96px; height:auto; z-index:3; object-fit:contain; }
+  .phones { position:absolute; inset:0; display:flex; justify-content:center; align-items:flex-end; gap:14px; z-index:2; padding-top:24px; }
+  .phone { width:30%; aspect-ratio: 9/18; border:3px solid var(--bg); border-bottom:none; border-radius:18px 18px 0 0; background:repeating-linear-gradient(45deg, #F1EDE6 0 8px, #f3d5cf 8px 10px); display:flex; align-items:center; justify-content:center; font:600 10px 'JetBrains Mono',monospace; color:var(--acc); text-align:center; }
+  .phone:nth-child(2) { transform: translateY(-20px); }
+
+  /* caso de estudio */
+  .cs-head { padding:44px 48px 30px; border-bottom:1px solid var(--line); }
+  .crumb { font:12px 'JetBrains Mono',monospace; color:var(--mut); margin-bottom:22px; }
+  .crumb b { color:var(--acc); }
+  .cs-head h1 { margin:10px 0 12px; font-size:92px; line-height:.84; font-weight:800; letter-spacing:-.05em; }
+  .cs-head h1 .out { color:transparent; -webkit-text-stroke:1.5px var(--paper); }
+  .cs-head .hook { font-size:22px; max-width:760px; color:var(--paper); }
+  .meta-row { display:grid; grid-template-columns: repeat(5,1fr); gap:0; margin-top:28px; border-top:1px solid var(--line); }
+  .meta-row div { padding:12px 14px 0 0; font:12px 'JetBrains Mono',monospace; color:var(--paper); }
+  .meta-row div span { display:block; margin-bottom:4px; }
+  .meta-row a { color:var(--acc); }
+  .cs-hero { margin:0 48px; transform: translateY(28px); border:1px solid var(--line); }
+  .cs-hero .riso { aspect-ratio: 21/8; }
+  .cs-body { display:grid; grid-template-columns: 190px 1fr; gap:40px; padding:70px 48px 50px; }
+  .toc { position:sticky; top:16px; align-self:start; display:grid; gap:9px; font:12px 'JetBrains Mono',monospace; color:var(--mut); }
+  .toc a { color:inherit; text-decoration:none; } .toc a.on { color:var(--paper); } .toc a.on::before { content:'■ '; color:var(--acc); }
+  .sec { padding-bottom:34px; margin-bottom:34px; border-bottom:1px solid var(--line); }
+  .sec h2 { margin:6px 0 14px; font-size:40px; line-height:.95; font-weight:800; letter-spacing:-.035em; }
+  .sec p { font-size:17px; line-height:1.55; color:#D9D4CC; max-width:680px; margin:0 0 12px; }
+  .ph { color:var(--acc); font-family:'JetBrains Mono',monospace; font-size:13px; }
+  .dec { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:16px; }
+  .dec .d { border:1px solid var(--line); padding:16px; background:var(--card); }
+  .dec .d.open { grid-column:1/-1; border-color:var(--acc); }
+  .dec .d b { display:block; font-size:20px; letter-spacing:-.02em; margin-bottom:6px; }
+  .dec .d p { font-size:14.5px; margin:0; }
+  pre { margin:14px 0 0; background:#0B0B0D; border-left:3px solid var(--acc); padding:14px 16px; font:12.5px/1.6 'JetBrains Mono',monospace; color:#D9D4CC; overflow:auto; }
+  pre .k { color:var(--acc); } pre .c { color:#6E6A64; }
+  .evo { display:grid; grid-template-columns: 1fr 40px 1fr; align-items:center; margin-top:16px; }
+  .evo .v { border:1px solid var(--line); padding:14px; font:12px 'JetBrains Mono',monospace; color:var(--mut); }
+  .evo .v b { display:block; color:var(--paper); font:800 22px 'Bricolage Grotesque'; margin-bottom:6px; }
+  .evo .v.now { border-color:var(--acc); }
+  .evo .arrow { text-align:center; color:var(--acc); font-size:22px; }
+  .tests { list-style:none; padding:0; margin:10px 0 0; font:12.5px 'JetBrains Mono',monospace; display:grid; gap:6px; color:#D9D4CC; }
+  .tests li::before { content:'✓ '; color:var(--acc); }
+  .next { display:flex; justify-content:space-between; padding:0 48px 44px; }
+  .next a { font:600 13px 'JetBrains Mono',monospace; color:var(--paper); text-decoration:none; border:1px solid var(--line); padding:12px 16px; }
+  .next a b { display:block; font:800 22px 'Bricolage Grotesque'; margin-top:4px; }
+</style>
+
+<h2>Boceto: proyectos y caso de estudio</h2>
+<p class="subtitle">Dos vistas. Pasa el ratón por las tarjetas: la imagen está "impresa" en tinta roja y al hacer hover se revela en color real. Cambia de vista con los botones.</p>
+
+<div class="tabs"><button class="on" data-v="home">1 · Sección Proyectos (home)</button><button data-v="cs">2 · Página de caso de estudio</button></div>
+
+<div class="site" id="v-home">
+  <div class="poster">
+    <div class="lbl" style="color:#101012;margin-bottom:10px">// 02</div>
+    <h2>Proyectos</h2>
+    <div class="meta">3 proyectos · 2 en producción<br>Go · Python · Flutter</div>
+  </div>
+  <div class="projects">
+    <article class="card feature">
+      <span class="num">01</span>
+      <div class="riso"><img src="./ab-panel.png" alt=""></div>
+      <div class="body">
+        <span class="tag"><i></i>Producto propio · ACELERIK</span>
+        <h3>Acelerik Booking</h3>
+        <p class="hook">Una API en Go que no deja que dos familias reserven la última plaza.</p>
+        <ul class="facts">
+          <li>Cero overbooking con locks en PostgreSQL</li>
+          <li>Pagos con Stripe idempotentes y webhooks firmados</li>
+          <li>De MVP en n8n a API en Go</li>
+        </ul>
+        <div class="chips"><span>Go</span><span>PostgreSQL</span><span>Stripe</span><span>Docker</span><span>OpenAPI</span></div>
+        <div class="go"><span>Ver caso de estudio</span><b>→</b></div>
+      </div>
+    </article>
+
+    <article class="card">
+      <span class="num">02</span>
+      <div class="riso">
+
+        <img class="pani-logo" src="./pani-logo.png" alt="">
+        <div class="wa">
+          <div class="bub"><span class="au">▶ ━━━━━━━━ 0:07</span><br><i>"Ponme 10 barras más para mañana"</i></div>
+          <div class="bub me">Apuntado para el <b>viernes 30/10</b>: 51 barras · 10 chapatas. ¿Está bien?</div>
+        </div>
+      </div>
+      <div class="body">
+        <span class="tag"><i></i>Cliente ACELERIK · en piloto</span>
+        <h3>Bot de pedidos por WhatsApp</h3>
+        <p class="hook">Notas de voz convertidas en la hoja de producción de las 02:00. La IA propone, el código decide.</p>
+        <div class="chips"><span>Python</span><span>FastAPI</span><span>WhatsApp API</span><span>LLM</span><span>~880 tests</span></div>
+        <div class="go"><span>Ver caso de estudio</span><b>→</b></div>
+      </div>
+    </article>
+
+    <article class="card">
+      <span class="num">03</span>
+      <div class="riso">
+        <div class="phones"><div class="phone">captura<br>App Store</div><div class="phone">captura<br>App Store</div><div class="phone">captura<br>App Store</div></div>
+      </div>
+      <div class="body">
+        <span class="tag"><i></i>Prácticas · Ulandu · 2025</span>
+        <h3>App Bendita Burger</h3>
+        <p class="hook">App de pedidos en Flutter con pagos por Stripe, publicada en App Store y Google Play.</p>
+        <div class="chips"><span>Flutter</span><span>Stripe</span><span>Firebase</span></div>
+        <div class="go"><span>App Store · Google Play</span><b>↗</b></div>
+      </div>
+    </article>
+  </div>
+</div>
+
+<div class="site" id="v-cs" style="display:none">
+  <div class="cs-head">
+    <div class="crumb">carlosvidal.dev / <b>proyectos</b> / acelerik-booking</div>
+    <span class="tag"><i></i>Producto propio · ACELERIK</span>
+    <h1>Acelerik<br><span class="out">Booking</span></h1>
+    <p class="hook">Reservas de cumpleaños y cobro de señal para parques infantiles. Una API en Go que no deja que dos familias reserven la última plaza.</p>
+    <div class="meta-row">
+      <div><span class="lbl">Rol</span>Diseño y desarrollo completo</div>
+      <div><span class="lbl">Tipo</span>Producto propio</div>
+      <div><span class="lbl">Stack</span>Go · PostgreSQL · Stripe</div>
+      <div><span class="lbl">Estado</span>Demo pública</div>
+      <div><span class="lbl">Enlaces</span><a>booking.acelerik.com ↗</a><br><a>GitHub ↗</a></div>
+    </div>
+  </div>
+  <div class="cs-hero"><div class="riso"><img src="./ab-reserva.png" alt=""></div></div>
+  <div class="cs-body">
+    <nav class="toc">
+      <a>01 El problema</a><a>02 La v1</a><a class="on">03 Por qué Go</a><a>04 Decisiones</a><a>05 Arquitectura</a><a>06 Testing</a><a>07 Qué aprendí</a><a>08 Siguiente</a>
+    </nav>
+    <div>
+      <section class="sec">
+        <div class="lbl">01 · El problema</div>
+        <h2>Cumpleaños gestionados por WhatsApp y libreta</h2>
+        <p>Los parques infantiles reciben las reservas de cumpleaños por teléfono y mensajes. Se solapan franjas, las señales se cobran a mano y nadie sabe qué hay libre sin mirar la libreta. <span class="ph">[confirmar con Carlos]</span></p>
+      </section>
+      <section class="sec">
+        <div class="lbl">02 → 03 · De la v1 a Go</div>
+        <h2>Funcionaba. Pero no se podía tocar sin miedo.</h2>
+        <div class="evo">
+          <div class="v"><b>v1 · Jungla Mágica</b>React + n8n + Supabase<br>MVP que validó la idea</div>
+          <div class="arrow">→</div>
+          <div class="v now"><b>v2 · API en Go</b>Reglas de negocio en código<br>tipado, versionado y testeado</div>
+        </div>
+        <p style="margin-top:16px">Lo reescribí en Go, mi lenguaje del día a día: código que se edita con confianza, todas las reglas en un único sitio y un binario pequeño que cuesta mucho menos alojar que una instancia de n8n.</p>
+      </section>
+      <section class="sec">
+        <div class="lbl">04 · Decisiones técnicas</div>
+        <h2>Cuatro cosas que no pueden fallar</h2>
+        <div class="dec">
+          <div class="d open"><b>Cero overbooking</b><p>Si dos familias piden la última plaza a la vez, solo entra una: cada franja se bloquea dentro de la transacción antes de contar plazas.</p>
+<pre><span class="c">// internal/booking/repository.go</span>
+lockKey := item.Date + <span class="k">" "</span> + item.StartTime
+tx.ExecContext(ctx, <span class="k">`SELECT pg_advisory_xact_lock(hashtext($1)::bigint)`</span>, lockKey)
+<span class="c">// ...cuenta las reservas activas de la franja</span>
+<span class="k">if</span> count >= maxParties { <span class="k">return</span> Booking{}, errSlotFull }</pre></div>
+          <div class="d"><b>Pagos sin duplicados</b><p>Idempotency key por reserva, webhooks con firma verificada e importe comprobado.</p></div>
+          <div class="d"><b>Estados a prueba de errores</b><p>Máquina de estados con bloqueo de fila. Un cambio inválido devuelve 409.</p></div>
+          <div class="d"><b>Plazas que se liberan solas</b><p>Sin pago en 1 hora, la reserva caduca. El Checkout de Stripe caduca a la vez.</p></div>
+          <div class="d"><b>Listo para desplegar</b><p>Docker multi-stage, binario estático, usuario no root y healthcheck con BD.</p></div>
+        </div>
+      </section>
+      <section class="sec">
+        <div class="lbl">05 · Arquitectura</div>
+        <h2>Un proceso, tres piezas</h2>
+        <svg viewBox="0 0 680 190" style="width:100%;max-width:680px;margin-top:6px" font-family="JetBrains Mono" font-size="12">
+          <defs><pattern id="h" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#E4251B" stroke-width="2"/></pattern>
+          <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#E4251B"/></marker></defs>
+          <g fill="#17171A" stroke="#F1EDE6" stroke-width="1.5">
+            <rect x="10" y="70" width="120" height="50"/><rect x="230" y="40" width="190" height="110"/><rect x="520" y="20" width="150" height="50"/><rect x="520" y="120" width="150" height="50"/>
+          </g>
+          <rect x="236" y="46" width="178" height="22" fill="url(#h)"/>
+          <g fill="#F1EDE6"><text x="30" y="100">Familia / Web</text><text x="246" y="62" fill="#101012" font-weight="600">API Go · Huma</text>
+          <text x="246" y="92">booking · payment</text><text x="246" y="112">estados · plazas</text><text x="246" y="132">OpenAPI /docs</text>
+          <text x="540" y="50">PostgreSQL</text><text x="540" y="150">Stripe Checkout</text></g>
+          <g stroke="#E4251B" stroke-width="2" fill="none" marker-end="url(#a)">
+            <path d="M130 95 L228 95"/><path d="M420 70 L518 45"/><path d="M420 115 L518 140"/><path d="M560 120 C 500 175 440 170 420 140" stroke-dasharray="5 4"/>
+          </g>
+          <text x="440" y="186" fill="#9A968F" font-size="11">webhook firmado</text>
+        </svg>
+      </section>
+      <section class="sec">
+        <div class="lbl">06 · Testing</div>
+        <h2>Lo que está cubierto, tal cual</h2>
+        <ul class="tests"><li>Transiciones de estado válidas e inválidas</li><li>Firma de los webhooks de Stripe</li><li>Aplicación de pagos completados, caducados y fallidos</li><li>Checkout bloqueado sin clave de test</li><li>Acceso privado a la demo y rutas del frontend</li><li>Configuración obligatoria en despliegue</li></ul>
+      </section>
+      <section class="sec" style="border:none">
+        <div class="lbl">07 · Qué aprendí</div>
+        <p class="ph">[PLACEHOLDER: texto de Carlos]</p>
+      </section>
+    </div>
+  </div>
+  <div class="next"><a href="#">← Volver a proyectos<b>Todos</b></a><a href="#" style="text-align:right">Siguiente →<b>Bot de pedidos por WhatsApp</b></a></div>
+</div>
+
+<script>
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.getElementById('v-home').style.display=b.dataset.v==='home'?'':'none';
+  document.getElementById('v-cs').style.display=b.dataset.v==='cs'?'':'none';
+});
+</script>
