@@ -56,6 +56,22 @@ test('tema guardado se aplica antes de la primera pintura (sin parpadeo rojo)', 
   expect(await filterOf(page, '#avatar-slot img')).toContain('hue-rotate(125deg)');
 });
 
+for (const bad of ['constructor', '__proto__', 'toString']) {
+  test(`tema guardado manipulado "${bad}": el acento sigue en rojo sin errores`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.addInitScript((bad) => localStorage.setItem('pubsub-rush:v1', `{"best":0,"unlocked":[],"theme":"${bad}","shades":false,"chain":false,"progress":{}}`), bad);
+    await page.goto('/');
+    for (const v of ['--acc', '--accent', '--accent-hi']) expect(await prop(page, v)).not.toContain('undefined');
+    expect((await prop(page, '--accent')).toUpperCase()).toBe('#E4251B');
+    // y tampoco al emitir el evento con un tema inválido
+    await page.waitForSelector(CANVAS);
+    await emitCosmetics(page, { shades: false, chain: false, theme: bad });
+    expect((await prop(page, '--accent')).toUpperCase()).toBe('#E4251B');
+    expect(errors).toEqual([]);
+  });
+}
+
 test('storage bloqueado: la página sigue en rojo sin errores', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));

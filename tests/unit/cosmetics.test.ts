@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { THEMES, applyTheme } from '../../src/lib/theme';
+import { THEMES, applyTheme, themeDef } from '../../src/lib/theme';
 import { drawShades, drawChains } from '../../src/islands/avatar/cosmetics';
 import type { Layers } from '../../src/islands/avatar/compositor';
 
@@ -46,6 +46,19 @@ describe('temas', () => {
     applyTheme('rojo', root);
     expect(props['--avatar-filter']).toBe('none');
     expect(props['--acc']).toBe('#E4251B');
+  });
+});
+
+describe('temas: claves inválidas', () => {
+  it.each(['constructor', 'toString', '__proto__', 'hasOwnProperty', 'nope', 7, null])('%s cae a rojo', (bad) => {
+    expect(themeDef(bad)).toBe(THEMES.rojo);
+    const props: Record<string, string> = {};
+    const root = { style: { setProperty: (k: string, v: string) => { props[k] = v; } } } as unknown as HTMLElement;
+    applyTheme(bad as never, root);
+    expect(props['--acc']).toBe('#E4251B');
+    expect(props['--accent']).toBe('#E4251B');
+    expect(props['--accent-hi']).toBe('#F04336');
+    expect(props['--avatar-filter']).toBe('none');
   });
 });
 

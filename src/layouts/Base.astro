@@ -44,7 +44,7 @@ const image = ogImage.startsWith('http') ? ogImage : `${SITE}${ogImage}`;
       // Tema guardado antes de la primera pintura (evita el parpadeo rojo -> azul/verde). Tolera storage bloqueado.
       try {
         var s = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
-        var th = s && THEMES[s.theme];
+        var th = s && typeof s.theme === 'string' && Object.prototype.hasOwnProperty.call(THEMES, s.theme) ? THEMES[s.theme] : null;
         if (th && s.theme !== 'rojo') {
           var st = document.documentElement.style;
           st.setProperty('--acc', th.acc); st.setProperty('--accent', th.acc);

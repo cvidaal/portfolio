@@ -18,9 +18,14 @@ export const THEMES: Record<Theme, ThemeDef> = {
   verde: { acc: '#3DDC84', hi: '#3DDC84', filter: 'hue-rotate(125deg) saturate(.9)' },
 };
 
+/** Definición del tema; claves heredadas ("constructor", "__proto__"...) o desconocidas caen a rojo. */
+export function themeDef(theme: unknown): ThemeDef {
+  return typeof theme === 'string' && Object.prototype.hasOwnProperty.call(THEMES, theme) ? THEMES[theme as Theme] : THEMES.rojo;
+}
+
 /** Aplica el tema en :root. `--acc` es el nombre de la spec; `--accent`/`--accent-hi` son los tokens que usa el sitio. */
 export function applyTheme(theme: Theme, root: HTMLElement = document.documentElement): void {
-  const t = THEMES[theme] ?? THEMES.rojo;
+  const t = themeDef(theme);
   root.style.setProperty('--acc', t.acc);
   root.style.setProperty('--accent', t.acc);
   root.style.setProperty('--accent-hi', t.hi);
