@@ -93,6 +93,23 @@ export const es = {
   'contacto.copiarError': 'No se pudo copiar. Cópialo a mano: carlosvidal.developer@gmail.com',
 
   // Juego
+  'logros.hola.nombre': 'Hola, mundo',
+  'logros.hola.desc': 'Enruta tu primer mensaje',
+  'logros.racha.nombre': 'En racha',
+  'logros.racha.desc': '10 aciertos seguidos',
+  'logros.racha.recompensa': 'Gafas de sol',
+  'logros.hooks.nombre': 'Webhook hunter',
+  'logros.hooks.desc': '5 webhooks en un turno',
+  'logros.hooks.recompensa': 'Cadenas',
+  'logros.cero.nombre': 'Cero fallos',
+  'logros.cero.desc': 'Turno completo sin dead letters y con al menos 12 mensajes enrutados',
+  'logros.cero.recompensa': 'Tema "tinta azul"',
+  'logros.mil.nombre': 'Alta carga',
+  'logros.mil.desc': '500 puntos en un turno',
+  'logros.mil.recompensa': 'Tema "verde terminal"',
+  'logros.secreto.nombre': 'Lo has visto todo',
+  'logros.secreto.desc': 'Consigue los cuatro logros con recompensa',
+  'logros.secreto.recompensa': 'Una nota personal de Carlos',
   'juego.notaSecreta': '[PLACEHOLDER: nota personal de Carlos al desbloquear "Lo has visto todo"]',
 
   // Pie
