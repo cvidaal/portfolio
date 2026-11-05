@@ -38,3 +38,6 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .skip { position: absolute; left: 8px; top: -60px; z-index: 100; background: var(--accent); color: var(--bg); padding: 8px 12px; font: 600 13px var(--font-mono); text-decoration: none; }
 .skip:focus { top: 8px; }
+
+/* Tema del avatar: el filtro lo fija applyTheme en --avatar-filter y vale para la <img> estática y para el canvas. */
+#avatar-slot img, #avatar-slot canvas { filter: var(--avatar-filter, none); }

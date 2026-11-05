@@ -2,6 +2,7 @@
   --bg: #101012;
   --paper: #F1EDE6;
   --accent: #E4251B;
+  --acc: #E4251B; /* alias del acento que re-escribe applyTheme junto con --accent */
   --accent-hi: #F04336; /* texto pequeño: contraste >= 4.5 sobre #101012 y #17171A, y con texto oscuro encima */
   --ink: #D8261C;
   --ink-light: #F0A193;

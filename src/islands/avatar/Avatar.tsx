@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { emit, on, type Cosmetics } from '../../lib/bus';
 import { readCosmetics } from '../../lib/save-key';
+import { loadChainFont } from './cosmetics';
 import { createCompositor, type AccessoryHook, type AvatarState, type EyeState, type Layers } from './compositor';
 import { IDLE_POSES, K_LOOK, K_POSE, POSES, lookOffset, step, type Pose, type PoseName } from './poses';
 
@@ -52,7 +53,13 @@ export default function Avatar({ layers, auto, accessories }: Props) {
     let cur = clonePose(POSES.neutral), tgt = POSES.neutral, tgtName: PoseName = 'neutral';
     let until = 0, hoverCta = false;
     let cosmetics: Cosmetics | null = readCosmetics();
-    let lastKey = '', raf = 0, running = false, painted = false;
+    let lastKey = '', raf = 0, running = false, painted = false, disposed = false;
+    // La chapa "200" necesita JetBrains Mono 800: se descarga solo si hay cadena y se repinta al llegar.
+    function setCosmetics(c: Cosmetics | null) {
+      cosmetics = c;
+      if (c?.chain) loadChainFont().then(() => { if (!disposed) { lastKey = ''; wake(); } });
+      wake();
+    }
 
     // --- mirada: el centro de los ojos se mide en cada cálculo (cambia con resize y scroll) ---
     function lookAtScreen(sx: number, sy: number) {
@@ -166,15 +173,17 @@ export default function Avatar({ layers, auto, accessories }: Props) {
       on('avatar:pose', (d) => { if (d) applyPose(d.name, d.ms); }),
       on('avatar:wink', wink),
       on('avatar:look', (p) => { lookPoint = p; retarget(); }),
-      on('avatar:cosmetics', (c) => { cosmetics = c; wake(); }),
+      on('avatar:cosmetics', (c) => setCosmetics(c)),
       on('game:open', () => { autoOn = true; }),
     );
 
+    setCosmetics(cosmetics);
     later(blink, 1500);
     later(idle, 2200);
     wake();
 
     return () => {
+      disposed = true;
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
       offs.forEach((off) => off());

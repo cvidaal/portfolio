@@ -4,6 +4,8 @@ import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/600.css';
 import '../styles/global.css';
 import { t } from '../i18n';
+import { THEMES } from '../lib/theme';
+import { SAVE_KEY } from '../lib/save-key';
 
 interface Props {
   title: string;
@@ -38,6 +40,18 @@ const image = ogImage.startsWith('http') ? ogImage : `${SITE}${ogImage}`;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
+    <script is:inline define:vars={{ THEMES, SAVE_KEY }}>
+      // Tema guardado antes de la primera pintura (evita el parpadeo rojo -> azul/verde). Tolera storage bloqueado.
+      try {
+        var s = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
+        var th = s && THEMES[s.theme];
+        if (th && s.theme !== 'rojo') {
+          var st = document.documentElement.style;
+          st.setProperty('--acc', th.acc); st.setProperty('--accent', th.acc);
+          st.setProperty('--accent-hi', th.hi); st.setProperty('--avatar-filter', th.filter || 'none');
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body id="top">
     <a class="skip" href="#main">{t("nav.saltar")}</a>

@@ -23,6 +23,10 @@ import { t } from '../i18n';
   // Escritorio con ratón: en idle. Resto: solo si se abre el juego o hay accesorios/tema guardados.
   import { on } from '../lib/bus';
   import { needsCompositor, readCosmetics } from '../lib/save-key';
+  import { applyTheme } from '../lib/theme';
+
+  // El tema re-tiñe todo el sitio aunque el avatar aún no se haya montado (el juego emite aquí).
+  on('avatar:cosmetics', (c) => { if (c) applyTheme(c.theme); });
 
   const slot = document.getElementById('avatar-slot');
   if (slot) {
