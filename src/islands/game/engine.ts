@@ -100,7 +100,7 @@ export function startIncident(prev: GameState, kind: Incident['kind']): GameStat
 }
 
 export function tick(prev: GameState, dtSec: number): GameState {
-  if (prev.over) return prev;
+  if (prev.over) return { ...prev, events: [] };
   const dt = Math.max(0, Math.min(MAXDT, dtSec));
   const s = clone(prev);
   s.t -= dt;
@@ -135,9 +135,9 @@ export function tick(prev: GameState, dtSec: number): GameState {
 }
 
 export function route(prev: GameState, service: MsgType, msgId?: number): GameState {
-  if (prev.over || prev.msgs.length === 0) return prev;
+  if (prev.over || prev.msgs.length === 0) return { ...prev, events: [] };
   const m = msgId === undefined ? prev.msgs[0] : prev.msgs.find((x) => x.id === msgId);
-  if (!m) return prev;
+  if (!m) return { ...prev, events: [] };
   const s = clone(prev);
   const down = s.incident?.kind === 'caido' && s.incident.service === service;
   if (down || m.type !== service) {

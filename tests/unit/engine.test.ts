@@ -95,8 +95,9 @@ describe('puntuación', () => {
     const b = route(s0, 'pago');
     expect(b.msgs.map((m) => m.id)).toEqual([2]);
     const empty = withMsgs([]);
-    expect(route(empty, 'pago')).toBe(empty);
-    expect(route(s0, 'pago', 99)).toBe(s0);
+    const e = route(empty, 'pago');
+    expect(e).toEqual({ ...empty, events: [] });
+    expect(route(s0, 'pago', 99)).toEqual({ ...s0, events: [] });
   });
 });
 
@@ -118,8 +119,8 @@ describe('tiempo y fin de partida', () => {
     expect(s.dlq).toBe(5);
     expect(s.over).toBe(true);
     expect(s.events.map((e) => e.kind)).toEqual(['bad', 'end']);
-    expect(tick(s, 0.05)).toBe(s);
-    expect(route(s, 'pago')).toBe(s);
+    expect(tick(s, 0.05)).toEqual({ ...s, events: [] });
+    expect(route(s, 'pago')).toEqual({ ...s, events: [] });
   });
 
   test('45 s terminan la partida', () => {
@@ -135,7 +136,7 @@ describe('tiempo y fin de partida', () => {
     s = tick(s, 0.05);
     expect(s.over).toBe(true);
     expect(s.events).toEqual([{ kind: 'end' }]);
-    expect(tick(s, 0.05).events).toEqual([{ kind: 'end' }]); // sin cambios
+    expect(tick(s, 0.05).events).toEqual([]); // sin repetir el evento end
   });
 
   test('dt enorme se recorta: una pestaña oculta no vacía la cola', () => {
@@ -280,5 +281,19 @@ describe('incidentes', () => {
     }
     expect(max).toBeLessThanOrEqual(MAXQUEUE);
     expect(max).toBeGreaterThanOrEqual(5);
+  });
+});
+
+describe('llamadas sin efecto', () => {
+  test('tras un ok, un route sin efecto devuelve events vacío', () => {
+    const s = route(withMsgs([msg(1, 'pago')]), 'pago');
+    expect(s.events).toHaveLength(1);
+    const n = route(s, 'pago'); // cola vacía
+    expect(n.events).toEqual([]);
+    expect(n.score).toBe(s.score);
+    expect(n.combo).toBe(s.combo);
+    const u = route({ ...s, msgs: [msg(2, 'pago')] }, 'pago', 99); // msgId desconocido
+    expect(u.events).toEqual([]);
+    expect(u.msgs).toHaveLength(1);
   });
 });
