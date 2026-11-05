@@ -10,6 +10,8 @@ hechos:
   - Pagos con Stripe idempotentes y webhooks firmados.
   - De MVP en n8n a API en Go.
 stack: [Go, PostgreSQL, Stripe, Docker, OpenAPI]
+imagen: ../../../assets/proyectos/ab-panel.png
+imagenCaso: ../../../assets/proyectos/ab-reserva.png
 enlaces:
   - label: booking.acelerik.com
     href: https://booking.acelerik.com
@@ -17,6 +19,141 @@ enlaces:
     href: https://github.com/cvidaal/acelerik-demo
 caso: true
 estado: Demo pública
+rol: Diseño y desarrollo en solitario
+secciones:
+  - { id: problema, label: El problema, pendiente: true }
+  - { id: v1, label: La v1 }
+  - { id: por-que-go, label: Por qué Go }
+  - { id: decisiones, label: Decisiones técnicas }
+  - { id: arquitectura, label: Arquitectura }
+  - { id: testing, label: Testing }
+  - { id: aprendi, label: Qué aprendí, pendiente: true }
+  - { id: siguiente, label: Siguiente }
 ---
+import Seccion from '../../../components/case/Seccion.astro';
+import Decision from '../../../components/case/Decision.astro';
+import Evo from '../../../components/case/Evo.astro';
+import ArchDiagram from '../../../components/case/ArchDiagram.astro';
+import Ph from '../../../components/Ph.astro';
 
-[PLACEHOLDER: cuerpo del caso de estudio, se redacta en la Tarea 4]
+<Seccion id="problema" etiqueta="El problema" titulo="Cumpleaños gestionados por teléfono y libreta" pendiente>
+
+<Ph text="[PLACEHOLDER: confirmar con Carlos: cómo se gestionaban las reservas de cumpleaños antes de la herramienta]" />
+
+</Seccion>
+
+<Seccion id="v1" etiqueta="La v1" titulo="Una primera versión para validar la idea">
+
+La primera versión, Jungla Mágica, es una web en React con flujos de n8n y Supabase como base de datos ([repositorio jungla-admin](https://github.com/cvidaal/jungla-admin)). Sirvió para validar la idea.
+
+</Seccion>
+
+<Seccion id="por-que-go" etiqueta="Por qué Go" titulo="Funcionaba, pero no se podía tocar sin miedo">
+
+<Evo v1="v1 · Jungla Mágica" v1Detalle="React + n8n + Supabase. MVP que validó la idea." v2="v2 · API en Go" v2Detalle="Reglas de negocio en código: tipado, versionado y con tests." />
+
+<p style="margin-top:16px">Tres razones para reescribirlo:</p>
+
+- Go es mi lenguaje del día a día.
+- El código se edita con más confianza que un flujo de n8n: está tipado, versionado en Git y se puede probar.
+- Es mucho más barato de alojar: un binario estático dentro de un contenedor pequeño.
+
+</Seccion>
+
+<Seccion id="decisiones" etiqueta="Decisiones técnicas" titulo="Lo que no puede fallar en una reserva con pago">
+
+<div class="dec">
+<Decision titulo="Cero overbooking" abierta>
+
+Si dos familias piden la última plaza a la vez, solo entra una. Dentro de la transacción de creación, antes de contar las plazas ocupadas, se toma un lock consultivo de PostgreSQL sobre la fecha y la hora de la franja. La segunda petición espera, cuenta después de la primera y, si la franja ya tiene sus 3 fiestas, recibe un 409.
+
+```go
+// internal/booking/repository.go · Create
+tx, err := r.db.BeginTx(ctx, nil)
+// ...
+defer tx.Rollback()
+
+// Lock the slot for the duration of the transaction
+lockKey := item.Date + " " + item.StartTime
+if _, err := tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(hashtext($1)::bigint)`, lockKey); err != nil {
+	return Booking{}, err
+}
+
+var count int
+if err := tx.QueryRowContext(ctx, `
+	SELECT COUNT(*)
+	FROM bookings
+	WHERE date = $1
+	  AND start_time = $2
+	  AND booking_status <> 'cancelled'`,
+	item.Date, item.StartTime,
+).Scan(&count); err != nil {
+	return Booking{}, err
+}
+if count >= maxParties {
+	return Booking{}, errSlotFull
+}
+// ... INSERT de la reserva y de los cumpleañeros, en la misma transacción
+```
+
+</Decision>
+<Decision titulo="Pagos sin duplicados">
+
+Cada reserva crea su Checkout de Stripe con una idempotency key propia y, si ya hay un Checkout abierto, se reutiliza. El webhook verifica la firma, comprueba que la sesión pertenece a esa reserva y que importe y moneda coinciden. Un pago que llega tarde a una reserva cancelada se registra, pero nunca reabre la plaza.
+
+</Decision>
+<Decision titulo="Estados a prueba de errores">
+
+Las reservas siguen una máquina de estados. El cambio se valida dentro de una transacción con `SELECT … FOR UPDATE` sobre la fila, así que dos cambios simultáneos no se pisan. Un cambio no permitido devuelve un 409.
+
+</Decision>
+<Decision titulo="Plazas que se liberan solas">
+
+Una reserva sin Checkout caduca a la hora. Si hay Checkout, su caducidad en Stripe está alineada con esa misma hora y el webhook de sesión caducada cancela la reserva.
+
+</Decision>
+<Decision titulo="Listo para desplegar">
+
+Dockerfile multi-stage, binario estático (`CGO_ENABLED=0`) en una imagen Alpine, ejecución con usuario no root, un endpoint `/health` que hace ping a la base de datos y la especificación OpenAPI generada por Huma y servida en `/docs`.
+
+</Decision>
+</div>
+
+<p class="nota">Es una demo: el pago solo funciona con Stripe en modo de pruebas. El servidor rechaza crear Checkouts sin una clave de test y descarta los eventos en modo real.</p>
+
+</Seccion>
+
+<Seccion id="arquitectura" etiqueta="Arquitectura" titulo="Un proceso en Go y dos dependencias">
+
+Un único binario (Gin con Huma) expone la API, sirve el frontend compilado y habla con PostgreSQL y con Stripe. El código se divide en los módulos `booking`, `payment`, `config` y `demo`.
+
+<ArchDiagram />
+
+</Seccion>
+
+<Seccion id="testing" etiqueta="Testing" titulo="Lo que está cubierto, tal cual">
+
+<ul class="tests">
+  <li>Transiciones de estado válidas e inválidas.</li>
+  <li>Firma de los webhooks de Stripe.</li>
+  <li>Aplicación de las sesiones de pago: confirmación, webhook duplicado, pago tardío en reserva cancelada, importe o sesión incorrectos y caducidad.</li>
+  <li>Checkout bloqueado sin clave de test.</li>
+  <li>Acceso privado a la demo y rutas del frontend.</li>
+  <li>Configuración obligatoria para el despliegue alojado.</li>
+</ul>
+
+<p class="nota">Los tests de pagos usan una base de datos simulada. El bloqueo por franja todavía no tiene un test de concurrencia contra un PostgreSQL real.</p>
+
+</Seccion>
+
+<Seccion id="aprendi" etiqueta="Qué aprendí" pendiente>
+
+<Ph text="[PLACEHOLDER: texto de Carlos sobre qué aprendió con Acelerik Booking]" />
+
+</Seccion>
+
+<Seccion id="siguiente" etiqueta="Siguiente" titulo="Lo próximo">
+
+Siguiente: CI con GitHub Actions.
+
+</Seccion>

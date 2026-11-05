@@ -1,0 +1,19 @@
+---
+interface Props { titulo: string; abierta?: boolean }
+const { titulo, abierta = false } = Astro.props;
+---
+<div class:list={['d', { open: abierta }]}>
+  <h3>{titulo}</h3>
+  <slot />
+</div>
+<style>
+  .d { border: 1px solid var(--line); padding: 16px; background: var(--card); min-width: 0; }
+  .d.open { grid-column: 1 / -1; border-color: var(--accent); }
+  h3 { font-size: 20px; letter-spacing: -0.02em; margin-bottom: 6px; line-height: 1.1; }
+  .d :global(p) { font-size: 14.5px !important; margin: 0 0 8px !important; }
+  .d :global(p:last-child) { margin-bottom: 0 !important; }
+</style>
+<style is:global>
+  .dec { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 16px; }
+  @media (min-width: 700px) { .dec { grid-template-columns: 1fr 1fr; } }
+</style>

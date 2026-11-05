@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import { t } from '../i18n';
+import ProjectCard from './ProjectCard.astro';
+
+const proyectos = (await getCollection('proyectos')).sort((a, b) => a.data.orden - b.data.orden);
+---
+<div class="wrap projects">
+  {proyectos.map((p, i) => (
+    <ProjectCard proyecto={p} num={String(i + 1).padStart(2, '0')} destacada={p.data.orden === 1}
+      altImagen={p.data.slug === 'bot-pedidos-whatsapp' ? t('proyectos.bot.altLogo') : ''}
+      logo={p.data.slug === 'bot-pedidos-whatsapp'}>
+      {p.data.slug === 'bot-pedidos-whatsapp' && (
+        <div slot="imagen" class="wa">
+          <div class="bub"><span class="au mono">Nota de voz <span aria-hidden="true">━━━━━</span> {t('proyectos.bot.audioDuracion')}</span><br /><i>{t('proyectos.bot.audio')}</i></div>
+          <div class="bub me">{t('proyectos.bot.respuesta')}</div>
+        </div>
+      )}
+    </ProjectCard>
+  ))}
+</div>
+<style>
+  .projects { padding-block: 40px 24px; display: grid; grid-template-columns: 1fr; gap: 18px; }
+  @media (min-width: 900px) {
+    .projects { grid-template-columns: repeat(2, 1fr); }
+    .projects > :global(.feature) { grid-column: 1 / -1; }
+  }
+  .wa { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; padding: 22px; z-index: 2; }
+  .bub { background: #fff; color: #111; border-radius: 10px; padding: 8px 11px; font-size: 13px; line-height: 1.35; box-shadow: 2px 2px 0 var(--accent); max-width: 80%; }
+  .bub.me { align-self: flex-end; background: var(--bg); color: var(--paper); }
+  .au { font-size: 11px; }
+</style>

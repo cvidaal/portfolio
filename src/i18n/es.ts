@@ -51,6 +51,28 @@ export const es = {
   // Proyectos (textos de la sección; el contenido va en src/content/proyectos)
   'proyectos.verCaso': 'Ver caso de estudio',
   'proyectos.verTiendas': 'Ver en las tiendas',
+  'proyectos.bot.audio': '"Ponme 10 barras más para mañana"',
+  'proyectos.bot.audioDuracion': '0:07',
+  'proyectos.bot.respuesta': 'Le apunto para el viernes 30/10: 10 barras más. ¿Está bien?',
+  'proyectos.ab.altReserva': 'Captura de la pantalla de reserva de cumpleaños de Acelerik Booking',
+  'proyectos.bot.altLogo': 'Logotipo de Hnos. Sánchez',
+
+  // Caso de estudio (plantilla)
+  'caso.migas': 'Ruta',
+  'caso.inicio': 'cvidal.dev',
+  'caso.rol': 'Rol',
+  'caso.tipo': 'Tipo',
+  'caso.stack': 'Stack',
+  'caso.estado': 'Estado',
+  'caso.enlaces': 'Enlaces',
+  'caso.indice': 'Índice del caso',
+  'caso.volver': 'Volver a proyectos',
+  'caso.volverTodos': 'Todos',
+  'caso.siguiente': 'Siguiente caso',
+  'caso.anterior': 'Caso anterior',
+  'caso.tipo.producto': 'Producto propio',
+  'caso.tipo.cliente': 'Cliente',
+  'caso.tipo.practicas': 'Prácticas',
 
   // Sobre mí
   'sobre.texto': '[PLACEHOLDER: texto breve y personal de Carlos para Sobre mí]',

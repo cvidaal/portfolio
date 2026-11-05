@@ -15,9 +15,15 @@ const proyectos = defineCollection({
       hechos: z.array(z.string()),
       stack: z.array(z.string()),
       imagen: image().optional(),
+      imagenCaso: image().optional(),
       enlaces: z.array(z.object({ label: z.string(), href: z.string() })),
       caso: z.boolean(),
       estado: z.string().optional(),
+      rol: z.string().optional(),
+      // Índice del caso. `pendiente`: la sección depende de texto de Carlos y no se publica sin él.
+      secciones: z
+        .array(z.object({ id: z.string(), label: z.string(), pendiente: z.boolean().optional() }))
+        .optional(),
     }),
 });
 

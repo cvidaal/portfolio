@@ -1,0 +1,68 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { t } from '../i18n';
+import RisoImage from './RisoImage.astro';
+
+interface Props { proyecto: CollectionEntry<'proyectos'>; num: string; destacada?: boolean; altImagen?: string; logo?: boolean }
+const { proyecto, num, destacada = false, altImagen = '', logo = false } = Astro.props;
+const d = proyecto.data;
+const conCaso = d.caso;
+const href = `/proyectos/${d.slug}`;
+---
+<article class:list={['card', { feature: destacada }]}>
+  <span class="num mono" aria-hidden="true">{num}</span>
+  {d.imagen && (
+    <RisoImage src={d.imagen} alt={altImagen} logo={logo} ratio={destacada ? undefined : '16 / 10'}
+      position={destacada ? 'left top' : 'center'} fit={logo ? 'contain' : 'cover'}>
+      <slot name="imagen" />
+    </RisoImage>
+  )}
+  <div class="body">
+    <span class="tag mono"><i></i>{d.etiqueta}</span>
+    <h3>{d.titulo}</h3>
+    <p class="hook">{d.titular}</p>
+    {destacada && (
+      <ul class="facts mono">{d.hechos.map((h) => <li>{h}</li>)}</ul>
+    )}
+    <ul class="chips mono">{d.stack.map((s) => <li>{s}</li>)}</ul>
+    <div class="go mono">
+      {conCaso ? (
+        <a class="card-link" href={href}>{t('proyectos.verCaso')} <b aria-hidden="true">→</b></a>
+      ) : (
+        <span class="tiendas">
+          {d.enlaces.map((e) => <a href={e.href} rel="noopener" target="_blank">{e.label}</a>)}
+        </span>
+      )}
+    </div>
+  </div>
+</article>
+<style>
+  .card { position: relative; background: var(--card); border: 1px solid var(--line); display: flex; flex-direction: column; transition: transform 0.25s, border-color 0.25s; min-width: 0; }
+  .card:hover, .card:focus-within { border-color: var(--paper); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) { .card:hover { transform: translateY(-4px); } }
+  .num { position: absolute; left: 16px; top: 12px; z-index: 5; font-size: 11px; font-weight: 600; background: var(--bg); padding: 2px 6px; }
+  .body { padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; flex: 1; min-width: 0; }
+  .tag { display: inline-flex; gap: 8px; align-items: center; font-size: 10.5px; font-weight: 600; color: var(--accent-hi); letter-spacing: 0.06em; text-transform: uppercase; }
+  .tag i { width: 7px; height: 7px; background: var(--accent); display: inline-block; flex: none; }
+  h3 { font-size: clamp(28px, 7vw, 34px); line-height: 0.95; letter-spacing: -0.035em; overflow-wrap: anywhere; }
+  .feature h3 { font-size: clamp(32px, 8vw, 46px); }
+  .hook { margin: 0; font-size: 16px; line-height: 1.35; color: #d9d4cc; }
+  .facts { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 6px; font-size: 12px; color: var(--muted); }
+  .facts li::before { content: '→ '; color: var(--accent-hi); }
+  .chips { list-style: none; margin: auto 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips li { font-size: 10.5px; font-weight: 600; border: 1px solid #3a3a3e; padding: 3px 7px; }
+  .go { margin-top: 10px; font-size: 12px; font-weight: 600; border-top: 1px solid var(--line); padding-top: 12px; }
+  .go a { text-decoration: none; }
+  .card-link { display: flex; justify-content: space-between; }
+  /* Toda la tarjeta es el enlace al caso. */
+  .card-link::after { content: ''; position: absolute; inset: 0; z-index: 4; }
+  .card-link b { color: var(--accent-hi); transition: transform 0.2s; display: inline-block; }
+  .card:hover .card-link b { transform: translateX(6px); }
+  .tiendas { display: flex; gap: 18px; flex-wrap: wrap; }
+  .tiendas a { color: var(--paper); text-underline-offset: 4px; padding: 6px 0; }
+  .tiendas a:hover { color: var(--accent-hi); }
+  @media (min-width: 900px) {
+    .feature { display: grid; grid-template-columns: 1.25fr 1fr; }
+    .feature :global(.riso) { aspect-ratio: auto; min-height: 340px; }
+  }
+</style>

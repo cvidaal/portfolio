@@ -10,6 +10,7 @@ hechos:
   - Pagos integrados con Stripe.
   - Publicada en App Store y Google Play.
 stack: [Flutter, Stripe, Firebase]
+imagen: ../../../assets/proyectos/benditaburger_app.png
 enlaces:
   - label: App Store
     href: https://apps.apple.com/es/app/bendita-burger/id1525077901

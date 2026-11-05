@@ -1,5 +1,4 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { t } from '../i18n';
 import { isPlaceholder, showPlaceholders } from '../lib/placeholder';
@@ -7,12 +6,12 @@ import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 import Poster from '../components/Poster.astro';
 import Experience from '../components/Experience.astro';
+import Projects from '../components/Projects.astro';
 import Stack from '../components/Stack.astro';
 import About from '../components/About.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
 
-const proyectos = (await getCollection('proyectos')).sort((a, b) => a.data.orden - b.data.orden);
 // Sin texto real de Carlos, "Sobre mí" no se publica en producción (solo se muestra en dev).
 const mostrarSobreMi = showPlaceholders || !isPlaceholder(t('sobre.texto'));
 ---
@@ -28,10 +27,7 @@ const mostrarSobreMi = showPlaceholders || !isPlaceholder(t('sobre.texto'));
 
     <section id="proyectos" aria-label={t('seccion.proyectos')}>
       <Poster num="02" titulo={t('seccion.proyectos')} meta={t('seccion.proyectosResumen')} />
-      {/* TAREA 4: sustituir esta lista provisional por las tarjetas de proyecto */}
-      <ul class="wrap proyectos-slot mono" data-slot="proyectos">
-        {proyectos.map((p) => <li><strong>{p.data.titulo}</strong> · {p.data.etiqueta}</li>)}
-      </ul>
+      <Projects />
       <Stack />
     </section>
 
@@ -50,7 +46,5 @@ const mostrarSobreMi = showPlaceholders || !isPlaceholder(t('sobre.texto'));
   <Footer />
 </Base>
 <style>
-  .proyectos-slot { list-style: none; margin: 0 auto; padding-block: 40px 24px; display: grid; gap: 10px; font-size: 13px; color: var(--muted); }
-  .proyectos-slot strong { color: var(--paper); }
   section[id] { scroll-margin-top: 52px; }
 </style>

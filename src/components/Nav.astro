@@ -1,13 +1,15 @@
 ---
 import { t } from '../i18n';
+interface Props { base?: string }
+const { base = '' } = Astro.props;
 ---
 <header class="nav">
   <nav class="wrap nav-in" aria-label={t('nav.aria')}>
     <a class="nav-home" href="/">{t('nav.inicio')}</a>
     <ul class="mono">
-      <li><a href="#experiencia">{t('nav.experiencia')}</a></li>
-      <li><a href="#proyectos">{t('nav.proyectos')}</a></li>
-      <li><a href="#contacto">{t('nav.contacto')}</a></li>
+      <li><a href={`${base}#experiencia`}>{t('nav.experiencia')}</a></li>
+      <li><a href={`${base}#proyectos`}>{t('nav.proyectos')}</a></li>
+      <li><a href={`${base}#contacto`}>{t('nav.contacto')}</a></li>
       <li><a class="nav-cv" href={t('cv.href')}>{t('nav.cv')}</a></li>
     </ul>
   </nav>

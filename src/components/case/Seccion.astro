@@ -1,0 +1,31 @@
+---
+import { showPlaceholders } from '../../lib/placeholder';
+interface Props { id: string; etiqueta: string; titulo?: string; pendiente?: boolean }
+const { id, etiqueta, titulo, pendiente = false } = Astro.props;
+// Una sección cuyo contenido principal es un hueco para Carlos solo se muestra en desarrollo.
+const visible = !pendiente || showPlaceholders;
+---
+{visible && (
+  <section class="sec" id={id} aria-labelledby={`${id}-t`}>
+    <div class="lbl mono">{etiqueta}</div>
+    <h2 id={`${id}-t`}>{titulo ?? etiqueta}</h2>
+    <slot />
+  </section>
+)}
+<style>
+  .sec { padding-bottom: 34px; margin-bottom: 34px; border-bottom: 1px solid var(--line); counter-increment: sec; scroll-margin-top: 68px; min-width: 0; }
+  .lbl { font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .lbl::before { content: counter(sec, decimal-leading-zero) ' · '; }
+  h2 { margin: 6px 0 14px; font-size: clamp(28px, 6vw, 40px); line-height: 0.98; letter-spacing: -0.035em; overflow-wrap: anywhere; }
+  .sec :global(p) { font-size: 17px; line-height: 1.55; color: #d9d4cc; max-width: 680px; margin: 0 0 12px; }
+  .sec :global(code) { font-family: var(--font-mono); font-size: 0.86em; color: var(--paper); background: #1c1c20; padding: 1px 5px; }
+  .sec :global(pre code) { background: none; padding: 0; font-size: inherit; }
+  .sec :global(pre) { margin: 14px 0 0; background: #0b0b0d; border-left: 3px solid var(--accent); padding: 14px 16px; font: 12.5px/1.6 var(--font-mono); color: #d9d4cc; overflow-x: auto; max-width: 100%; }
+  .sec :global(a) { color: var(--accent-hi); text-underline-offset: 3px; }
+  .sec :global(ol.flujo), .sec :global(ul.tests) { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; font: 13px/1.5 var(--font-mono); color: #d9d4cc; max-width: 680px; }
+  .sec :global(ul.tests li)::before { content: '✓ '; color: var(--accent-hi); }
+  .sec :global(ol.flujo) { counter-reset: paso; }
+  .sec :global(ol.flujo li) { counter-increment: paso; padding-left: 2.2em; position: relative; }
+  .sec :global(ol.flujo li)::before { content: counter(paso, decimal-leading-zero); position: absolute; left: 0; color: var(--accent-hi); font-weight: 600; }
+  .sec :global(.nota) { font: 12.5px/1.55 var(--font-mono); color: var(--muted); max-width: 680px; margin-top: 14px; }
+</style>
