@@ -1,6 +1,5 @@
 // Genera public/og.png (1200x630): fondo #101012, avatar en tinta roja a la derecha, texto a la izquierda.
-// Avatar provisional: duotono (luminancia -> tinta roja sobre crema). Tarea 5 lo sustituye por el avatar definitivo
-// y se vuelve a ejecutar: `node scripts/make-og.mjs`.
+// Avatar: public/avatar/static.webp (ya recoloreado a tinta roja por scripts/avatar/bake.mjs).
 // Nota: sharp renderiza el SVG con las fuentes del sistema (no ve las fuentes autoalojadas),
 // por eso el texto usa una pila de respaldo (Arial Black / Arial / sans-serif).
 import sharp from 'sharp';
@@ -8,22 +7,11 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SRC = join(root, 'docs/superpowers/prototypes/avatar-ref.webp');
+const SRC = join(root, 'public/avatar/static.webp');
 const OUT = join(root, 'public/og.png');
 const W = 1200, H = 630, AV = 630;
 
-const INK = [216, 38, 28];
-const PAPER = [241, 237, 230];
-
-// Duotono: oscuro -> tinta roja, claro -> papel.
-const { data, info } = await sharp(SRC).resize(AV, AV).greyscale().raw().toBuffer({ resolveWithObject: true });
-const rgba = Buffer.alloc(info.width * info.height * 4);
-for (let i = 0; i < info.width * info.height; i++) {
-  const l = Math.min(1, Math.max(0, (data[i] - 90) / 140));
-  for (let c = 0; c < 3; c++) rgba[i * 4 + c] = Math.round(INK[c] + (PAPER[c] - INK[c]) * l);
-  rgba[i * 4 + 3] = 255;
-}
-const avatar = await sharp(rgba, { raw: { width: info.width, height: info.height, channels: 4 } }).png().toBuffer();
+const avatar = await sharp(SRC).resize(AV, AV).png().toBuffer();
 
 const FONT = "'Arial Black', Arial, Helvetica, sans-serif";
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
