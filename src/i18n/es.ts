@@ -10,6 +10,7 @@ export const es = {
   'nav.contacto': 'Contacto',
   'nav.cv': 'CV',
   'nav.aria': 'Navegación principal',
+  'nav.saltar': 'Saltar al contenido',
 
   // Hero
   'hero.nombre1': 'Carlos',
@@ -66,6 +67,7 @@ export const es = {
   'contacto.github': 'https://github.com/cvidaal',
   'contacto.copiar': 'Copiar email',
   'contacto.copiado': 'Email copiado',
+  'contacto.copiarError': 'No se pudo copiar. Cópialo a mano: carlosvidal.developer@gmail.com',
 
   // Juego
   'juego.notaSecreta': '[PLACEHOLDER: nota personal de Carlos al desbloquear "Lo has visto todo"]',

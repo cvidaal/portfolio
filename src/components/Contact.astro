@@ -13,7 +13,7 @@ const github = t('contacto.github');
   "linkedin": "<a href={linkedin} rel="noopener">{linkedin}</a>",
   "github": "<a href={github} rel="noopener">{github}</a>"
 {'}'}</pre>
-    <button type="button" class="copy" data-email={email} data-copied={t('contacto.copiado')} aria-label={`${t('contacto.copiar')}: ${email}`}>
+    <button type="button" class="copy" data-email={email} data-copied={t("contacto.copiado")} data-error={t("contacto.copiarError")} aria-label={`${t('contacto.copiar')}: ${email}`}>
       <span class="copy-txt" aria-hidden="true">{t('contacto.copiar')}</span>
     </button>
     <span class="sr-only" role="status" aria-live="polite" id="copy-status"></span>
@@ -33,4 +33,5 @@ const github = t('contacto.github');
   pre a { color: var(--paper); }
   .copy { font: 600 12px var(--font-mono); background: var(--accent-hi); color: var(--bg); border: 0; padding: 10px 14px; cursor: pointer; }
   .copy:hover { background: var(--paper); }
+  .copy-err { display: block; margin-top: 10px; color: var(--paper); }
 </style>

@@ -36,3 +36,10 @@ describe('i18n', () => {
       ['Go', 'APIs REST', 'Webhooks', 'GCP Pub/Sub', 'Docker', 'Testing', 'PostgreSQL']);
   });
 });
+
+describe('i18n: textos de accesibilidad y errores', () => {
+  it('claves de salto y fallo de copia', () => {
+    expect(t('nav.saltar')).toBe('Saltar al contenido');
+    expect(t('contacto.copiarError')).toMatch(/No se pudo copiar/);
+  });
+});

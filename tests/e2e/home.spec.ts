@@ -49,3 +49,17 @@ test('a11y sin violaciones serias', async ({ page }) => {
   const bad = r.violations.filter((v) => v.impact === 'critical' || v.impact === 'serious');
   expect(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(' | ')}`)).toEqual([]);
 });
+
+test('copiar email: si falla el portapapeles se avisa y no se dice copiado', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.reject(new Error('denied')) }, configurable: true });
+    document.execCommand = () => false;
+  });
+  await page.goto('/');
+  const btn = page.getByRole('button', { name: /copiar email/i });
+  await btn.click();
+  await expect(page.locator('#copy-status')).toContainText('No se pudo copiar');
+  await expect(page.locator('#copy-status')).toBeVisible();
+  await expect(page.getByText('Email copiado')).toHaveCount(0);
+  await expect(btn.locator('.copy-txt')).toHaveText('Copiar email');
+});

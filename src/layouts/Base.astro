@@ -3,6 +3,7 @@ import '@fontsource-variable/bricolage-grotesque/wght.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/600.css';
 import '../styles/global.css';
+import { t } from '../i18n';
 
 interface Props {
   title: string;
@@ -39,7 +40,7 @@ const image = ogImage.startsWith('http') ? ogImage : `${SITE}${ogImage}`;
     <meta name="twitter:image" content={image} />
   </head>
   <body id="top">
-    <a class="skip" href="#main">Saltar al contenido</a>
+    <a class="skip" href="#main">{t("nav.saltar")}</a>
     <slot />
   </body>
 </html>
