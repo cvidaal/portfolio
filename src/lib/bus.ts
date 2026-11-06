@@ -6,8 +6,6 @@ export interface Cosmetics { shades: boolean; chain: boolean; theme: Theme }
 export interface BusEvents {
   'avatar:pose': { name: PoseName; ms: number };
   'avatar:wink': undefined;
-  /** Punto de pantalla al que mirar; null = volver a seguir al ratón. */
-  'avatar:look': { x: number; y: number } | null;
   'avatar:cosmetics': Cosmetics;
   /** Se abre el tablero: el avatar pausa sus gestos sueltos y reacciona al juego. */
   'game:open': undefined;

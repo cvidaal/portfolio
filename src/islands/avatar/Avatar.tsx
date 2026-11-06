@@ -50,7 +50,6 @@ export default function Avatar({ layers, auto, accessories }: Props) {
     let gameOpen = document.documentElement.dataset.game === 'open';
     let autoOn = auto || gameOpen;
     let look = { x: 0, y: 0 }, target = { x: 0, y: 0 };
-    let lookPoint: { x: number; y: number } | null = null;
     let lastMouse: { x: number; y: number; t: number } | null = null;
     const closed: [EyeState, EyeState] = [0, 0];
     let cur = clonePose(POSES.neutral), tgt = POSES.neutral, tgtName: PoseName = 'neutral';
@@ -72,7 +71,7 @@ export default function Avatar({ layers, auto, accessories }: Props) {
       return lookOffset(sx - fx, sy - fy);
     }
     function retarget() {
-      const p = lookPoint ?? lastMouse;
+      const p = lastMouse;
       target = p ? lookAtScreen(p.x, p.y) : { x: 0, y: 0 };
       wake();
     }
@@ -153,12 +152,12 @@ export default function Avatar({ layers, auto, accessories }: Props) {
         if (v > SURPRISE_SPEED && !(tgtName === 'surprised' && now < until)) emit('avatar:pose', { name: 'surprised', ms: 700 });
       }
       lastMouse = { x: e.clientX, y: e.clientY, t: now };
-      if (!lookPoint) { target = lookAtScreen(e.clientX, e.clientY); wake(); }
+      target = lookAtScreen(e.clientX, e.clientY); wake();
     }, { passive: true });
     // el ratón sale de la página: los ojos vuelven al centro
     listen<MouseEvent>(window, 'mouseout', (e) => { if (!e.relatedTarget) { lastMouse = null; retarget(); } });
     listen(window, 'resize', retarget, { passive: true });
-    listen(window, 'scroll', () => { if (lastMouse || lookPoint) retarget(); }, { passive: true });
+    listen(window, 'scroll', () => { if (lastMouse) retarget(); }, { passive: true });
     listen(document, 'visibilitychange', () => {
       if (document.hidden) { cancelAnimationFrame(raf); running = false; } else wake();
     });
@@ -176,7 +175,6 @@ export default function Avatar({ layers, auto, accessories }: Props) {
     offs.push(
       on('avatar:pose', (d) => { if (d) applyPose(d.name, d.ms); }),
       on('avatar:wink', wink),
-      on('avatar:look', (p) => { lookPoint = p; retarget(); }),
       on('avatar:cosmetics', (c) => setCosmetics(c)),
       on('game:open', () => { gameOpen = true; autoOn = true; }),
       // al cerrar: en escritorio vuelven los gestos; en el resto se paran

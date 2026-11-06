@@ -2,7 +2,7 @@
   --bg: #101012;
   --paper: #F1EDE6;
   --accent: #E4251B;
-  --acc: #E4251B; /* alias del acento que re-escribe applyTheme junto con --accent */
+  --acc: #E4251B; /* alias de --accent (nombre de la spec); lo re-escribe applyTheme y lo comprueban tests/unit/cosmetics y e2e/cosmetics+game: no borrar */
   --accent-hi: #F04336; /* texto pequeño: contraste >= 4.5 sobre #101012 y #17171A, y con texto oscuro encima */
   --on-accent: #000000; /* texto pequeño sobre el acento: >= 4.5:1 en los tres temas (rojo 4.58, azul 4.67, verde 11.7); #101012 se queda en 4.14 */
   --ink: #D8261C;

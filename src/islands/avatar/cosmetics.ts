@@ -3,8 +3,6 @@
 import type { AccessoryHook, Layers } from './compositor';
 import { INK, PAPER, TINT } from './compositor';
 
-export { THEMES, applyTheme } from '../../lib/theme';
-
 type Pt = [number, number];
 type Quad = [Pt, Pt, Pt, Pt];
 
