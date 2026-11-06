@@ -1,6 +1,6 @@
 export {};
 
-const btn = document.querySelector<HTMLButtonElement>('button.copy[data-email]');
+const btn = document.querySelector<HTMLButtonElement>('button[data-email]');
 const status = document.getElementById('copy-status');
 const label = btn?.querySelector('.copy-txt') ?? null;
 // Etiqueta original, guardada una sola vez: un segundo clic durante los 2 s no debe capturar "Email copiado".

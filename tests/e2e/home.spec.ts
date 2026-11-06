@@ -40,7 +40,7 @@ test('sin scroll horizontal a 320px', async ({ page }) => {
 test('copiar email', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/');
-  await page.getByRole('button', { name: /copiar email/i }).click();
+  await page.getByRole('button', { name: /^Email/ }).click();
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('carlosvidal.developer@gmail.com');
 });
 
@@ -57,7 +57,7 @@ test('copiar email: si falla el portapapeles se avisa y no se dice copiado', asy
     document.execCommand = () => false;
   });
   await page.goto('/');
-  const btn = page.getByRole('button', { name: /copiar email/i });
+  const btn = page.getByRole('button', { name: /^Email/ });
   await btn.click();
   await expect(page.locator('#copy-status')).toContainText('No se pudo copiar');
   await expect(page.locator('#copy-status')).toBeVisible();
@@ -68,7 +68,7 @@ test('copiar email: si falla el portapapeles se avisa y no se dice copiado', asy
 test('copiar email: dos clics rápidos no dejan la etiqueta atascada', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/');
-  const btn = page.getByRole('button', { name: /copiar email/i });
+  const btn = page.getByRole('button', { name: /^Email/ });
   await btn.click();
   await expect(btn.locator('.copy-txt')).toHaveText('Email copiado');
   await btn.click();

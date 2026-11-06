@@ -53,7 +53,7 @@ CHROME_PATH="$LOCALAPPDATA/ms-playwright/chromium-1248/chrome-win64/chrome.exe" 
 ## Antes de publicar
 
 - [ ] Añadir `public/CarlosVidal_Backend_CV.pdf` (el botón de CV apunta a `/CarlosVidal_Backend_CV.pdf`).
-- [ ] Rellenar los placeholders, que en producción se ocultan y solo se ven en `npm run dev`: "Sobre mí" (`sobre.texto`), los dos "Qué aprendí", "El problema" de Acelerik y la nota secreta del juego (`juego.notaSecreta`). "Sobre mí" no se publica hasta que tenga texto real.
+- [ ] Rellenar los placeholders, que en producción se ocultan y solo se ven en `npm run dev`: los dos "Qué aprendí", "El problema" de Acelerik y la nota secreta del juego (`juego.notaSecreta`).
 - [ ] Comprobar cómo se despliega: el repositorio no incluye configuración de Vercel, Netlify ni CI. Confirma si `main` se despliega solo antes de fusionar `rediseno-portfolio`.
 - [ ] `npm run check`, `npm test` y `npm run build && npm run test:e2e` en verde (el e2e falla si queda algún `[PLACEHOLDER` en `dist/`).
 
