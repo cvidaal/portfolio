@@ -18,6 +18,7 @@ test('sin JS se lee todo', async ({ browser }) => {
     await expect(page.getByText(txt, { exact: false }).first()).toBeVisible();
   await expect(page.locator('#avatar-slot img')).toBeVisible();
   await expect(page.locator('#play-game')).toBeHidden();
+  await expect(page.locator('.arcade')).toBeHidden();
   await ctx.close();
 });
 

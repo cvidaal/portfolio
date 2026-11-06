@@ -151,11 +151,69 @@
 .pm-btn.b2 { background: transparent; color: var(--paper); border: 1px solid #3a3a3e; }
 .pm-btn.b2:hover { border-color: var(--paper); }
 
-/* ---------- vitrina ---------- */
-.vitrina { padding-block: 8px 28px; }
-.v-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 10px; }
-.v-head h2 { font: 600 11px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--paper); }
-.v-head p { margin: 0; font-size: 11px; color: var(--muted); }
+/* ---------- máquina arcade (entrada al juego, bajo los CTA del hero) ---------- */
+/* Con JS ocupa su hueco desde la primera pintura pero no se ve ni se pulsa hasta hidratarse (sin salto de
+   maquetación); sin JS, Hero.astro la quita con <noscript>. Con reduced motion, global.css para el desfile y el parpadeo. */
+.arcade { position: relative; margin-top: 30px; max-width: 430px; visibility: hidden; }
+.arcade.ready { visibility: visible; }
+.arcade-play {
+  display: flex; gap: 14px; align-items: stretch; width: 100%; padding: 12px; text-align: left; cursor: pointer;
+  font: inherit; color: var(--paper); border: 2px solid var(--accent);
+  background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--accent) 10%, transparent) 0 6px, transparent 6px 12px), var(--card);
+  transition: transform .15s;
+}
+@media (hover: hover) { .arcade-play:hover { transform: translateY(-3px); } }
+.arcade-play:focus-visible, .arcade .chip:focus-visible { outline: 2px solid var(--accent-hi); outline-offset: 3px; }
+.arcade .screen {
+  width: 150px; flex: none; display: grid; gap: 5px; align-content: center; padding: 8px; overflow: hidden;
+  background: #0B0B0D; border: 1px solid var(--line);
+}
+.arcade .m {
+  display: flex; gap: 6px; align-items: center; font-size: 10px; color: var(--paper); white-space: nowrap;
+  animation: arcade-slide 2.4s linear infinite;
+}
+.arcade .m:nth-child(2) { animation-delay: -1.6s; }
+.arcade .m:nth-child(3) { animation-delay: -.8s; }
+.arcade .shape { width: 8px; height: 8px; }
+@keyframes arcade-slide {
+  0% { transform: translateX(-110%); opacity: 0; }
+  15% { opacity: 1; }
+  70% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(120%); opacity: 0; }
+}
+.arcade .info { display: flex; flex-direction: column; justify-content: space-between; gap: 6px; min-width: 0; }
+.arcade .tt { font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
+.arcade .sub { font: 13px/1.4 var(--font-display); color: var(--paper); }
+.arcade .start { font-size: 13px; font-weight: 800; color: var(--accent-hi); animation: arcade-blink 1.1s steps(2) infinite; }
+@keyframes arcade-blink { 50% { opacity: 0; } }
+.arcade .chip {
+  position: absolute; right: -1px; top: -15px; z-index: 1; min-height: 28px; padding: 5px 9px; cursor: pointer;
+  font: 600 11px var(--font-mono); color: #000; background: var(--paper); border: 0;
+}
+.arcade .chip:hover { background: var(--accent-hi); }
+@media (max-width: 420px) {
+  .arcade-play { gap: 10px; padding: 10px; }
+  .arcade .screen { width: 118px; padding: 6px; }
+  .arcade .m { font-size: 9.5px; gap: 5px; }
+  .arcade .tt { font-size: 16px; }
+  .arcade .sub { font-size: 12px; }
+}
+
+/* ---------- panel de logros (diálogo modal) ---------- */
+dialog.logros {
+  width: min(640px, calc(100vw - 32px)); max-width: none; max-height: none; padding: 0; overflow: visible;
+  color: var(--paper); background: var(--bg); border: 2px solid var(--accent);
+}
+dialog.logros::backdrop { background: rgb(0 0 0 / .72); }
+/* el scroll va dentro: un clic en la barra de scroll no cuenta como clic en el fondo (que cierra) */
+.logros-in { padding: 16px; max-height: min(86vh, 760px); overflow-y: auto; }
+.logros-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.logros-head h2 { margin: 0; font: 600 13px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--paper); }
+.logros-head .logros-close { margin-top: 0; align-self: center; }
+.logros-close kbd { font: inherit; color: var(--muted); margin-left: 4px; }
+.logros-intro { margin: 6px 0 12px; font-size: 11px; color: var(--muted); }
+
+/* ---------- vitrina (contenido del panel) ---------- */
 .shelf {
   list-style: none; margin: 0; padding: 0; display: grid; gap: 8px;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));

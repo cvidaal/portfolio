@@ -8,7 +8,12 @@ describe('i18n', () => {
     expect(locale).toBe('es');
     expect(t('hero.rol')).toBe('Backend Developer · Go');
     expect(t('hero.estado')).toBe('Abierto a oportunidades · Backend / Go');
-    expect(t('hero.juego')).toBe('▶ ¿Te atreves a hacer mi trabajo?');
+    expect(t('arcade.titulo')).toBe('PUB/SUB RUSH');
+    expect(t('arcade.sub')).toBe('Haz mi trabajo durante 45 segundos. Si aguantas, desbloqueas cosas.');
+    expect(t('arcade.start')).toBe('▶ PULSA START');
+    expect(t('arcade.logros')).toBe('LOGROS {n}/{total}');
+    expect(t('logros.panel.titulo')).toBe('Logros');
+    expect(t('juego.verLogros')).toBe('Ver logros');
   });
   it('sin Full Stack, Claude ni IA como herramienta', () => {
     const all = Object.values(es).join(' ');

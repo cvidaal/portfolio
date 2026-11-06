@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 const KEY = 'pubsub-rush:v1';
 const CANVAS = '#avatar-slot canvas[data-ready="1"]';
@@ -47,6 +48,16 @@ async function openGame(page: Page) {
   await expect(play).toBeVisible();
   await play.click();
   await expect(page.locator('.game-board')).toBeVisible();
+}
+
+/** Abre el panel de logros desde la pegatina de la tarjeta arcade. */
+async function openLogros(page: Page) {
+  const chip = page.locator('.arcade .chip');
+  await expect(chip).toBeVisible();
+  await chip.click();
+  const dlg = page.getByRole('dialog', { name: 'Logros' });
+  await expect(dlg).toBeVisible();
+  return dlg;
 }
 
 /** Fuerza el fin: manda cada mensaje al servicio equivocado hasta 5 dead letters. */
@@ -176,7 +187,7 @@ test.describe('móvil 320', () => {
   });
 });
 
-test('salir a mitad de turno: la vitrina refleja el progreso y un interruptor no lo pisa', async ({ page }) => {
+test('salir a mitad de turno: el panel de logros refleja el progreso y un interruptor no lo pisa', async ({ page }) => {
   await withSave(page, { best: 10, unlocked: ['hola', 'racha'] });
   await openGame(page);
   let routed = 0;
@@ -190,7 +201,7 @@ test('salir a mitad de turno: la vitrina refleja el progreso y un interruptor no
   expect(routed).toBe(3);
   await expect(score(page)).not.toHaveText('0');
   await page.keyboard.press('Escape');
-  const shelf = page.locator('.vitrina');
+  const shelf = await openLogros(page);
   const racha = shelf.locator('[data-ach="racha"] .pg');
   await expect(racha).not.toHaveText('racha máx.: 0/10');
   const progress = await racha.textContent();
@@ -202,12 +213,13 @@ test('salir a mitad de turno: la vitrina refleja el progreso y un interruptor no
   expect(saved.shades).toBe(true);
   expect(saved.progress.maxCombo).toBe(n);
   await page.reload();
-  await expect(page.locator('.vitrina [data-ach="racha"] .pg')).toHaveText(progress!);
+  await expect((await openLogros(page)).locator('[data-ach="racha"] .pg')).toHaveText(progress!);
 });
 
-test('interruptor de la vitrina durante la partida no pisa el progreso en curso', async ({ page }) => {
+test('durante la partida no se llega a los logros; tras el turno, un interruptor no pisa el progreso', async ({ page }) => {
   await withSave(page, { best: 10, unlocked: ['hola', 'racha'] });
   await openGame(page);
+  await expect(page.locator('.arcade')).toBeHidden(); // la tarjeta (y su pegatina) se aparta con el texto del hero
   let routed = 0;
   const deadline = Date.now() + 15000;
   while (routed < 2 && Date.now() < deadline) {
@@ -216,7 +228,9 @@ test('interruptor de la vitrina durante la partida no pisa el progreso en curso'
     await page.locator(`.game-board .svc[data-type="${type}"]`).click();
     routed++;
   }
-  await page.locator('.vitrina').getByRole('button', { name: /gafas/i }).click();
+  await forceEnd(page);
+  await page.locator('.postmortem').getByRole('button', { name: 'Ver logros' }).click();
+  await page.getByRole('dialog', { name: 'Logros' }).getByRole('button', { name: /gafas/i }).click();
   const saved = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)!), KEY);
   expect(saved.shades).toBe(true);
   expect(saved.progress.maxCombo).toBeGreaterThanOrEqual(1);
@@ -348,22 +362,21 @@ test.describe('post-mortem', () => {
   });
 });
 
-test.describe('vitrina', () => {
+test.describe('logros en panel', () => {
   test('progreso visible sin haber jugado', async ({ page }) => {
     await page.goto('/');
-    const shelf = page.locator('.vitrina');
-    await expect(shelf).toBeVisible();
+    const shelf = await openLogros(page);
     await expect(shelf).toContainText('racha máx.: 0/10');
     await expect(shelf).toContainText('webhooks: 0/5');
     await expect(shelf).toContainText('puntos: 0/500');
-    await expect(shelf.getByRole('button')).toHaveCount(0); // nada desbloqueado, nada que activar
+    await expect(shelf.locator('.shelf').getByRole('button')).toHaveCount(0); // nada desbloqueado, nada que activar
   });
 
   test('accesorios activables con save preinyectado', async ({ page }) => {
     await recordBus(page);
     await withSave(page, { best: 120, unlocked: ['hola', 'racha'], progress: { maxCombo: 10, maxHooks: 2, maxScore: 120 } });
     await page.goto('/');
-    const shelf = page.locator('.vitrina');
+    const shelf = await openLogros(page);
     await expect(shelf).toContainText('racha máx.: 10/10');
     await expect(shelf).toContainText('webhooks: 2/5');
     await expect(shelf).toContainText('120');
@@ -380,16 +393,18 @@ test.describe('vitrina', () => {
   test('tema desbloqueado cambia el acento del sitio', async ({ page }) => {
     await withSave(page, { best: 200, unlocked: ['hola', 'cero'] });
     await page.goto('/');
-    await page.locator('.vitrina').getByRole('button', { name: /azul/i }).click();
+    const shelf = await openLogros(page);
+    await shelf.getByRole('button', { name: /azul/i }).click();
     await expect.poll(() => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--acc').trim())).toBe('#2F6BFF');
-    await page.locator('.vitrina').getByRole('button', { name: /rojo/i }).click();
+    await shelf.getByRole('button', { name: /rojo/i }).click();
     await expect.poll(() => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--acc').trim().toUpperCase())).toBe('#E4251B');
   });
 
   test('nota secreta oculta en producción si es placeholder', async ({ page }) => {
     await withSave(page, { best: 600, unlocked: ['hola', 'racha', 'hooks', 'cero', 'mil', 'secreto'], shades: true, chain: true });
     await page.goto('/');
-    const secret = page.locator('.vitrina [data-ach="secreto"]');
+    await expect(page.locator('.arcade .chip')).toHaveText('LOGROS 6/6');
+    const secret = (await openLogros(page)).locator('[data-ach="secreto"]');
     await expect(secret).toContainText('Lo has visto todo');
     await expect(secret.locator('.nota')).toBeVisible();
     await expect(page.locator('body')).not.toContainText('PLACEHOLDER');
@@ -397,8 +412,161 @@ test.describe('vitrina', () => {
 
   test('secreto bloqueado no revela su nombre', async ({ page }) => {
     await page.goto('/');
-    const secret = page.locator('.vitrina [data-ach="secreto"]');
+    const secret = (await openLogros(page)).locator('[data-ach="secreto"]');
     await expect(secret).toContainText('???');
     await expect(secret).not.toContainText('Lo has visto todo');
   });
 });
+
+test.describe('máquina arcade', () => {
+  test('la vitrina no está en la página y la tarjeta muestra título, START y logros', async ({ page }) => {
+    await page.goto('/');
+    const card = page.locator('.arcade');
+    await expect(card).toBeVisible();
+    await expect(card).toContainText('PUB/SUB RUSH');
+    await expect(card).toContainText('Haz mi trabajo durante 45 segundos. Si aguantas, desbloqueas cosas.');
+    await expect(card).toContainText('PULSA START');
+    for (const r of ['POST /pagos', 'POST /reservas', 'POST /avisos']) await expect(card).toContainText(r);
+    await expect(card.locator('.chip')).toHaveText('LOGROS 0/6');
+    // la vitrina ya no vive en el flujo de la página
+    await expect(page.locator('.vitrina')).toHaveCount(0);
+    await expect(page.locator('[data-ach]')).toHaveCount(0);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    // la tarjeta es el activador del juego (id de siempre)
+    await expect(page.locator('#play-game')).toBeVisible();
+    expect(await page.locator('#play-game').evaluate((e) => !!e.closest('.arcade'))).toBe(true);
+  });
+
+  test('el contador refleja los logros desbloqueados', async ({ page }) => {
+    await withSave(page, { best: 50, unlocked: ['hola', 'racha'] });
+    await page.goto('/');
+    await expect(page.locator('.arcade .chip')).toHaveText('LOGROS 2/6');
+  });
+
+  test('primer acierto: LOGROS pasa de 0/6 a 1/6 al volver', async ({ page }) => {
+    await openGame(page);
+    await expect(page.locator('.game-hint')).toContainText(/pulsa [123]/);
+    const key = (await page.locator('.game-hint').textContent())!.match(/pulsa ([123])/)![1];
+    await page.keyboard.press(key);
+    await expect(score(page)).toHaveText('10');
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.arcade .chip')).toHaveText('LOGROS 1/6');
+  });
+
+  test('Enter en la tarjeta abre el tablero', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#play-game')).toBeVisible();
+    await page.locator('#play-game').focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('.game-board')).toBeVisible();
+  });
+
+  test('clic en el cuerpo de la tarjeta (no en el título) abre el tablero', async ({ page }) => {
+    await page.goto('/');
+    const card = page.locator('.arcade');
+    await expect(card).toBeVisible();
+    const box = (await card.boundingBox())!;
+    await page.mouse.click(box.x + 6, box.y + box.height - 6); // esquina inferior izquierda
+    await expect(page.locator('.game-board')).toBeVisible();
+  });
+
+  test('la pegatina abre el panel sin abrir el juego; Escape lo cierra y devuelve el foco', async ({ page }) => {
+    await recordBus(page);
+    await page.goto('/');
+    const chip = page.locator('.arcade .chip');
+    const dlg = await openLogros(page);
+    await expect(page.locator('.game-board')).toHaveCount(0);
+    expect(await events(page, 'game:open')).toHaveLength(0);
+    await expect(dlg).toHaveAttribute('aria-modal', 'true');
+    await expect(dlg.getByRole('heading', { name: 'Logros' })).toBeVisible();
+    expect(await page.evaluate(() => !!document.activeElement?.closest('[role="dialog"]'))).toBe(true);
+    // Tab y Shift+Tab no salen del panel
+    for (const key of ['Tab', 'Shift+Tab']) {
+      for (let i = 0; i < 10; i++) {
+        await page.keyboard.press(key);
+        expect(await page.evaluate(() => !!document.activeElement?.closest('[role="dialog"]'))).toBe(true);
+      }
+    }
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(chip).toBeFocused();
+    await expect(page.locator('.game-board')).toHaveCount(0);
+    // el botón de cerrar también devuelve el foco
+    await chip.click();
+    await page.getByRole('dialog').getByRole('button', { name: 'Cerrar' }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(chip).toBeFocused();
+  });
+
+  test('el panel no se abre dos veces', async ({ page }) => {
+    await page.goto('/');
+    await openLogros(page);
+    await page.locator('.arcade .chip').evaluate((b) => { (b as HTMLElement).click(); (b as HTMLElement).click(); });
+    await expect(page.locator('dialog, [role="dialog"]')).toHaveCount(1);
+  });
+
+  test('en el post-mortem, "Ver logros" abre el panel y Escape solo cierra el panel', async ({ page }) => {
+    await veteran(page);
+    await openGame(page);
+    await forceEnd(page);
+    const ver = page.locator('.postmortem').getByRole('button', { name: 'Ver logros' });
+    await ver.click();
+    const dlg = page.getByRole('dialog', { name: 'Logros' });
+    await expect(dlg).toBeVisible();
+    await expect(dlg.locator('[data-ach="hola"]')).toHaveClass(/on/);
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.locator('.postmortem')).toBeVisible();
+    await expect(ver).toBeFocused();
+  });
+
+  test('con reduced motion la pantalla no desfila y START no parpadea', async ({ page }) => {
+    await page.goto('/');
+    const anim = () => page.locator('.arcade .screen .m, .arcade .start').evaluateAll((els) => els.map((e) => getComputedStyle(e).animationName));
+    await expect(page.locator('.arcade')).toBeVisible();
+    const moving = await anim();
+    expect(moving).toHaveLength(4);
+    expect(moving.every((n) => n !== 'none')).toBe(true);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    expect((await anim()).every((n) => n === 'none')).toBe(true);
+  });
+
+  test('sin JS la tarjeta no aparece', async ({ browser }) => {
+    const ctx = await browser.newContext({ javaScriptEnabled: false });
+    const page = await ctx.newPage();
+    await page.goto('/');
+    await expect(page.locator('#hero-titulo')).toBeVisible();
+    await expect(page.locator('.arcade')).toBeHidden();
+    await expect(page.getByText('PUB/SUB RUSH')).toBeHidden();
+    await ctx.close();
+  });
+
+  test('axe sin violaciones serias con el panel abierto', async ({ page }) => {
+    await withSave(page, { best: 600, unlocked: ['hola', 'racha', 'cero'], shades: true });
+    await page.goto('/');
+    await openLogros(page);
+    const r = await new AxeBuilder({ page }).analyze();
+    const bad = r.violations.filter((v) => v.impact === 'critical' || v.impact === 'serious');
+    expect(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(' | ')}`)).toEqual([]);
+  });
+});
+
+for (const width of [320, 375]) {
+  test.describe(`tarjeta arcade a ${width} px`, () => {
+    test.use({ viewport: { width, height: 740 }, isMobile: true, hasTouch: true });
+    test('visible, sin scroll horizontal, y el panel cabe', async ({ page }) => {
+      await page.goto('/');
+      await expect(page.locator('.arcade')).toBeVisible();
+      const o = await overflow(page);
+      expect(o.scrollWidth, JSON.stringify(o)).toBeLessThanOrEqual(width);
+      await page.locator('.arcade .chip').tap();
+      const dlg = page.getByRole('dialog', { name: 'Logros' });
+      await expect(dlg).toBeVisible();
+      const box = (await dlg.boundingBox())!;
+      expect(box.x).toBeGreaterThanOrEqual(0);
+      expect(box.x + box.width).toBeLessThanOrEqual(width);
+      const o2 = await overflow(page);
+      expect(o2.scrollWidth, JSON.stringify(o2)).toBeLessThanOrEqual(width);
+    });
+  });
+}

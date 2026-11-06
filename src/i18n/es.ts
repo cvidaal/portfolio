@@ -19,8 +19,13 @@ export const es = {
   'hero.verProyectos': 'Ver proyectos',
   'hero.descargarCv': 'Descargar CV',
   'hero.estado': 'Abierto a oportunidades · Backend / Go',
-  'hero.juego': '▶ ¿Te atreves a hacer mi trabajo?',
   'hero.avatarAlt': 'Ilustración de Carlos Vidal en tinta roja estilo risografía',
+
+  // Entrada al juego: máquina arcade bajo los CTA del hero (spec it2 §2)
+  'arcade.titulo': 'PUB/SUB RUSH',
+  'arcade.sub': 'Haz mi trabajo durante 45 segundos. Si aguantas, desbloqueas cosas.',
+  'arcade.start': '▶ PULSA START',
+  'arcade.logros': 'LOGROS {n}/{total}',
 
   // CV
   'cv.href': '/CarlosVidal_Backend_CV.pdf',
@@ -166,9 +171,11 @@ export const es = {
   'juego.url': 'https://www.cvidal.dev',
   'juego.otra': 'Otra partida',
   'juego.volver': 'Volver',
+  'juego.verLogros': 'Ver logros',
 
-  // Juego: vitrina
-  'vitrina.titulo': 'Vitrina de logros',
+  // Juego: vitrina (panel de logros)
+  'logros.panel.titulo': 'Logros',
+  'logros.panel.cerrar': 'Cerrar',
   'vitrina.intro': 'Se guardan solo en este navegador.',
   'vitrina.oculto': '???',
   'vitrina.recompensa': 'Recompensa: {r}',

@@ -1,4 +1,4 @@
-// Vitrina de logros bajo el hero: progreso, recompensas e interruptores de accesorios y temas.
+// Vitrina de logros (contenido del panel de logros): progreso, recompensas e interruptores de accesorios y temas.
 import { t } from '../../i18n';
 import { isPlaceholder, showPlaceholders } from '../../lib/placeholder';
 import { ACHIEVEMENTS, type Save, type ThemeId } from './achievements';
@@ -22,11 +22,8 @@ export default function Shelf({ save, onChange }: Props) {
     toggle(label, save.theme === id, () => onChange((s) => ({ ...s, theme: s.theme === id ? 'rojo' : id })));
 
   return (
-    <section className="vitrina mono" aria-labelledby="vitrina-titulo">
-      <div className="v-head">
-        <h2 id="vitrina-titulo">{t('vitrina.titulo')}</h2>
-        <p>{t('vitrina.intro')}</p>
-      </div>
+    <>
+      <p className="logros-intro">{t('vitrina.intro')}</p>
       <ul className="shelf">
         {ACHIEVEMENTS.map((a) => {
           const on = has(a.id);
@@ -53,6 +50,6 @@ export default function Shelf({ save, onChange }: Props) {
           )}
         </li>
       </ul>
-    </section>
+    </>
   );
 }

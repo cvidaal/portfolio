@@ -1,4 +1,4 @@
-// Isla del juego "Pub/Sub Rush" (sección 7 de la spec): vitrina en su sitio y tablero en #game-slot.
+// Isla del juego "Pub/Sub Rush": tarjeta arcade en el hero, tablero en #game-slot y logros en un panel (spec it2 §2).
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { t } from '../../i18n';
@@ -10,6 +10,8 @@ import { fmt, hintFor, isFirstGame, isTypingTarget, keyToService, settle, trackW
 import Board, { type Flash, type Float, type Toast } from './Board';
 import PostMortem from './PostMortem';
 import Shelf from './Shelf';
+import ArcadeCard from './ArcadeCard';
+import LogrosDialog from './LogrosDialog';
 import './game.css';
 
 const FLOAT_MS = 800;
@@ -30,6 +32,7 @@ export default function Game() {
   const [flash, setFlash] = useState<Flash>({});
   const [result, setResult] = useState<{ record: boolean; best: number } | null>(null);
   const [round, setRound] = useState(0); // cambia en cada partida nueva: enfoca el tablero
+  const [logros, setLogros] = useState(false); // panel de logros abierto (una sola instancia)
 
   const saveRef = useRef(save);
   const gameRef = useRef<GameState | null>(null);
@@ -43,6 +46,8 @@ export default function Game() {
   const lastRef = useRef(0);
   const uid = useRef(0);
   const boardRef = useRef<HTMLDivElement>(null);
+  const logrosRef = useRef<{ trigger: HTMLElement | null } | null>(null);
+  const focusBackRef = useRef<HTMLElement | null>(null);
 
   // --- guardado ---
   function commitSave(next: Save) {
@@ -163,6 +168,20 @@ export default function Game() {
     rafRef.current = 0;
   }
 
+  // --- panel de logros ---
+  function openLogros(trigger: HTMLElement) {
+    if (logrosRef.current) return; // ya abierto: nunca dos paneles
+    logrosRef.current = { trigger };
+    setLogros(true);
+  }
+  function closeLogros() {
+    const cur = logrosRef.current;
+    if (!cur) return;
+    logrosRef.current = null;
+    focusBackRef.current = cur.trigger;
+    setLogros(false); // el foco vuelve en un efecto: con el modal aún abierto, el resto de la página es inerte
+  }
+
   // --- abrir / cerrar ---
   const heroTxt = () => document.getElementById('hero-txt');
   function newGame() {
@@ -181,6 +200,7 @@ export default function Game() {
     startLoop();
   }
   function openBoard() {
+    if (logrosRef.current) return;
     if (!openRef.current) {
       openRef.current = true;
       document.documentElement.dataset.game = 'open'; // antes del evento: el avatar lo lee al montarse
@@ -214,15 +234,12 @@ export default function Game() {
   const handlers = useRef({ openBoard, closeBoard, doRoute, startLoop, stopLoop });
   handlers.current = { openBoard, closeBoard, doRoute, startLoop, stopLoop };
 
-  // Hidratado: cargar el guardado y mostrar el botón del hero.
+  // Hidratado: cargar el guardado y mostrar la tarjeta arcade.
   useEffect(() => {
     const s = loadSave();
     saveRef.current = s;
     setSave(s);
     setMounted(true);
-    const play = document.getElementById('play-game');
-    const onPlay = () => handlers.current.openBoard();
-    if (play) { play.hidden = false; play.addEventListener('click', onPlay); }
     const onVis = () => {
       const g = gameRef.current;
       if (document.hidden) handlers.current.stopLoop();
@@ -230,7 +247,6 @@ export default function Game() {
     };
     document.addEventListener('visibilitychange', onVis);
     return () => {
-      play?.removeEventListener('click', onPlay);
       document.removeEventListener('visibilitychange', onVis);
       handlers.current.stopLoop();
     };
@@ -240,6 +256,7 @@ export default function Game() {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
+      if (logrosRef.current) return; // con el panel de logros abierto, las teclas son suyas
       if (e.key === 'Escape') { e.preventDefault(); handlers.current.closeBoard(true); return; }
       if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || isTypingTarget(e.target)) return;
       const g = gameRef.current;
@@ -253,6 +270,13 @@ export default function Game() {
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
+  // Panel de logros cerrado (ya fuera de la capa superior): el foco vuelve al disparador.
+  useEffect(() => {
+    if (logros || !focusBackRef.current) return;
+    focusBackRef.current.focus();
+    focusBackRef.current = null;
+  }, [logros]);
+
   // Partida nueva: el foco entra en el tablero.
   useEffect(() => {
     if (round > 0) boardRef.current?.focus();
@@ -264,7 +288,18 @@ export default function Game() {
 
   return (
     <>
-      <Shelf save={save} onChange={changeFromShelf} />
+      <ArcadeCard
+        unlocked={save.unlocked.length}
+        total={ACHIEVEMENTS.length}
+        ready={mounted}
+        onPlay={() => openBoard()}
+        onLogros={openLogros}
+      />
+      {logros && (
+        <LogrosDialog onClose={closeLogros}>
+          <Shelf save={save} onChange={changeFromShelf} />
+        </LogrosDialog>
+      )}
       {open && game && slot && createPortal(
         <Board
           ref={boardRef}
@@ -287,6 +322,7 @@ export default function Game() {
               record={result.record}
               onAgain={newGame}
               onBack={() => closeBoard(true)}
+              onLogros={openLogros}
               onLeave={() => closeBoard(false)}
             />
           )}

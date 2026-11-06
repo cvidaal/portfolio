@@ -13,11 +13,13 @@ interface Props {
   record: boolean;
   onAgain: () => void;
   onBack: () => void;
+  /** Abre el panel de logros (el foco vuelve a este botón al cerrarlo). */
+  onLogros: (trigger: HTMLElement) => void;
   /** Al seguir un enlace del puente: cerrar el tablero sin robar el foco. */
   onLeave: () => void;
 }
 
-export default function PostMortem({ game: g, best, worst, record, onAgain, onBack, onLeave }: Props) {
+export default function PostMortem({ game: g, best, worst, record, onAgain, onBack, onLogros, onLeave }: Props) {
   const again = useRef<HTMLButtonElement>(null);
   const [status, setStatus] = useState<{ text: string; bad: boolean } | null>(null);
   useEffect(() => { again.current?.focus(); }, []);
@@ -62,6 +64,7 @@ export default function PostMortem({ game: g, best, worst, record, onAgain, onBa
       <div className="pm-row">
         <button type="button" className="pm-btn b1" ref={again} onClick={onAgain} aria-describedby="pm-title pm-score">{t('juego.otra')}</button>
         <button type="button" className="pm-btn b2" onClick={onBack}>{t('juego.volver')}</button>
+        <button type="button" className="pm-btn b2" aria-haspopup="dialog" onClick={(e) => onLogros(e.currentTarget)}>{t('juego.verLogros')}</button>
       </div>
     </section>
   );

@@ -12,18 +12,16 @@ import Game from '../islands/game/Game';
         <a class="btn b2 mono" id="cta-cv" href={t('cv.href')} download={t('cv.descarga')}>{t('hero.descargarCv')}</a>
       </div>
       <p class="st mono"><i aria-hidden="true"></i>{t('hero.estado')}</p>
-      <button type="button" class="play mono" id="play-game" hidden>{t('hero.juego')}</button>
+      <!-- Entrada al juego (máquina arcade, #play-game) y panel de logros. Sin JS no se puede jugar:
+           la tarjeta no aparece. Con JS ocupa su hueco desde la primera pintura (sin salto) y se ve al hidratarse. -->
+      <noscript><style>.arcade { display: none !important; }</style></noscript>
+      <Game client:idle />
     </div>
     <div class="game-slot" id="game-slot"></div>
     <div class="avatar" id="avatar-slot">
       <img src="/avatar/static.webp" srcset="/avatar/static-480.webp 480w, /avatar/static-800.webp 800w, /avatar/static.webp 1254w"
         sizes="(min-width: 820px) 560px, min(100vw, 420px)" alt={t('hero.avatarAlt')} width="1254" height="1254" fetchpriority="high" decoding="async" />
     </div>
-  </div>
-  <div class="wrap">
-    <!-- Juego y vitrina: sin JS no se puede jugar, así que la vitrina no se muestra -->
-    <noscript><style>.vitrina { display: none !important; }</style></noscript>
-    <Game client:idle />
   </div>
 </section>
 <script>
@@ -53,7 +51,7 @@ import Game from '../islands/game/Game';
     // El avatar lee <html data-game> al montarse: un game:open durante la carga no se pierde.
     offs.push(
       on('game:open', () => start(desktop)),
-      // accesorios o tema activados desde la vitrina (el avatar los lee del guardado al montarse)
+      // accesorios o tema activados desde el panel de logros (el avatar los lee del guardado al montarse)
       on('avatar:cosmetics', (c) => { if (needsCompositor(c)) start(desktop); }),
     );
     if (desktop) {
@@ -86,9 +84,6 @@ import Game from '../islands/game/Game';
   .b2:hover { border-color: var(--paper); }
   .st { font-size: 11px; color: var(--muted); margin: 18px 0 0; }
   .st i { display: inline-block; width: 7px; height: 7px; background: var(--accent); margin-right: 7px; }
-  .play { margin-top: 22px; display: inline-flex; gap: 8px; align-items: center; font-size: 12px; color: var(--paper); border: 1px dashed var(--accent); padding: 9px 12px; cursor: pointer; background: transparent; }
-  .play[hidden] { display: none; }
-  .play:hover { background: var(--accent); color: var(--on-accent); }
   @media (min-width: 820px) {
     .hero-in { grid-template-columns: 1.05fr 1fr; min-height: 560px; padding-block: 40px; }
     .avatar, .hero.playing .avatar { order: 0; width: 100%; max-width: 560px; margin: 0; }
