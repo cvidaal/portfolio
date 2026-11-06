@@ -21,7 +21,7 @@ const num = Object.fromEntries(
 );
 ---
 <Base title={t('meta.titulo')} description={t('meta.descripcion')} path="/">
-  <Nav />
+  <Nav autoHide />
   <main id="main">
     <Hero />
 
@@ -49,6 +49,9 @@ const num = Object.fromEntries(
     </section>
   </main>
   <Footer />
+  <script>
+    import "../scripts/nav-reveal";
+  </script>
 </Base>
 <style>
   section[id] { scroll-margin-top: 52px; }

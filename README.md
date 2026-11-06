@@ -48,7 +48,7 @@ CHROME_PATH="$LOCALAPPDATA/ms-playwright/chromium-1248/chrome-win64/chrome.exe" 
 
 - **Capas del avatar** (`public/avatar/`): `npm run avatar:bake`. Lee `assets-src/avatar-ref.webp` y escribe `base.webp`, párpados, cejas, labios, `layers.json`, la imagen estática `static.webp` y sus variantes `static-480.webp` y `static-800.webp` (srcset del hero). Los resultados se versionan; vuelve a ejecutarlo solo si cambia la imagen de referencia o la lógica de `scripts/avatar/`.
 - **Imagen og** (`public/og.png`, 1200x630, PNG de paleta < 300 KB para que WhatsApp la admita): `node scripts/make-og.mjs`. Parte de `public/avatar/static.webp`, así que ejecútalo después de `avatar:bake` si este cambia.
-- **Favicons** (`public/favicon.svg` es la fuente; `favicon.png` de 192 px, también apple-touch-icon, y `favicon.ico` de 16/32/48): `node scripts/make-favicon.mjs`.
+- **Favicons** (`assets-src/face.webp` es la fuente; `face-nav.webp` (menú), `favicon.png` de 192 px, también apple-touch-icon, y `favicon.ico` de 16/32/48): `node scripts/make-favicon.mjs`.
 
 ## Antes de publicar
 

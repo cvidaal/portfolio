@@ -4,7 +4,7 @@ export const es = {
   'meta.descripcion': 'Carlos Vidal, Backend Developer en Go: APIs, integraciones y testing.',
 
   // Navegación
-  'nav.inicio': 'Carlos Vidal',
+  'nav.inicio': 'Inicio',
   'nav.experiencia': 'Experiencia',
   'nav.proyectos': 'Proyectos',
   'nav.contacto': 'Contacto',
