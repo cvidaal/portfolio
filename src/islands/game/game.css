@@ -153,17 +153,20 @@
 
 /* ---------- máquina arcade (entrada al juego, bajo los CTA del hero) ---------- */
 /* Con JS ocupa su hueco desde la primera pintura pero no se ve ni se pulsa hasta hidratarse (sin salto de
-   maquetación); sin JS, Hero.astro la quita con <noscript>. Con reduced motion, global.css para el desfile y el parpadeo. */
+   maquetación); sin JS, Hero.astro la quita con <noscript>. Con movimiento reducido, global.css desactiva todas las animaciones (el parpadeo de START incluido). */
 .arcade { position: relative; margin-top: 30px; max-width: 430px; visibility: hidden; }
 .arcade.ready { visibility: visible; }
 .arcade-play {
   display: flex; gap: 14px; align-items: stretch; width: 100%; padding: 12px; text-align: left; cursor: pointer;
   font: inherit; color: var(--paper); border: 2px solid var(--accent);
   background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--accent) 10%, transparent) 0 6px, transparent 6px 12px), var(--card);
-  transition: transform .15s;
+  transition: transform .15s; position: relative;
 }
 @media (hover: hover) { .arcade-play:hover { transform: translateY(-3px); } }
-.arcade-play:focus-visible, .arcade .chip:focus-visible { outline: 2px solid var(--accent-hi); outline-offset: 3px; }
+.arcade-play:has(#play-game:focus-visible) { outline: 2px solid var(--accent-hi); outline-offset: 3px; }
+.arcade button.tt { display: block; padding: 0; margin: 0; border: 0; background: none; color: inherit; font-family: inherit; text-align: left; cursor: pointer; }
+.arcade button.tt::after { content: ''; position: absolute; inset: 0; }
+.arcade .chip:focus-visible { outline: 2px solid var(--accent-hi); outline-offset: 3px; }
 .arcade .screen {
   width: 150px; flex: none; display: grid; gap: 5px; align-content: center; padding: 8px; overflow: hidden;
   background: #0B0B0D; border: 1px solid var(--line);
@@ -190,6 +193,8 @@
   position: absolute; right: -1px; top: -15px; z-index: 1; min-height: 28px; padding: 5px 9px; cursor: pointer;
   font: 600 11px var(--font-mono); color: #000; background: var(--paper); border: 0;
 }
+/* Área pulsable de 44 px de alto sin cambiar el aspecto de la pegatina (84x28). */
+.arcade .chip::before { content: ''; position: absolute; inset: -8px 0; }
 .arcade .chip:hover { background: var(--accent-hi); }
 @media (max-width: 420px) {
   .arcade-play { gap: 10px; padding: 10px; }

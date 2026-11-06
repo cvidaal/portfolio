@@ -1,4 +1,5 @@
 :root {
+  --nav-h: 52px; /* altura de la barra fija: una sola fila hasta 320 px */
   --bg: #101012;
   --paper: #F1EDE6;
   --accent: #E4251B;

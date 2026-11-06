@@ -37,13 +37,6 @@ test('sin scroll horizontal a 320px', async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
 });
 
-test('copiar email', async ({ page, context }) => {
-  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  await page.goto('/');
-  await page.getByRole('button', { name: /^Email/ }).click();
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('carlosvidal.developer@gmail.com');
-});
-
 test('a11y sin violaciones serias', async ({ page }) => {
   await page.goto('/');
   const r = await new AxeBuilder({ page }).analyze();

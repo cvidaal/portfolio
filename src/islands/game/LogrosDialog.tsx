@@ -49,7 +49,6 @@ export default function LogrosDialog({ onClose, children }: Props) {
     <dialog
       ref={ref}
       className="logros mono"
-      role="dialog"
       aria-modal="true"
       aria-labelledby="logros-titulo"
       onKeyDown={onKeyDown}

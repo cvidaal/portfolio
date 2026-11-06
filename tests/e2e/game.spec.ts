@@ -437,6 +437,28 @@ test.describe('máquina arcade', () => {
     expect(await page.locator('#play-game').evaluate((e) => !!e.closest('.arcade'))).toBe(true);
   });
 
+  test('la pegatina LOGROS tiene un área pulsable de al menos 44 px de alto', async ({ page }) => {
+    await page.goto('/');
+    const chip = page.locator('.arcade .chip');
+    await expect(chip).toBeVisible();
+    const hit = await chip.evaluate((e) => {
+      const r = e.getBoundingClientRect();
+      const c = getComputedStyle(e, '::before');
+      return { h: r.height, w: r.width, before: parseFloat(c.height), top: parseFloat(c.top), bottom: parseFloat(c.bottom) };
+    });
+    expect(Math.max(hit.h, hit.before)).toBeGreaterThanOrEqual(44);
+    expect(hit.w).toBeLessThan(120); // el aspecto no cambia: sigue siendo una pegatina pequeña
+    // Un clic 6 px por debajo del borde visible también la activa.
+    const b = (await chip.boundingBox())!;
+    await page.mouse.click(b.x + b.width / 2, b.y + b.height + 6);
+    await expect(page.getByRole('dialog', { name: 'Logros' })).toBeVisible();
+  });
+
+  test('#play-game tiene un nombre accesible corto', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByRole('button', { name: 'PUB/SUB RUSH: jugar (45 s)' })).toHaveAttribute('id', 'play-game');
+  });
+
   test('el contador refleja los logros desbloqueados', async ({ page }) => {
     await withSave(page, { best: 50, unlocked: ['hola', 'racha'] });
     await page.goto('/');
@@ -479,12 +501,14 @@ test.describe('máquina arcade', () => {
     expect(await events(page, 'game:open')).toHaveLength(0);
     await expect(dlg).toHaveAttribute('aria-modal', 'true');
     await expect(dlg.getByRole('heading', { name: 'Logros' })).toBeVisible();
-    expect(await page.evaluate(() => !!document.activeElement?.closest('[role="dialog"]'))).toBe(true);
-    // Tab y Shift+Tab no salen del panel
+    expect(await page.evaluate(() => !!document.activeElement?.closest('dialog'))).toBe(true);
+    // Tab y Shift+Tab no salen del panel: N+1 pulsaciones dan la vuelta completa
+    const n = await dlg.locator('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])').count();
+    expect(n).toBeGreaterThan(0);
     for (const key of ['Tab', 'Shift+Tab']) {
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < n + 1; i++) {
         await page.keyboard.press(key);
-        expect(await page.evaluate(() => !!document.activeElement?.closest('[role="dialog"]'))).toBe(true);
+        expect(await page.evaluate(() => !!document.activeElement?.closest('dialog'))).toBe(true);
       }
     }
     await page.keyboard.press('Escape');

@@ -22,12 +22,14 @@ test.describe('contacto con iconos', () => {
       await expect(a).toHaveAttribute('target', '_blank');
       await expect(a).toHaveAttribute('rel', /noopener/);
     }
-    await expect(page.locator(grid).getByRole('link', { name: /^CV/ })).toHaveAttribute('href', '/CarlosVidal_Backend_CV.pdf');
+    const cv = page.locator(grid).getByRole('link', { name: /^CV/ });
+    await expect(cv).toHaveAttribute('href', '/CarlosVidal_Backend_CV.pdf');
+    await expect(cv).toHaveAttribute('download', t('cv.descarga'));
   });
 
-  test('los iconos de marca van incrustados en el HTML, sin peticiones externas', async ({ page }) => {
+  test('los iconos de marca van incrustados en el HTML, sin peticiones externas', async ({ page, baseURL }) => {
     const ext: string[] = [];
-    page.on('request', (r) => { if (!r.url().startsWith('http://localhost:4321')) ext.push(r.url()); });
+    page.on('request', (r) => { if (new URL(r.url()).origin !== new URL(baseURL!).origin) ext.push(r.url()); });
     await page.goto('/', { waitUntil: 'networkidle' });
     for (const name of ['LinkedIn', 'GitHub']) {
       const svg = page.locator(grid).getByRole('link', { name: new RegExp(`^${name}`) }).locator('svg');

@@ -26,6 +26,7 @@ export const es = {
   'arcade.sub': 'Haz mi trabajo durante 45 segundos. Si aguantas, desbloqueas cosas.',
   'arcade.start': '▶ PULSA START',
   'arcade.logros': 'LOGROS {n}/{total}',
+  'arcade.jugar': 'PUB/SUB RUSH: jugar (45 s)',
 
   // CV
   'cv.href': '/CarlosVidal_Backend_CV.pdf',

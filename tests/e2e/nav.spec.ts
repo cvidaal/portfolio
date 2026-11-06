@@ -36,7 +36,7 @@ test.describe('menú con la cara', () => {
     await page.goto(CASO);
     await expect(page.locator(`${bar} a.nav-home`)).toHaveAttribute('href', '/');
     await page.locator(`${bar} a.nav-home`).click();
-    await expect(page).toHaveURL('http://localhost:4321/');
+    expect(new URL(page.url()).pathname).toBe('/');
     await expect(page.locator('h1').first()).toContainText('Carlos');
   });
 
@@ -61,7 +61,31 @@ test.describe('menú con la cara', () => {
     await page.keyboard.press('Tab');
     const enBarra = await page.evaluate(() => !!document.activeElement?.closest('header.nav'));
     expect(enBarra).toBe(false);
+    await expect(page.locator('#cta-proyectos')).toBeFocused();
   });
+
+  for (const w of [320, 360]) {
+    test(`a ${w} px la barra ocupa una sola fila, sin scroll horizontal, y el ancla deja visible el cartel`, async ({ page }) => {
+      await page.setViewportSize({ width: w, height: 700 });
+      await page.goto('/');
+      await page.evaluate(() => document.getElementById('experiencia')!.scrollIntoView());
+      await expect(page.locator(bar)).toBeVisible();
+      expect((await page.locator(bar).boundingBox())!.height).toBeLessThanOrEqual(60);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(w);
+      for (const a of await page.locator(`${bar} ul a`).all()) {
+        const b = (await a.boundingBox())!;
+        expect(b.height).toBeGreaterThanOrEqual(24);
+        expect(b.x + b.width).toBeLessThanOrEqual(w);
+      }
+      await page.locator(`${bar} a[href="#contacto"]`).click();
+      await page.waitForFunction(() => location.hash === '#contacto');
+      await page.waitForTimeout(600);
+      const label = (await page.locator('#contacto .poster').boundingBox())!;
+      const nav = (await page.locator(bar).boundingBox())!;
+      expect(label.y).toBeGreaterThanOrEqual(nav.y + nav.height - 1);
+      expect(label.y).toBeLessThan(nav.y + nav.height + 40);
+    });
+  }
 
   test.describe('sin JS', () => {
     test.use({ javaScriptEnabled: false });

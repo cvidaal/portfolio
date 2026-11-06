@@ -21,18 +21,19 @@ interface Props {
 export default function ArcadeCard({ unlocked, total, ready, onPlay, onLogros }: Props) {
   return (
     <div className={`arcade mono${ready ? ' ready' : ''}`}>
-      <button type="button" className="arcade-play" id="play-game" onClick={onPlay}>
+      <div className="arcade-play">
         <span className="screen" aria-hidden="true">
           {MSGS.map(([type, shape]) => (
             <span key={type} className="m"><i className={`shape ${shape}`} />{fmt(t('juego.msg'), { ruta: ruta(type) })}</span>
           ))}
         </span>
         <span className="info">
-          <span className="tt">{t('arcade.titulo')}</span>
+          {/* El boton envuelve solo el titulo y se estira sobre la tarjeta: su nombre accesible (corto) contiene el texto visible. */}
+          <button type="button" className="tt" id="play-game" aria-label={t('arcade.jugar')} onClick={onPlay}>{t('arcade.titulo')}</button>
           <span className="sub">{t('arcade.sub')}</span>
-          <span className="start">{t('arcade.start')}</span>
+          <span className="start" aria-hidden="true">{t('arcade.start')}</span>
         </span>
-      </button>
+      </div>
       <button type="button" className="chip" aria-haspopup="dialog" onClick={(e) => onLogros(e.currentTarget)}>
         {fmt(t('arcade.logros'), { n: unlocked, total })}
       </button>

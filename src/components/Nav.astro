@@ -36,14 +36,19 @@ const { base = '', autoHide = false } = Astro.props;
 <style>
   .nav { view-transition-name: site-nav; position: sticky; top: 0; z-index: 20; background: rgba(16, 16, 18, 0.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(6px); transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s; }
   :global(html.nav-hidden) .nav { transform: translateY(-100%); opacity: 0; visibility: hidden; }
-  .nav-in { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0 12px; min-height: 52px; }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap; gap: 0 8px; min-height: var(--nav-h); }
   /* La cara va sola (transparente): sin circulo, borde ni fondo. El enlace mantiene un objetivo tactil de 44 px. */
   .nav-home { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 44px; }
   .nav-home img { height: 40px; width: auto; display: block; transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1); }
   .nav-home:hover img, .nav-home:focus-visible img { transform: rotate(-10deg) scale(1.12); }
   .nav-home:focus-visible { outline-offset: 0; }
-  ul { display: flex; flex-wrap: wrap; gap: 0 clamp(10px, 3vw, 22px); list-style: none; margin: 0; padding: 0; font-size: 12px; }
+  ul { display: flex; flex-wrap: nowrap; gap: 0 clamp(10px, 3vw, 22px); list-style: none; margin: 0; padding: 0; font-size: 12px; }
   ul a { text-decoration: none; color: var(--muted); padding: 10px 2px; display: inline-block; }
   ul a:hover { color: var(--paper); }
   ul a.nav-cv { color: var(--bg); background: var(--accent-hi); padding: 4px 9px; font-weight: 600; }
+  @media (max-width: 380px) {
+    ul { gap: 0 clamp(2px, 1.2vw, 6px); font-size: 11px; }
+    ul a { padding: 10px 1px; }
+    ul a.nav-cv { padding: 4px 6px; }
+  }
 </style>

@@ -15,7 +15,8 @@ export function initNavReveal(doc: Document = document): void {
     nav.toggleAttribute('inert', oculta);
   };
   // El margen superior descuenta la altura de la barra: aparece cuando el hero queda bajo ella.
-  new IntersectionObserver((e) => set(e[e.length - 1].isIntersecting), { rootMargin: '-52px 0px 0px 0px' }).observe(hero);
+  const alto = Math.round(nav.getBoundingClientRect().height) || 52;
+  new IntersectionObserver((e) => set(e[e.length - 1].isIntersecting), { rootMargin: `-${alto}px 0px 0px 0px` }).observe(hero);
 }
 
 if (typeof document !== 'undefined') initNavReveal();
