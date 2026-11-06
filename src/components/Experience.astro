@@ -2,12 +2,16 @@
 import { t } from '../i18n';
 import { cursiva } from '../lib/cursiva';
 import type { ImageMetadata } from 'astro';
+import logoTopDoctors from '../assets/logos/topdoctors.png';
+import logoUlandu from '../assets/logos/ulandu.png';
+import logoAeternum from '../assets/logos/aeternum.png';
 
-// Orden de la spec it2 §4. Sin `logo` el hueco muestra las iniciales (nunca una imagen rota ni un logo inventado).
+// Orden de la spec it2 §4. Logos oficiales que aportó Carlos (scripts/make-logos.mjs);
+// sin `logo` el hueco muestra las iniciales (nunca una imagen rota ni un logo inventado).
 const trabajos: { id: 'topdoctors' | 'ulandu' | 'aeternum'; lugar?: boolean; enlace?: boolean; logo?: ImageMetadata }[] = [
-  { id: 'topdoctors', lugar: true },
-  { id: 'ulandu', enlace: true },
-  { id: 'aeternum' },
+  { id: 'topdoctors', lugar: true, logo: logoTopDoctors },
+  { id: 'ulandu', enlace: true, logo: logoUlandu },
+  { id: 'aeternum', logo: logoAeternum },
 ];
 const lista = (k: string) => t(k as 'exp.topdoctors.puntos').split('|');
 ---
@@ -17,7 +21,7 @@ const lista = (k: string) => t(k as 'exp.topdoctors.puntos').split('|');
     return (
       <article class="job reveal">
         <div class="logo mono" aria-hidden="true">
-          {j.logo ? <img src={j.logo.src} width="64" height="64" alt="" /> : t(k('iniciales'))}
+          {j.logo ? <img src={j.logo.src} width="52" height="52" alt="" loading="lazy" decoding="async" /> : t(k('iniciales'))}
         </div>
         <div class="body">
           <header>
@@ -42,7 +46,7 @@ const lista = (k: string) => t(k as 'exp.topdoctors.puntos').split('|');
   .exp { display: grid; gap: 12px; padding-block: 18px 40px; }
   .job { display: grid; grid-template-columns: 64px 1fr; gap: 16px; background: var(--card); border: 1px solid var(--line); padding: 16px 18px; }
   .logo { width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; background: var(--paper); color: #3a3a3a; font-size: 18px; font-weight: 700; letter-spacing: 0.04em; border-radius: 4px; }
-  .logo img { width: 64px; height: 64px; object-fit: contain; display: block; }
+  .logo img { width: 52px; height: 52px; object-fit: contain; display: block; }
   header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; }
   h3 { font-size: clamp(22px, 5vw, 28px); letter-spacing: -0.03em; }
   .when { margin: 0; font-size: 12px; color: var(--muted); }

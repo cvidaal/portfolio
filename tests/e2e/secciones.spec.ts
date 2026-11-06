@@ -44,11 +44,15 @@ test.describe('experiencia', () => {
     await expect(t2.locator('.tags li')).toHaveText(['Unity', 'Diseño gráfico']);
   });
 
-  test('cada tarjeta tiene hueco de logo con iniciales y ninguna imagen rota', async ({ page }) => {
+  test('cada tarjeta muestra el logo de su empresa, sin imágenes rotas', async ({ page }) => {
     await page.goto('/');
     const logos = page.locator('#experiencia .job .logo');
-    await expect(logos).toHaveText(['TD', 'UL', 'AG']);
-    await expect(page.locator('#experiencia .job img')).toHaveCount(0);
+    const imgs = page.locator('#experiencia .job .logo img');
+    await expect(imgs).toHaveCount(3);
+    for (const img of await imgs.all()) {
+      await img.scrollIntoViewIfNeeded();
+      expect(await img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+    }
     const caja = (await logos.first().boundingBox())!;
     expect(Math.round(caja.width)).toBe(64);
     expect(Math.round(caja.height)).toBe(64);
