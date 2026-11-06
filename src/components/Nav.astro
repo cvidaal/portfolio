@@ -45,10 +45,11 @@ const { base = '', autoHide = false } = Astro.props;
   .nav-home img { height: 40px; width: auto; display: block; transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1); }
   .nav-home:hover img, .nav-home:focus-visible img { transform: rotate(-10deg) scale(1.12); }
   .nav-home:focus-visible { outline-offset: 0; }
-  ul { display: flex; flex-wrap: nowrap; gap: 0 clamp(10px, 3vw, 22px); list-style: none; margin: 0; padding: 0; font-size: 12px; }
+  ul { display: flex; flex-wrap: nowrap; align-items: center; gap: 0 clamp(10px, 3vw, 22px); list-style: none; margin: 0; padding: 0; font-size: 12px; }
+  li { display: flex; align-items: center; }
   ul a { text-decoration: none; color: var(--muted); padding: 10px 2px; display: inline-block; }
   ul a:hover { color: var(--paper); }
-  ul a.nav-cv { color: var(--bg); background: var(--accent-hi); padding: 4px 9px; font-weight: 600; transition: background 0.2s, transform 0.2s cubic-bezier(0.3, 1.6, 0.5, 1); }
+  ul a.nav-cv { display: inline-flex; align-items: center; min-height: 26px; line-height: 1.2; color: var(--bg); background: var(--accent-hi); padding: 5px 9px; font-weight: 600; transition: background 0.2s, transform 0.2s cubic-bezier(0.3, 1.6, 0.5, 1); }
   ul a.nav-cv:hover, ul a.nav-cv:focus-visible { background: var(--paper); color: var(--bg); transform: translateY(-1px) rotate(-2deg); }
   ul a.nav-cv:active { transform: translateY(1px) scale(0.96); }
   @media (max-width: 380px) {

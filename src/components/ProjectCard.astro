@@ -30,7 +30,12 @@ const href = `/proyectos/${d.slug}`;
         <a class="card-link" href={href}>{t('proyectos.verCaso')} <b aria-hidden="true">→</b></a>
       ) : (
         <span class="tiendas">
-          {d.enlaces.map((e) => <a href={e.href} rel="noopener" target="_blank">{e.label}</a>)}
+          {/* Sin caso de estudio: toda la tarjeta abre el primer enlace (App Store); el resto quedan por encima, pulsables. */}
+          {d.enlaces.map((e, i) => (
+            <a class:list={[{ 'card-link': i === 0, 'sobre-tarjeta': i > 0 }]} href={e.href} rel="noopener" target="_blank">
+              {e.label} <b aria-hidden="true">↗</b>
+            </a>
+          ))}
         </span>
       )}
     </div>
@@ -61,6 +66,9 @@ const href = `/proyectos/${d.slug}`;
   .tiendas { display: flex; gap: 18px; flex-wrap: wrap; }
   .tiendas a { color: var(--paper); text-underline-offset: 4px; padding: 6px 0; }
   .tiendas a:hover { color: var(--accent-hi); }
+  .tiendas .card-link { display: inline-flex; gap: 6px; }
+  .tiendas a b { color: var(--accent-hi); }
+  .tiendas .sobre-tarjeta { position: relative; z-index: 5; }
   @media (min-width: 900px) {
     .feature { display: grid; grid-template-columns: 1.25fr 1fr; }
     .feature :global(.riso) { aspect-ratio: auto; min-height: 340px; }

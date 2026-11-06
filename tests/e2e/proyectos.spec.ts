@@ -94,3 +94,20 @@ test('Acelerik: estado honesto y mock del bot etiquetado', async ({ page }) => {
   await expect(page.locator('#proyectos')).not.toContainText('Demo pública');
   await expect(page.locator('#proyectos article').nth(1).locator('.ej')).toHaveText('Ejemplo');
 });
+
+test('la tarjeta de Bendita Burger se puede pulsar entera y Google Play sigue siendo pulsable', async ({ page }) => {
+  await page.goto('/');
+  const card = page.locator('#proyectos article').filter({ hasText: 'Bendita Burger' });
+  const store = card.locator('a.card-link');
+  await expect(store).toHaveAttribute('href', /apps\.apple\.com/);
+  // Pulsar en el titular (no en el enlace) abre la App Store.
+  await card.locator('h3').scrollIntoViewIfNeeded();
+  const h = (await card.locator('h3').boundingBox())!;
+  const [popup] = await Promise.all([page.waitForEvent('popup'), page.mouse.click(h.x + h.width / 2, h.y + h.height / 2)]);
+  expect(popup.url()).toMatch(/apps\.apple\.com/);
+  await popup.close();
+  const play = card.locator('a.sobre-tarjeta');
+  await expect(play).toHaveAttribute('href', /play\.google\.com/);
+  const [popup2] = await Promise.all([page.waitForEvent('popup'), play.click()]);
+  expect(popup2.url()).toMatch(/play\.google\.com/);
+});

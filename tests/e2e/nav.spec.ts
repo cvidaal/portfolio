@@ -135,3 +135,11 @@ test.describe('favicon', () => {
     for (const h of ['/favicon.ico', '/favicon.png', '/face-nav.webp', '/face-nav@2x.webp', '/face-nav@3x.webp']) expect((await request.get(h)).ok()).toBe(true);
   });
 });
+
+test('el botón CV del menú está centrado verticalmente con el resto de enlaces', async ({ page }) => {
+  await page.goto('/proyectos/acelerik-booking');
+  const centro = async (sel: string) => { const b = (await page.locator(sel).boundingBox())!; return b.y + b.height / 2; };
+  const cv = await centro('a.nav-cv');
+  const otro = await centro('nav ul li:first-child a');
+  expect(Math.abs(cv - otro)).toBeLessThanOrEqual(1.5);
+});
