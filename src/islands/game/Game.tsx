@@ -6,7 +6,7 @@ import { emit, type PoseName } from '../../lib/bus';
 import { MAXDLQ, createGame, route, tick, type GameState, type Incident, type MsgType } from './engine';
 import { ACHIEVEMENTS, type AchId, type Save } from './achievements';
 import { defaultSave, loadSave, persist } from './storage';
-import { fmt, hintFor, isFirstGame, isTypingTarget, keyToService, settle } from './ui';
+import { fmt, hintFor, isFirstGame, isTypingTarget, keyToService, settle, trackWorst, type Worst } from './ui';
 import Board, { type Flash, type Float, type Toast } from './Board';
 import PostMortem from './PostMortem';
 import Shelf from './Shelf';
@@ -38,6 +38,7 @@ export default function Game() {
   const guidedRef = useRef(false);
   const bestAtStart = useRef(0);
   const bannerRef = useRef<{ kind: Incident['kind']; service?: MsgType; untilT: number } | null>(null);
+  const worstRef = useRef<Worst | null>(null);
   const rafRef = useRef(0);
   const lastRef = useRef(0);
   const uid = useRef(0);
@@ -49,7 +50,9 @@ export default function Game() {
     setSave(next);
     persist(next); // antes de emitir: el avatar lee el guardado al montarse
   }
-  function changeFromShelf(next: Save) {
+  // Siempre sobre saveRef: durante una partida lleva progreso que la vitrina aún no ha pintado.
+  function changeFromShelf(update: (s: Save) => Save) {
+    const next = update(saveRef.current);
     commitSave(next);
     emit('avatar:cosmetics', cosmeticsOf(next));
   }
@@ -87,6 +90,7 @@ export default function Game() {
   // --- estado de la partida ---
   function apply(s: GameState, svc: MsgType | null) {
     gameRef.current = s;
+    worstRef.current = trackWorst(worstRef.current, s);
     setGame(s);
     if (selRef.current !== null && !s.msgs.some((m) => m.id === selRef.current)) setSelected(null);
     let routedOk = false;
@@ -166,6 +170,7 @@ export default function Game() {
     guidedRef.current = s.guided;
     bestAtStart.current = saveRef.current.best;
     bannerRef.current = null;
+    worstRef.current = trackWorst(null, s);
     gameRef.current = s;
     setGame(s);
     setSelected(null);
@@ -191,7 +196,7 @@ export default function Game() {
     if (!openRef.current) return;
     stopLoop();
     const g = gameRef.current;
-    if (g && !g.over) persist(saveRef.current); // progreso de un turno a medias
+    if (g && !g.over) commitSave(saveRef.current); // progreso de un turno a medias (y la vitrina al día)
     openRef.current = false;
     gameRef.current = null;
     setGame(null);
@@ -278,6 +283,7 @@ export default function Game() {
             <PostMortem
               game={game}
               best={result.best}
+              worst={worstRef.current}
               record={result.record}
               onAgain={newGame}
               onBack={() => closeBoard(true)}

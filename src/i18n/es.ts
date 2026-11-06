@@ -150,6 +150,8 @@ export const es = {
   'juego.fin.racha': 'racha máx.',
   'juego.fin.puntos': 'puntuación',
   'juego.fin.record': 'récord',
+  'juego.fin.peor': 'peor momento',
+  'juego.fin.peorValor': '{n} en cola a los {s} s',
   'juego.fin.nuevoRecord': 'Nuevo récord. Carlos te guiña un ojo.',
   'juego.fin.puente': 'Esto, pero de verdad, es lo que hago en Top Doctors.',
   'juego.fin.verExperiencia': 'Ver experiencia',

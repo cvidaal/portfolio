@@ -1,6 +1,6 @@
 // Ayudas puras de la interfaz del juego (sin DOM ni React): se prueban con vitest.
 import { t } from '../../i18n';
-import { GUIDED_COUNT, type GameState, type MsgType } from './engine';
+import { GUIDED_COUNT, ROUND, type GameState, type MsgType } from './engine';
 import { META_HOOKS, META_MIL, META_RACHA, evaluate, type AchId, type Save } from './achievements';
 
 /** Sustituye {clave} por su valor. */
@@ -62,3 +62,13 @@ export function settle(prev: Save, game: GameState, final: boolean): { save: Sav
   };
   return { save: next, nuevos, cosmeticsChanged: next.shades !== prev.shades || next.chain !== prev.chain };
 }
+
+/** "Peor momento" del turno: la cola más larga y el segundo en que ocurrió (el primero si se repite). */
+export type Worst = { queue: number; at: number };
+export function trackWorst(prev: Worst | null, s: GameState): Worst {
+  const n = s.msgs.length;
+  if (prev && n <= prev.queue) return prev;
+  return { queue: n, at: Math.max(0, Math.floor(ROUND - s.t)) };
+}
+
+export const worstText = (w: Worst): string => fmt(t('juego.fin.peorValor'), { n: w.queue, s: w.at });

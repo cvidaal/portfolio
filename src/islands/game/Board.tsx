@@ -44,6 +44,8 @@ const Board = forwardRef<HTMLDivElement, Props>(function Board(
   const deploying = g.incident?.kind === 'deploy';
   return (
     <div className="game-board mono" role="region" aria-label={t('juego.region')} tabIndex={-1} ref={ref}>
+      {/* con el post-mortem abierto, lo de detrás no se ve, no se lee y no recibe el foco */}
+      <div className="gb-body" {...(g.over ? { inert: '', 'aria-hidden': true } : {})}>
       <div className="gb-top">
         <span className="gb-title">{t('juego.titulo')}</span>
         <button type="button" className="gb-close" onClick={onClose}>
@@ -115,6 +117,7 @@ const Board = forwardRef<HTMLDivElement, Props>(function Board(
         </div>
       </div>
       <p className="help">{t('juego.ayuda')}</p>
+      </div>
       {children}
       <div className="toasts" role="status">
         {toasts.map((x) => <p key={x.id} className="toast">{x.text}</p>)}

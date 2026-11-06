@@ -5,7 +5,10 @@
   position: relative; display: flex; flex-direction: column; gap: 10px;
   padding: 14px 0 12px; color: var(--paper); font-size: 12px;
 }
-.game-board:has(.postmortem) { min-height: 520px; }
+.game-board:has(.postmortem) { min-height: 540px; }
+/* nada del tablero puede ensanchar la página (flotantes, toasts, animaciones) */
+.game-board { overflow-x: clip; }
+.gb-body { display: flex; flex-direction: column; gap: 10px; flex: 1; min-height: 0; }
 .game-board:focus { outline: none; }
 .game-board:focus-visible { outline: 1px dashed var(--accent); outline-offset: 4px; }
 .game-board kbd { font: inherit; }
@@ -55,7 +58,7 @@
 .msg .ttl { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--paper); }
 .msg .ttl.low { background: var(--accent); }
 .msg:focus-visible, .svc:focus-visible, .pm-btn:focus-visible, .v-btn:focus-visible, .gb-close:focus-visible {
-  outline: 2px solid var(--accent-hi); outline-offset: 2px;
+  outline: 2px solid var(--accent-hi); outline-offset: -2px; /* dentro de la caja: el tablero recorta en x */
 }
 
 .shape { width: 12px; height: 12px; flex: none; background: var(--accent); }
@@ -125,7 +128,7 @@
 /* ---------- post-mortem ---------- */
 .postmortem {
   position: absolute; inset: 0; z-index: 7; overflow-y: auto; display: flex; flex-direction: column; justify-content: center;
-  gap: 10px; padding: 16px 4px; background: rgba(16, 16, 18, .96); font-size: 12px;
+  gap: 10px; padding: 16px 4px; background: var(--bg); font-size: 12px;
 }
 .postmortem p { margin: 0; }
 .pm-head { color: var(--muted); font-size: 11px; }

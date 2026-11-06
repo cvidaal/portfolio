@@ -116,3 +116,27 @@ describe('settle: logros sobre el guardado', () => {
     expect(again.cosmeticsChanged).toBe(false);
   });
 });
+
+describe('peor momento', () => {
+  it('guarda la cola más larga y el segundo en que pasó', async () => {
+    const { trackWorst } = await import('../../src/islands/game/ui');
+    const g = createGame({ seed: 3, guided: false });
+    const msg = (id: number) => ({ id, type: 'pago' as const, hook: false, ttl: 5, left: 5 });
+    let w = trackWorst(null, g);
+    expect(w).toEqual({ queue: 0, at: 0 });
+    w = trackWorst(w, { ...g, t: 40.2, msgs: [msg(1), msg(2)] });
+    expect(w).toEqual({ queue: 2, at: 4 });
+    w = trackWorst(w, { ...g, t: 30, msgs: [msg(3), msg(4)] }); // empate: se queda el primero
+    expect(w).toEqual({ queue: 2, at: 4 });
+    w = trackWorst(w, { ...g, t: 12.7, msgs: [msg(5), msg(6), msg(7)] });
+    expect(w).toEqual({ queue: 3, at: 32 });
+    w = trackWorst(w, { ...g, t: 5, msgs: [] });
+    expect(w).toEqual({ queue: 3, at: 32 });
+  });
+
+  it('texto del post-mortem', async () => {
+    const { worstText } = await import('../../src/islands/game/ui');
+    expect(worstText({ queue: 6, at: 31 })).toBe('6 en cola a los 31 s');
+    expect(worstText({ queue: 1, at: 0 })).toBe('1 en cola a los 0 s');
+  });
+});

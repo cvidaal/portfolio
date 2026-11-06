@@ -7,9 +7,13 @@ const save = (s: SaveIn) => ({
   best: 0, unlocked: [], theme: 'rojo', shades: false, chain: false,
   progress: { maxCombo: 0, maxHooks: 0, maxScore: 0 }, ...s,
 });
-/** Inyecta un guardado antes de cargar la página. */
+/** Inyecta un guardado antes de la primera carga (una recarga conserva lo que haya guardado el juego). */
 const withSave = (page: Page, s: SaveIn) =>
-  page.addInitScript(([k, v]) => localStorage.setItem(k, v), [KEY, JSON.stringify(save(s))] as const);
+  page.addInitScript(([k, v]) => {
+    if (sessionStorage.getItem('__seeded')) return;
+    sessionStorage.setItem('__seeded', '1');
+    localStorage.setItem(k, v);
+  }, [KEY, JSON.stringify(save(s))] as const);
 /** Partida no guiada: ya se ha jugado antes. */
 const veteran = (page: Page) => withSave(page, { best: 10, unlocked: ['hola'] });
 /** Registra los eventos del bus en window.__ev. */
@@ -136,13 +140,6 @@ test.describe('móvil', () => {
     await expect(score(page)).toHaveText('10');
   });
 
-  test('a 320 px el tablero no provoca scroll horizontal', async ({ page }) => {
-    await page.setViewportSize({ width: 320, height: 640 });
-    await openGame(page);
-    await expect(page.locator('.game-board .msg').first()).toBeVisible();
-    const o = await overflow(page);
-    expect(o.scrollWidth, JSON.stringify(o)).toBeLessThanOrEqual(320);
-  });
 
   test('abrir el juego monta un avatar que reacciona', async ({ page }) => {
     await openGame(page);
@@ -151,6 +148,78 @@ test.describe('móvil', () => {
     await page.evaluate(() => dispatchEvent(new CustomEvent('avatar:pose', { detail: { name: 'think', ms: 3000 } })));
     await expect(page.locator(CANVAS)).toHaveAttribute('data-pose', 'think');
   });
+});
+
+test.describe('móvil 320', () => {
+  // viewport fijado al crear el contexto (no con setViewportSize tras crearlo a 375)
+  test.use({ viewport: { width: 320, height: 640 }, isMobile: true, hasTouch: true });
+
+  test('a 320 px el tablero no provoca scroll horizontal', async ({ page }) => {
+    await openGame(page);
+    await expect(page.locator('.game-board .msg').first()).toBeVisible();
+    const o = await overflow(page);
+    expect(o.scrollWidth, JSON.stringify(o)).toBeLessThanOrEqual(320);
+    // y tampoco al terminar (post-mortem) ni con un toast o flotante largo
+    await page.locator('.game-board .toasts').evaluate((el) => {
+      const p = document.createElement('p'); p.className = 'toast'; p.textContent = 'x'.repeat(200); el.appendChild(p);
+    });
+    const o2 = await overflow(page);
+    expect(o2.scrollWidth, JSON.stringify(o2)).toBeLessThanOrEqual(320);
+  });
+
+  test('ningún elemento del tablero puede ensanchar la página', async ({ page }) => {
+    await openGame(page);
+    await page.locator('.game-board').evaluate((el) => {
+      const d = document.createElement('div'); d.style.cssText = 'position:absolute;left:0;top:0;width:1200px;height:4px'; el.appendChild(d);
+    });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+  });
+});
+
+test('salir a mitad de turno: la vitrina refleja el progreso y un interruptor no lo pisa', async ({ page }) => {
+  await withSave(page, { best: 10, unlocked: ['hola', 'racha'] });
+  await openGame(page);
+  let routed = 0;
+  const deadline = Date.now() + 15000;
+  while (routed < 3 && Date.now() < deadline) {
+    const type = await page.locator('.game-board .msg').first().getAttribute('data-type', { timeout: 300 }).catch(() => null);
+    if (!type) continue;
+    await page.locator(`.game-board .svc[data-type="${type}"]`).click();
+    routed++;
+  }
+  expect(routed).toBe(3);
+  await expect(score(page)).not.toHaveText('0');
+  await page.keyboard.press('Escape');
+  const shelf = page.locator('.vitrina');
+  const racha = shelf.locator('[data-ach="racha"] .pg');
+  await expect(racha).not.toHaveText('racha máx.: 0/10');
+  const progress = await racha.textContent();
+  const n = Number(progress!.match(/(\d+)\/10/)![1]);
+  expect(n).toBeGreaterThanOrEqual(1);
+  // un interruptor después de salir no borra el progreso guardado
+  await shelf.getByRole('button', { name: /gafas/i }).click();
+  const saved = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)!), KEY);
+  expect(saved.shades).toBe(true);
+  expect(saved.progress.maxCombo).toBe(n);
+  await page.reload();
+  await expect(page.locator('.vitrina [data-ach="racha"] .pg')).toHaveText(progress!);
+});
+
+test('interruptor de la vitrina durante la partida no pisa el progreso en curso', async ({ page }) => {
+  await withSave(page, { best: 10, unlocked: ['hola', 'racha'] });
+  await openGame(page);
+  let routed = 0;
+  const deadline = Date.now() + 15000;
+  while (routed < 2 && Date.now() < deadline) {
+    const type = await page.locator('.game-board .msg').first().getAttribute('data-type', { timeout: 300 }).catch(() => null);
+    if (!type) continue;
+    await page.locator(`.game-board .svc[data-type="${type}"]`).click();
+    routed++;
+  }
+  await page.locator('.vitrina').getByRole('button', { name: /gafas/i }).click();
+  const saved = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)!), KEY);
+  expect(saved.shades).toBe(true);
+  expect(saved.progress.maxCombo).toBeGreaterThanOrEqual(1);
 });
 
 test('el avatar no hace gestos sueltos mientras se juega', async ({ page }) => {
@@ -204,6 +273,20 @@ test.describe('post-mortem', () => {
     await expect(pm).toContainText('racha máx.');
     await expect(pm).toContainText('récord');
     await expect(pm.locator('[data-pm="dlq"]')).toHaveText('5/5');
+    await expect(pm).toContainText('peor momento');
+    await expect(pm.locator('[data-pm="peor"]')).toHaveText(/^[1-7] en cola a los \d+ s$/);
+    // el post-mortem tapa el tablero: lo de detrás es inert y el tabulador no llega
+    const body = page.locator('.game-board .gb-body');
+    expect(await body.evaluate((e) => (e as HTMLElement).inert)).toBe(true);
+    await expect(body).toHaveAttribute('aria-hidden', 'true');
+    expect(await pm.evaluate((e) => getComputedStyle(e).backgroundColor)).toBe('rgb(16, 16, 18)');
+    for (const key of ['Tab', 'Shift+Tab']) {
+      for (let i = 0; i < 12; i++) {
+        await page.keyboard.press(key);
+        expect(await page.evaluate(() => !!document.activeElement?.closest('.gb-body'))).toBe(false);
+      }
+    }
+    await pm.getByRole('button', { name: 'Otra partida' }).focus();
     await expect(pm.getByRole('button', { name: 'Otra partida' })).toBeFocused();
     await pm.getByRole('button', { name: /compartir/i }).click();
     await expect(pm.locator('.pm-status')).toContainText('Copiado');

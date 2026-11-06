@@ -3,11 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 import { t } from '../../i18n';
 import { MAXDLQ, type GameState } from './engine';
 import { copyText, shareScore } from './share';
-import { fmt } from './ui';
+import { fmt, worstText, type Worst } from './ui';
 
 interface Props {
   game: GameState;
   best: number;
+  /** Peor momento del turno (cola más larga). */
+  worst: Worst | null;
   record: boolean;
   onAgain: () => void;
   onBack: () => void;
@@ -15,7 +17,7 @@ interface Props {
   onLeave: () => void;
 }
 
-export default function PostMortem({ game: g, best, record, onAgain, onBack, onLeave }: Props) {
+export default function PostMortem({ game: g, best, worst, record, onAgain, onBack, onLeave }: Props) {
   const again = useRef<HTMLButtonElement>(null);
   const [status, setStatus] = useState<{ text: string; bad: boolean } | null>(null);
   useEffect(() => { again.current?.focus(); }, []);
@@ -35,11 +37,12 @@ export default function PostMortem({ game: g, best, record, onAgain, onBack, onL
     ['puntos', t('juego.fin.puntos'), String(g.score)],
     ['best', t('juego.fin.record'), String(best)],
   ];
+  if (worst && worst.queue > 0) rows.splice(3, 0, ['peor', t('juego.fin.peor'), worstText(worst)]);
 
   return (
     <section className="postmortem" aria-labelledby="pm-title">
       <p className="pm-head" id="pm-title">{t(g.dlq >= MAXDLQ ? 'juego.fin.caida' : 'juego.fin.titulo')}</p>
-      <p className="pm-big" data-pm="score">{fmt(t('juego.fin.pts'), { n: g.score })}</p>
+      <p className="pm-big" id="pm-score" data-pm="score">{fmt(t('juego.fin.pts'), { n: g.score })}</p>
       <dl className="pm-log">
         {rows.map(([k, label, v]) => (
           <div key={k}><dt>{label}</dt><dd data-pm={k}>{v}</dd></div>
@@ -57,7 +60,7 @@ export default function PostMortem({ game: g, best, record, onAgain, onBack, onL
         <a href="#proyectos" onClick={onLeave}>{t('juego.fin.verProyectos')}</a>
       </p>
       <div className="pm-row">
-        <button type="button" className="pm-btn b1" ref={again} onClick={onAgain}>{t('juego.otra')}</button>
+        <button type="button" className="pm-btn b1" ref={again} onClick={onAgain} aria-describedby="pm-title pm-score">{t('juego.otra')}</button>
         <button type="button" className="pm-btn b2" onClick={onBack}>{t('juego.volver')}</button>
       </div>
     </section>

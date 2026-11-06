@@ -6,7 +6,8 @@ import { fmt, progressText } from './ui';
 
 interface Props {
   save: Save;
-  onChange: (next: Save) => void;
+  /** Recibe una función sobre el guardado más reciente (no sobre esta prop, que puede ir por detrás de la partida). */
+  onChange: (update: (s: Save) => Save) => void;
 }
 
 // En producción nunca se muestra un [PLACEHOLDER]: hasta que Carlos escriba la nota, un mensaje neutro.
@@ -18,7 +19,7 @@ export default function Shelf({ save, onChange }: Props) {
     <button type="button" className="v-btn" aria-pressed={pressed} onClick={fn}>{label}</button>
   );
   const theme = (id: ThemeId, label: string) =>
-    toggle(label, save.theme === id, () => onChange({ ...save, theme: save.theme === id ? 'rojo' : id }));
+    toggle(label, save.theme === id, () => onChange((s) => ({ ...s, theme: s.theme === id ? 'rojo' : id })));
 
   return (
     <section className="vitrina mono" aria-labelledby="vitrina-titulo">
@@ -36,8 +37,8 @@ export default function Shelf({ save, onChange }: Props) {
               <span>{a.desc}</span>
               {a.recompensa && <span className="rw">{fmt(t('vitrina.recompensa'), { r: a.recompensa })}</span>}
               {progress && <span className="pg">{progress}</span>}
-              {on && a.id === 'racha' && toggle(t('vitrina.gafas'), save.shades, () => onChange({ ...save, shades: !save.shades }))}
-              {on && a.id === 'hooks' && toggle(t('vitrina.cadenas'), save.chain, () => onChange({ ...save, chain: !save.chain }))}
+              {on && a.id === 'racha' && toggle(t('vitrina.gafas'), save.shades, () => onChange((s) => ({ ...s, shades: !s.shades })))}
+              {on && a.id === 'hooks' && toggle(t('vitrina.cadenas'), save.chain, () => onChange((s) => ({ ...s, chain: !s.chain })))}
               {on && a.id === 'cero' && theme('azul', t('vitrina.usarAzul'))}
               {on && a.id === 'mil' && theme('verde', t('vitrina.usarVerde'))}
               {on && a.id === 'secreto' && <p className="nota">{NOTA}</p>}
@@ -48,7 +49,7 @@ export default function Shelf({ save, onChange }: Props) {
           <b>{t('vitrina.record')}</b>
           <span>{fmt(t('vitrina.puntos'), { n: save.best })}</span>
           {save.theme !== 'rojo' && (
-            <button type="button" className="v-btn" onClick={() => onChange({ ...save, theme: 'rojo' })}>{t('vitrina.volverRojo')}</button>
+            <button type="button" className="v-btn" onClick={() => onChange((s) => ({ ...s, theme: 'rojo' }))}>{t('vitrina.volverRojo')}</button>
           )}
         </li>
       </ul>
