@@ -32,9 +32,9 @@ describe('i18n', () => {
     expect(t('contacto.linkedin')).toBe('https://www.linkedin.com/in/carlosvidaldev/');
     expect(t('contacto.github')).toBe('https://github.com/cvidaal');
   });
-  it('solo Sobre mí y nota secreta son placeholders', () => {
+  it('solo la nota secreta es placeholder (Sobre mí ya es texto real)', () => {
     const ph = Object.entries(es).filter(([, v]) => isPlaceholder(v)).map(([k]) => k);
-    expect(ph.sort()).toEqual(['juego.notaSecreta', 'sobre.texto']);
+    expect(ph.sort()).toEqual(['juego.notaSecreta']);
   });
   it('stack mostrado', () => {
     expect(t('stack.items').split('|')).toEqual(

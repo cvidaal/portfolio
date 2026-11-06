@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import { t } from '../i18n';
-import { isPlaceholder, showPlaceholders } from '../lib/placeholder';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 import Poster from '../components/Poster.astro';
@@ -12,11 +11,9 @@ import About from '../components/About.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
 
-// Sin texto real de Carlos, "Sobre mí" no se publica en producción (solo se muestra en dev).
-const mostrarSobreMi = showPlaceholders || !isPlaceholder(t('sobre.texto'));
-// Los carteles se numeran según las secciones que de verdad se renderizan (sin huecos).
+// Los carteles se numeran de forma consecutiva según el orden de las secciones.
 const num = Object.fromEntries(
-  ['experiencia', 'proyectos', ...(mostrarSobreMi ? ['sobre-mi'] : []), 'contacto']
+  ['experiencia', 'proyectos', 'sobre-mi', 'contacto']
     .map((id, i) => [id, String(i + 1).padStart(2, '0')]),
 );
 ---
@@ -36,12 +33,10 @@ const num = Object.fromEntries(
       <Stack />
     </section>
 
-    {mostrarSobreMi && (
-      <section id="sobre-mi" aria-label={t('seccion.sobre')}>
-        <Poster num={num["sobre-mi"]} titulo={t('seccion.sobre')} />
-        <About />
-      </section>
-    )}
+    <section id="sobre-mi" aria-label={t('seccion.sobre')}>
+      <Poster num={num["sobre-mi"]} titulo={t('seccion.sobre')} />
+      <About />
+    </section>
 
     <section id="contacto" aria-label={t('seccion.contacto')}>
       <Poster num={num["contacto"]} titulo={t('seccion.contacto')} />

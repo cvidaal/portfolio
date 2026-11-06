@@ -9,7 +9,7 @@ const { base = '', autoHide = false } = Astro.props;
 ---
 <header class="nav">
   <nav class="wrap nav-in" aria-label={t('nav.aria')}>
-    <a class="nav-home" href="#top"><img src="/face-nav.webp" alt={t('nav.inicio')} width="36" height="36" /></a>
+    <a class="nav-home" href={base || '#top'}><img src="/face-nav.webp" srcset="/face-nav.webp 1x, /face-nav@2x.webp 2x, /face-nav@3x.webp 3x" alt={t('nav.inicio')} width="33" height="40" /></a>
     <ul class="mono">
       <li><a href={`${base}#experiencia`}>{t('nav.experiencia')}</a></li>
       <li><a href={`${base}#proyectos`}>{t('nav.proyectos')}</a></li>
@@ -37,8 +37,9 @@ const { base = '', autoHide = false } = Astro.props;
   .nav { view-transition-name: site-nav; position: sticky; top: 0; z-index: 20; background: rgba(16, 16, 18, 0.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(6px); transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s; }
   :global(html.nav-hidden) .nav { transform: translateY(-100%); opacity: 0; visibility: hidden; }
   .nav-in { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0 12px; min-height: 52px; }
-  .nav-home { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; }
-  .nav-home img { width: 36px; height: 36px; border-radius: 50%; background: #F1EDE6; border: 2px solid var(--accent); display: block; transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1); }
+  /* La cara va sola (transparente): sin circulo, borde ni fondo. El enlace mantiene un objetivo tactil de 44 px. */
+  .nav-home { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 44px; }
+  .nav-home img { height: 40px; width: auto; display: block; transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1); }
   .nav-home:hover img, .nav-home:focus-visible img { transform: rotate(-10deg) scale(1.12); }
   .nav-home:focus-visible { outline-offset: 0; }
   ul { display: flex; flex-wrap: wrap; gap: 0 clamp(10px, 3vw, 22px); list-style: none; margin: 0; padding: 0; font-size: 12px; }

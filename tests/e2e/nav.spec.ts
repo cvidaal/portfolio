@@ -11,7 +11,33 @@ test.describe('menú con la cara', () => {
     const img = page.locator(`${bar} a.nav-home img`);
     await expect(img).toHaveAttribute('alt', t('nav.inicio'));
     await expect(img).toHaveAttribute('src', '/face-nav.webp');
+    await expect(img).toHaveAttribute('srcset', '/face-nav.webp 1x, /face-nav@2x.webp 2x, /face-nav@3x.webp 3x');
+  });
+
+  test('la cara va sola: sin círculo, sin borde y sin fondo de papel', async ({ page }) => {
+    await page.goto(CASO);
+    const st = await page.locator(`${bar} a.nav-home img`).evaluate((e) => {
+      const c = getComputedStyle(e);
+      return { radius: c.borderRadius, borde: c.borderTopWidth, fondo: c.backgroundColor, alto: e.getBoundingClientRect().height };
+    });
+    expect(st.radius).toBe('0px');
+    expect(st.borde).toBe('0px');
+    expect(st.fondo).toBe('rgba(0, 0, 0, 0)');
+    expect(st.alto).toBeGreaterThanOrEqual(38);
+    expect(st.alto).toBeLessThanOrEqual(44);
+  });
+
+  test('en la home la cara enlaza a #top', async ({ page }) => {
+    await page.goto('/');
     await expect(page.locator(`${bar} a.nav-home`)).toHaveAttribute('href', '#top');
+  });
+
+  test('en un caso de estudio la cara enlaza a la home y navega', async ({ page }) => {
+    await page.goto(CASO);
+    await expect(page.locator(`${bar} a.nav-home`)).toHaveAttribute('href', '/');
+    await page.locator(`${bar} a.nav-home`).click();
+    await expect(page).toHaveURL('http://localhost:4321/');
+    await expect(page.locator('h1').first()).toContainText('Carlos');
   });
 
   test('en la home, con JS, la barra está oculta mientras se ve el hero y aparece al bajar', async ({ page }) => {
@@ -82,6 +108,6 @@ test.describe('favicon', () => {
     expect(hrefs).toEqual(['/favicon.ico', '/favicon.png', '/favicon.png']);
     expect(hrefs.join()).not.toContain('.svg');
     expect((await request.get('/favicon.svg')).status()).toBe(404);
-    for (const h of ['/favicon.ico', '/favicon.png', '/face-nav.webp']) expect((await request.get(h)).ok()).toBe(true);
+    for (const h of ['/favicon.ico', '/favicon.png', '/face-nav.webp', '/face-nav@2x.webp', '/face-nav@3x.webp']) expect((await request.get(h)).ok()).toBe(true);
   });
 });

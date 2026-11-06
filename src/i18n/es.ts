@@ -38,20 +38,33 @@ export const es = {
   'seccion.contacto': 'Contacto',
   'seccion.proyectosResumen': '3 proyectos · Go · Python · Flutter',
 
-  // Experiencia
+  // Experiencia (spec it2 §4). Puntos y etiquetas van separados por "|"; *texto* se pinta en cursiva.
   'exp.topdoctors.empresa': 'Top Doctors',
+  'exp.topdoctors.iniciales': 'TD',
   'exp.topdoctors.puesto': 'Integration Developer',
-  'exp.topdoctors.fechas': 'mar 2026 – actualidad',
+  'exp.topdoctors.fechas': 'mar. 2026 – actualidad',
   'exp.topdoctors.lugar': 'Remoto',
-  'exp.topdoctors.punto1': 'Más de 10 integraciones con sistemas externos.',
-  'exp.topdoctors.punto2': 'Pipeline de datos de medicamentos (NHS) desarrollado en solitario.',
-  'exp.topdoctors.punto3': 'Go, GCP Pub/Sub, testing, Docker.',
+  'exp.topdoctors.frase': 'Conecto la plataforma con sistemas externos en Go: más de 10 integraciones en producción.',
+  'exp.topdoctors.puntos':
+    'Diseñé y desarrollé en solitario el pipeline de datos de medicamentos del NHS (Reino Unido), de la ingesta a la entrega.|Mensajería asíncrona con GCP Pub/Sub, servicios en Docker y testing en cada integración.',
+  'exp.topdoctors.etiquetas': 'Go|GCP Pub/Sub|Docker|Testing',
   'exp.ulandu.empresa': 'Ulandu',
-  'exp.ulandu.puesto': 'Prácticas',
-  'exp.ulandu.fechas': 'mar – jun 2025',
-  'exp.ulandu.descripcion':
-    'Desarrollo de la app de Bendita Burger en Flutter e integración de pagos con Stripe.',
+  'exp.ulandu.iniciales': 'UL',
+  'exp.ulandu.puesto': 'Desarrollador Flutter · Prácticas',
+  'exp.ulandu.fechas': 'mar. – jun. 2025',
+  'exp.ulandu.frase': 'Llevé la app de Bendita Burger de cero a las tiendas: hoy está publicada en App Store y Google Play.',
+  'exp.ulandu.puntos': 'Desarrollé la app en Flutter y conecté los pagos con Stripe.',
   'exp.ulandu.enlace': 'Ver el proyecto',
+  'exp.ulandu.etiquetas': 'Flutter|Stripe|Firebase',
+  'exp.aeternum.empresa': 'Aeternum Game Studios',
+  'exp.aeternum.iniciales': 'AG',
+  'exp.aeternum.puesto': 'Diseñador gráfico de escenarios',
+  'exp.aeternum.fechas': 'mar. 2020 – jul. 2022',
+  'exp.aeternum.frase':
+    'Di forma visual a los niveles de *Aeterna Noctis*, el primer juego del estudio, publicado en PC y consolas.',
+  'exp.aeternum.puntos':
+    'Diseñé gráficamente más de 35 niveles: la atmósfera, el estilo y la identidad de cada zona, en Unity.',
+  'exp.aeternum.etiquetas': 'Unity|Diseño gráfico',
 
   // Proyectos (textos de la sección; el contenido va en src/content/proyectos)
   'proyectos.verCaso': 'Ver caso de estudio',
@@ -81,8 +94,22 @@ export const es = {
   'caso.tipo.cliente': 'Cliente',
   'caso.tipo.practicas': 'Prácticas',
 
-  // Sobre mí
-  'sobre.texto': '[PLACEHOLDER: texto breve y personal de Carlos para Sobre mí]',
+  // Sobre mí (spec it2 §5); *texto* se pinta en cursiva
+  'sobre.titular': 'Empecé dibujando mundos. Ahora construyo lo que hay debajo.',
+  'sobre.p1':
+    'Pasé más de dos años diseñando los escenarios de *Aeterna Noctis*. Después hice apps en Flutter y acabé en el backend: hoy escribo Go en Top Doctors e integro sistemas que tienen que funcionar aunque nadie los vea.',
+  'sobre.p2':
+    'Del diseño gráfico me traje la manía por el detalle. Una API también se puede hacer con gusto: nombres claros, errores que se entienden y tests que cuentan qué hace el código.',
+  'sobre.p3':
+    'Soy de los que se ríen en las reuniones y prueban la herramienta nueva el mismo día que sale. En paralelo llevo ACELERIK, donde construyo productos propios como Acelerik Booking.',
+  'sobre.datos.ubicacion.clave': 'ubicación:',
+  'sobre.datos.ubicacion.valor': 'Talavera de la Reina, Toledo · Madrid · Remoto',
+  'sobre.datos.stack.clave': 'stack:',
+  'sobre.datos.stack.valor': 'Go · Pub/Sub · Docker · PostgreSQL',
+  'sobre.datos.antes.clave': 'antes:',
+  'sobre.datos.antes.valor': 'diseño gráfico de videojuegos',
+  'sobre.datos.fuera.clave': 'fuera del código:',
+  'sobre.datos.fuera.valor': 'trasteando con lo último en tecnología e IA',
 
   // Stack mostrado
   'stack.titulo': 'Stack',

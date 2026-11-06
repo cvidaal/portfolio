@@ -1,38 +1,37 @@
-// Genera, desde assets-src/face.webp (cabeza en tinta roja con alfa), todo lo que lleva la cara:
-//   public/face-nav.webp  96x96, cabeza entera sobre papel #F1EDE6 (circulo del menu, 2x de un circulo de 40 px)
-//   public/favicon.png    192 px (tambien apple-touch-icon), cabeza entera sobre papel
-//   public/favicon.ico    16/32/48 px (PNG embebidos); recorte mas cerrado a la cara (sin el exceso de pelo)
-//     para que a 16 px se reconozca en vez de ser una mancha roja.
+// Genera, desde assets-src/face.svg (vector de Carlos, 1254x1254, fondo transparente), todo lo que lleva la cara.
+// Todo con fondo TRANSPARENTE: sin circulo, sin borde y sin papel. El SVG (4,5 MB) nunca se sirve al navegador.
+//   public/face-nav.webp, face-nav@2x.webp, face-nav@3x.webp   cabeza sola, 40 / 80 / 120 px de alto (srcset del menu)
+//   public/favicon.png    192 px (tambien apple-touch-icon), recorte ajustado a la cabeza
+//   public/favicon.ico    16/32/48 px (PNG embebidos)
 import sharp from 'sharp';
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const src = join(root, 'assets-src/face.webp');
-const PAPEL = { r: 0xf1, g: 0xed, b: 0xe6, alpha: 1 };
+const SIN_FONDO = { r: 0, g: 0, b: 0, alpha: 0 };
 
-// Recortes cuadrados sobre la imagen de 1254 px: {left, top, size}.
-const CABEZA = { left: 150, top: 20, size: 1000 }; // cabeza entera con margen
-const CARA = { left: 250, top: 330, size: 780 }; // desde la frente: ojos, nariz y bigote ocupan el icono
+// Se rasteriza una vez a 1254 px (densidad 72) y de ahi salen todos los tamanos.
+const base = await sharp(join(root, 'assets-src/face.svg'), { density: 72 }).png().toBuffer();
 
-const render = (crop, size, { round = false } = {}) => {
-  let img = sharp(src).extract({ left: crop.left, top: crop.top, width: crop.size, height: crop.size })
-    .flatten({ background: PAPEL }).resize(size, size, { kernel: 'lanczos3' });
-  if (round) {
-    const r = size / 2;
-    const mask = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><circle cx="${r}" cy="${r}" r="${r}"/></svg>`);
-    img = img.composite([{ input: mask, blend: 'dest-in' }]);
-  }
-  return img;
-};
+// Recortes sobre la imagen de 1254 px (la cabeza ocupa x 186-1061, y 36-1108).
+const CABEZA = { left: 178, top: 28, width: 895, height: 1088 }; // cabeza entera, margen minimo (para el menu)
+const CUADRADO = { left: 76, top: 28, width: 1096, height: 1096 }; // la misma cabeza, centrada en un cuadrado
 
-await render(CABEZA, 96).webp({ quality: 90 }).toFile(join(root, 'public/face-nav.webp'));
-writeFileSync(join(root, 'public/favicon.png'), await render(CABEZA, 192).png({ compressionLevel: 9 }).toBuffer());
+const render = (crop, w, h) =>
+  sharp(base).extract(crop).resize(w, h, { fit: 'contain', background: SIN_FONDO, kernel: 'lanczos3' });
+
+// Menu: ~40 px de alto (1x / 2x / 3x). Ancho = 40 * 895/1088 = 32,9 -> 33 px a 1x.
+for (const [suf, alto] of [['', 40], ['@2x', 80], ['@3x', 120]]) {
+  await render(CABEZA, Math.round((alto * CABEZA.width) / CABEZA.height), alto)
+    .webp({ quality: 92, alphaQuality: 100 }).toFile(join(root, `public/face-nav${suf}.webp`));
+}
+
+writeFileSync(join(root, 'public/favicon.png'), await render(CUADRADO, 192, 192).png({ compressionLevel: 9 }).toBuffer());
 
 // ICO: cabecera (6 B) + directorio (16 B por imagen) + PNG embebidos (validos desde Vista).
 const sizes = [16, 32, 48];
-const frames = await Promise.all(sizes.map((s) => render(CARA, s).png({ compressionLevel: 9 }).toBuffer()));
+const frames = await Promise.all(sizes.map((s) => render(CUADRADO, s, s).png({ compressionLevel: 9 }).toBuffer()));
 const head = Buffer.alloc(6 + 16 * sizes.length);
 head.writeUInt16LE(0, 0); head.writeUInt16LE(1, 2); head.writeUInt16LE(sizes.length, 4);
 let offset = head.length;
@@ -46,10 +45,14 @@ sizes.forEach((s, i) => {
 writeFileSync(join(root, 'public/favicon.ico'), Buffer.concat([head, ...frames]));
 
 if (process.argv.includes('--preview')) {
-  // Vista ampliada (x16 / x8, vecino mas cercano) de los frames del ico para revisarlos a ojo.
+  // Vista ampliada (vecino mas cercano) de los frames 16 y 32 sobre fondo de pestana claro y oscuro.
   const out = process.argv[process.argv.indexOf('--preview') + 1];
-  const big = await Promise.all(sizes.slice(0, 2).map((s, i) => sharp(frames[i]).resize(s * (s === 16 ? 16 : 12), null, { kernel: 'nearest' }).png().toBuffer()));
-  await sharp({ create: { width: 256 + 384 + 60, height: 400, channels: 3, background: '#222' } })
-    .composite([{ input: big[0], left: 20, top: 20 }, { input: big[1], left: 296, top: 20 }]).png().toFile(out);
+  const big = await Promise.all([0, 1].map((i) => sharp(frames[i]).resize(sizes[i] * (i ? 8 : 16), null, { kernel: 'nearest' }).png().toBuffer()));
+  const W = 2 * 572;
+  const mitad = (bg, x) => ({ input: { create: { width: W / 2, height: 300, channels: 3, background: bg } }, left: x, top: 0 });
+  await sharp({ create: { width: W, height: 300, channels: 3, background: '#fff' } })
+    .composite([mitad('#f1f1f1', 0), mitad('#202124', W / 2),
+      { input: big[0], left: 20, top: 20 }, { input: big[1], left: 20 + 256 + 20, top: 20 },
+      { input: big[0], left: W / 2 + 20, top: 20 }, { input: big[1], left: W / 2 + 20 + 256 + 20, top: 20 }]).png().toFile(out);
 }
 console.log('favicons generados');
