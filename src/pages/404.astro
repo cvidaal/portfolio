@@ -1,16 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
+import { t } from '../i18n';
 ---
 <Base
-  title="Página no encontrada · Carlos Vidal"
-  description="La página que buscas no existe."
+  title={`${t('error404.titulo')} · Carlos Vidal`}
+  description={t('error404.descripcion')}
   path="/404"
   noindex
 >
   <main class="nf">
     <p class="code">404</p>
-    <h1>Esta página no existe</h1>
-    <a href="/">Volver al inicio</a>
+    <h1>{t('error404.texto')}</h1>
+    <a href="/">{t('error404.volver')}</a>
   </main>
 </Base>
 

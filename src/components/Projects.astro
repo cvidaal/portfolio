@@ -13,7 +13,7 @@ const proyectos = (await getCollection('proyectos')).sort((a, b) => a.data.orden
       {p.data.slug === 'bot-pedidos-whatsapp' && (
         <div slot="imagen" class="wa">
           <span class="ej mono">{t('proyectos.bot.ejemplo')}</span>
-          <div class="bub"><span class="au mono">Nota de voz <span aria-hidden="true">━━━━━</span> {t('proyectos.bot.audioDuracion')}</span><br /><i>{t('proyectos.bot.audio')}</i></div>
+          <div class="bub"><span class="au mono">{t('proyectos.bot.notaVoz')} <span aria-hidden="true">━━━━━</span> {t('proyectos.bot.audioDuracion')}</span><br /><i>{t('proyectos.bot.audio')}</i></div>
           <div class="bub me">{t('proyectos.bot.respuesta')}</div>
         </div>
       )}

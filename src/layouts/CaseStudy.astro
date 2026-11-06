@@ -22,7 +22,7 @@ const ultima = palabras.pop();
 const primeras = palabras.join(' ');
 const tipo = t(`caso.tipo.${d.tipo}` as 'caso.tipo.producto');
 ---
-<Base title={`${d.titulo} · Caso de estudio · Carlos Vidal`} description={d.titular} path={`/proyectos/${d.slug}`}>
+<Base title={`${d.titulo} · ${t('caso.sufijoTitulo')} · Carlos Vidal`} description={d.titular} path={`/proyectos/${d.slug}`}>
   <Nav base="/" />
   <main id="main">
     <header class="cs-head">
@@ -62,10 +62,10 @@ const tipo = t(`caso.tipo.${d.tipo}` as 'caso.tipo.producto');
     </nav>
   </main>
   <Footer />
+  <script>
+    import '../scripts/toc-active';
+  </script>
 </Base>
-<script>
-  import '../scripts/toc-active';
-</script>
 <style>
   .cs-head { padding-block: 44px 30px; border-bottom: 1px solid var(--line); }
   .crumb { font-size: 12px; color: var(--muted); margin-bottom: 22px; }

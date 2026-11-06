@@ -53,6 +53,7 @@ export const es = {
   'proyectos.verTiendas': 'Ver en las tiendas',
   'proyectos.bot.ejemplo': 'Ejemplo',
   'proyectos.bot.audio': '"Ponme 10 barras más para mañana"',
+  'proyectos.bot.notaVoz': 'Nota de voz',
   'proyectos.bot.audioDuracion': '0:07',
   'proyectos.bot.respuesta': 'Le apunto para el viernes 30/10: 10 barras más. ¿Está bien?',
   'proyectos.ab.altReserva': 'Captura de la pantalla de reserva de cumpleaños de Acelerik Booking',
@@ -70,7 +71,7 @@ export const es = {
   'caso.volver': 'Volver a proyectos',
   'caso.volverTodos': 'Todos',
   'caso.siguiente': 'Siguiente caso',
-  'caso.anterior': 'Caso anterior',
+  'caso.sufijoTitulo': 'Caso de estudio',
   'caso.tipo.producto': 'Producto propio',
   'caso.tipo.cliente': 'Cliente',
   'caso.tipo.practicas': 'Prácticas',
@@ -187,7 +188,8 @@ export const es = {
   'footer.subir': 'Volver arriba',
 
   // 404
-  'error404.titulo': '404 Not Found',
-  'error404.texto': 'Esta ruta no existe.',
+  'error404.titulo': 'Página no encontrada',
+  'error404.descripcion': 'La página que buscas no existe.',
+  'error404.texto': 'Esta página no existe',
   'error404.volver': 'Volver al inicio',
 } as const;
