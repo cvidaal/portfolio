@@ -63,3 +63,14 @@ test('copiar email: si falla el portapapeles se avisa y no se dice copiado', asy
   await expect(page.getByText('Email copiado')).toHaveCount(0);
   await expect(btn.locator('.copy-txt')).toHaveText('Copiar email');
 });
+
+test('copiar email: dos clics rápidos no dejan la etiqueta atascada', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/');
+  const btn = page.getByRole('button', { name: /copiar email/i });
+  await btn.click();
+  await expect(btn.locator('.copy-txt')).toHaveText('Email copiado');
+  await btn.click();
+  await expect(btn.locator('.copy-txt')).toHaveText('Email copiado');
+  await expect(btn.locator('.copy-txt')).toHaveText('Copiar email', { timeout: 5000 });
+});
