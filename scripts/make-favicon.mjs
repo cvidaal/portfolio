@@ -18,6 +18,9 @@ const base = await sharp(join(root, 'assets-src/face.svg'), { density: 72 }).png
 const CABEZA = { left: 178, top: 28, width: 895, height: 1088 }; // cabeza entera, margen minimo (para el menu)
 const CUADRADO = { left: 76, top: 28, width: 1096, height: 1096 }; // la misma cabeza, centrada en un cuadrado
 
+// Recorte ajustado a la cara (menos pelo) para los frames pequenos: a 16 px la cabeza entera se vuelve un borron.
+const CARA = { left: 236, top: 330, width: 780, height: 780 };
+
 const render = (crop, w, h) =>
   sharp(base).extract(crop).resize(w, h, { fit: 'contain', background: SIN_FONDO, kernel: 'lanczos3' });
 
@@ -27,11 +30,11 @@ for (const [suf, alto] of [['', 40], ['@2x', 80], ['@3x', 120]]) {
     .webp({ quality: 92, alphaQuality: 100 }).toFile(join(root, `public/face-nav${suf}.webp`));
 }
 
-writeFileSync(join(root, 'public/favicon.png'), await render(CUADRADO, 192, 192).png({ compressionLevel: 9 }).toBuffer());
+writeFileSync(join(root, 'public/favicon.png'), await render(CUADRADO, 192, 192).png({ compressionLevel: 9, palette: true, quality: 90, effort: 10 }).toBuffer());
 
 // ICO: cabecera (6 B) + directorio (16 B por imagen) + PNG embebidos (validos desde Vista).
 const sizes = [16, 32, 48];
-const frames = await Promise.all(sizes.map((s) => render(CUADRADO, s, s).png({ compressionLevel: 9 }).toBuffer()));
+const frames = await Promise.all(sizes.map((s) => render(s <= 32 ? CARA : CUADRADO, s, s).png({ compressionLevel: 9 }).toBuffer()));
 const head = Buffer.alloc(6 + 16 * sizes.length);
 head.writeUInt16LE(0, 0); head.writeUInt16LE(1, 2); head.writeUInt16LE(sizes.length, 4);
 let offset = head.length;

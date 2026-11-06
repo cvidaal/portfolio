@@ -9,6 +9,7 @@ Sitio personal de Carlos Vidal, Backend Developer · Go. https://www.cvidal.dev
 - **CSS propio** con variables (`src/styles/tokens.css`); los temas rojo/azul/verde re-escriben el acento con `applyTheme` (`src/lib/theme.ts`).
 - Fuentes autoalojadas con fontsource (Bricolage Grotesque y JetBrains Mono), precargadas en `src/layouts/Base.astro`.
 - Movimiento sin librerías: apariciones con IntersectionObserver (`src/scripts/reveal.ts`, clase `.reveal`) y View Transitions nativas entre documentos (`@view-transition` en `src/styles/global.css`). Con `prefers-reduced-motion: reduce` no hay ni apariciones ni transiciones, y sin JS no se oculta nada.
+- `simple-icons` va fijado exactamente a 13.21.0 porque LinkedIn desapareció en v14+; no lo subas sin comprobarlo.
 - Textos en `src/i18n/es.ts` y `src/content/` (colección `proyectos`).
 - Tests: Vitest (unidad) y Playwright + axe (e2e sobre `astro preview`). Lighthouse CI para rendimiento y accesibilidad.
 
