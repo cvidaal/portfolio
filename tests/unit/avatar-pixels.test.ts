@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-// @ts-expect-error módulo .mjs sin tipos
 import { purpleness, luminance, ramp, floodBackground, largestComponent } from '../../scripts/avatar/pixels.mjs';
 
 describe('pixels', () => {
