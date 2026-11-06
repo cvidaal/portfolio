@@ -13,7 +13,8 @@
     "avatar:bake": "node scripts/avatar/bake.mjs",
     "lhci:mobile": "lhci autorun --upload.outputDir=.lighthouseci/mobile",
     "lhci:desktop": "lhci autorun --collect.settings.preset=desktop --upload.outputDir=.lighthouseci/desktop",
-    "check": "astro check && tsc --noEmit"
+    "check": "astro check && tsc --noEmit",
+    "cv": "node scripts/make-cv.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.3",

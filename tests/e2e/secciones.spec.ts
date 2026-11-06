@@ -28,20 +28,20 @@ test.describe('experiencia', () => {
     await expect(t0).toContainText('Integration Developer');
     await expect(t0).toContainText('mar. 2026 – actualidad');
     await expect(t0).toContainText('Remoto');
-    await expect(t0).toContainText('Conecto la plataforma con sistemas externos en Go: más de 10 integraciones en producción.');
-    await expect(t0).toContainText('Mensajería asíncrona con GCP Pub/Sub, servicios en Docker y testing en cada integración.');
-    await expect(t1).toContainText('Desarrollador Flutter');
+    await expect(t0).toContainText('Conecto la plataforma con aseguradoras, hospitales y software clínico en Go: más de 10 integraciones con APIs de terceros.');
+    await expect(t0).toContainText('pipeline de ingesta del catálogo público de medicamentos del NHS');
+    await expect(t1).toContainText('Desarrollador Mobile (Flutter)');
     await expect(t1).toContainText('Prácticas');
     await expect(t1).toContainText('mar. – jun. 2025');
-    await expect(t1).toContainText('Desarrollé la app en Flutter y conecté los pagos con Stripe.');
+    await expect(t1).toContainText('Escáner de códigos de barras y reservas para clubes de pádel');
     await expect(t1.getByRole('link', { name: 'Ver el proyecto' })).toHaveAttribute('href', '#proyectos');
-    await expect(t2).toContainText('Diseñador gráfico de escenarios');
-    await expect(t2).toContainText('mar. 2020 – jul. 2022');
+    await expect(t2).toContainText('Level Designer');
+    await expect(t2).toContainText('may. 2020 – jul. 2022');
     await expect(t2).toContainText('Aeterna Noctis');
-    await expect(t2).toContainText('Diseñé gráficamente más de 35 niveles');
-    await expect(t0.locator('.tags li')).toHaveText(['Go', 'GCP Pub/Sub', 'Docker', 'Testing']);
-    await expect(t1.locator('.tags li')).toHaveText(['Flutter', 'Stripe', 'Firebase']);
-    await expect(t2.locator('.tags li')).toHaveText(['Unity', 'Diseño gráfico']);
+    await expect(t2).toContainText('Diseño técnico de más de 35 niveles en Unity');
+    await expect(t0.locator('.tags li')).toHaveText(['Go', 'APIs REST', 'Webhooks', 'GCP Pub/Sub', 'Docker', 'SQL']);
+    await expect(t1.locator('.tags li')).toHaveText(['Flutter', 'Stripe', 'Firebase', 'APIs REST']);
+    await expect(t2.locator('.tags li')).toHaveText(['Unity', 'Level design']);
   });
 
   test('cada tarjeta muestra el logo de su empresa, sin imágenes rotas', async ({ page }) => {
@@ -64,16 +64,16 @@ test.describe('sobre mí', () => {
     await page.goto('/');
     const s = page.locator('section#sobre-mi');
     await expect(s).toHaveCount(1);
-    await expect(s.locator('h3')).toHaveText('Empecé dibujando mundos. Ahora construyo lo que hay debajo.');
-    await expect(s).toContainText('Pasé más de dos años diseñando los escenarios de Aeterna Noctis.');
-    await expect(s).toContainText('Del diseño gráfico me traje la manía por el detalle.');
+    await expect(s.locator('h3')).toHaveText('Empecé diseñando mundos. Ahora construyo lo que hay debajo.');
+    await expect(s).toContainText('Pasé más de dos años diseñando niveles de Aeterna Noctis.');
+    await expect(s).toContainText('Del diseño de niveles me traje la manía por el detalle.');
     await expect(s).toContainText('prueban la herramienta nueva el mismo día que sale');
     await expect(s).toContainText('Acelerik Booking');
     await expect(s.locator('dl dt')).toHaveText(['ubicación:', 'stack:', 'antes:', 'fuera del código:']);
     await expect(s.locator('dl dd')).toHaveText([
-      'Talavera de la Reina, Toledo · Madrid · Remoto',
+      'Madrid · Remoto',
       'Go · Pub/Sub · Docker · PostgreSQL',
-      'diseño gráfico de videojuegos',
+      'level design de videojuegos',
       'trasteando con lo último en tecnología e IA',
     ]);
     await expect(s).not.toContainText('PLACEHOLDER');

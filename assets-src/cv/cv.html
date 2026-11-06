@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Carlos Vidal Sánchez · CV Backend Developer · Go</title>
+<style>
+  @font-face { font-family: 'Bricolage'; src: url('../../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2') format('woff2'); font-weight: 200 800; }
+  @font-face { font-family: 'Mono'; src: url('../../node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2') format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'Mono'; src: url('../../node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2') format('woff2'); font-weight: 600; }
+
+  :root { --bg: #101012; --paper: #F1EDE6; --acc: #E4251B; --acc-txt: #B81B12; --ink: #1d1d20; --mut: #5c5a57; --line: #e2ddd5; }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: 'Bricolage', sans-serif; color: var(--ink); font-size: 9.4pt; line-height: 1.3; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .mono { font-family: 'Mono', monospace; }
+  a { color: inherit; text-decoration: none; }
+
+  header { background: var(--bg); color: var(--paper); display: flex; gap: 22px; align-items: center; padding: 20px 36px 18px; position: relative; overflow: hidden; }
+  header::after { content: ''; position: absolute; right: -40px; top: -60px; width: 190px; height: 190px; border-radius: 50%;
+    background: repeating-linear-gradient(45deg, rgba(228,37,27,.85) 0 3px, transparent 3px 10px); }
+  .foto { width: 104px; height: 104px; border-radius: 50%; border: 3px solid var(--acc); background: url('foto-cv.jpg') center 22% / cover; flex: none; }
+  .kicker { font: 600 9pt 'Mono', monospace; color: var(--acc); letter-spacing: .02em; }
+  h1 { margin: 2px 0 2px; font-size: 25pt; line-height: 1; font-weight: 800; letter-spacing: -0.03em; }
+  .sub { font-size: 11pt; color: #d7d2ca; margin-bottom: 8px; }
+  .contacto { font: 8.6pt 'Mono', monospace; color: #e9e4dc; display: flex; flex-wrap: wrap; gap: 3px 14px; position: relative; z-index: 1; }
+  .contacto b { color: var(--acc); font-weight: 600; }
+
+  main { padding: 12px 36px 10px; }
+  h2 { font: 600 9pt 'Mono', monospace; color: var(--acc-txt); letter-spacing: .14em; text-transform: uppercase; margin: 10px 0 5px; padding-bottom: 3px; border-bottom: 1.5px solid var(--acc); }
+  h2:first-child { margin-top: 0; }
+  p { margin: 0; }
+  .job { margin-bottom: 6px; }
+  .job-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .job-h h3 { margin: 0; font-size: 10.4pt; font-weight: 700; letter-spacing: -0.01em; }
+  .job-h .when { font: 8.4pt 'Mono', monospace; color: var(--mut); white-space: nowrap; }
+  ul { margin: 3px 0 0; padding-left: 15px; }
+  li { margin: 1px 0; }
+  li::marker { color: var(--acc); }
+  .tags { font: 8.3pt 'Mono', monospace; color: var(--acc-txt); margin-top: 3px; }
+  .skills { display: grid; grid-template-columns: 150px 1fr; gap: 3px 12px; }
+  .skills dt { font-weight: 700; }
+  .skills dd { margin: 0; }
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 0 26px; }
+  .pie { font: 8pt 'Mono', monospace; color: var(--mut); text-align: right; margin-top: 6px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="foto" role="img" aria-label="Foto de Carlos Vidal"></div>
+  <div>
+    <div class="kicker">// backend developer · go</div>
+    <h1>Carlos Vidal Sánchez</h1>
+    <div class="sub">Backend Developer · Go (Golang) · APIs REST e integraciones</div>
+    <div class="contacto">
+      <span><b>›</b> Madrid · Remoto</span>
+      <span><b>›</b> +34 608 42 93 82</span>
+      <span><b>›</b> <a href="mailto:carlosvidal.developer@gmail.com">carlosvidal.developer@gmail.com</a></span>
+      <span><b>›</b> <a href="https://www.linkedin.com/in/carlosvidaldev/">linkedin.com/in/carlosvidaldev</a></span>
+      <span><b>›</b> <a href="https://github.com/cvidaal">github.com/cvidaal</a></span>
+      <span><b>›</b> <a href="https://www.cvidal.dev">cvidal.dev</a></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <h2>Perfil</h2>
+  <p>Desarrollador backend con Go. Desde marzo de 2026 en Top Doctors como Integration Developer, donde he desarrollado más de 10 integraciones con sistemas externos del sector salud: aseguradoras, hospitales, software de gestión clínica y diagnóstico por imagen. Trabajo con APIs REST, webhooks, GCP Pub/Sub y testing, y busco seguir creciendo en backend y sistemas distribuidos.</p>
+
+  <h2>Experiencia profesional</h2>
+  <div class="job">
+    <div class="job-h"><h3>Integration Developer (Go) · Top Doctors</h3><span class="when">mar. 2026 – actualidad · Remoto</span></div>
+    <ul>
+      <li>Más de 10 integraciones desarrolladas o ampliadas con APIs de terceros: sincronización de datos maestros (centros, doctores, servicios, seguros) y ciclo completo de citas (disponibilidad, creación, cancelación y reprogramación).</li>
+      <li>Procesamiento asíncrono de citas con GCP Pub/Sub, webhooks entrantes y clientes REST salientes, con enrutado por proveedor y mapeo de modelos entre sistemas.</li>
+      <li>Capa de adaptadores en la API v2 para dirigir los mismos endpoints a distintos proveedores sin cambiar el contrato JSON.</li>
+      <li>Diseño y desarrollo en solitario de un pipeline de ingesta semanal de un catálogo público de medicamentos: parseo de XML, modelo relacional, migraciones y API HTTP de consulta.</li>
+      <li>Servicios por capas con tests unitarios (mockery) y resolución de incidencias en producción: reservas duplicadas, concurrencia y errores de mapeo.</li>
+    </ul>
+    <div class="tags">Go · APIs REST · Webhooks · GCP Pub/Sub · Docker · SQL · GORM · mockery</div>
+  </div>
+  <div class="job">
+    <div class="job-h"><h3>Desarrollador Mobile (Flutter) · Ulandu</h3><span class="when">mar. 2025 – jun. 2025 · Talavera de la Reina</span></div>
+    <ul>
+      <li>App comercial "Bendita Burger" (iOS y Android): flujo de pedido, pagos con Stripe, notificaciones push con Firebase y APIs REST de un backend Laravel.</li>
+      <li>Escáner de códigos de barras y reservas para clubes de pádel; corrección de bugs críticos antes de cada lanzamiento.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="job-h"><h3>Level Designer · Aeternum Game Studios</h3><span class="when">may. 2020 – jul. 2022 · Talavera de la Reina</span></div>
+    <ul>
+      <li>Diseño técnico de más de 35 niveles en Unity para <i>Aeterna Noctis</i> (PlayStation, Xbox, Switch y PC), junto al equipo de programación.</li>
+    </ul>
+  </div>
+
+  <h2>Proyectos propios · ACELERIK</h2>
+  <div class="job">
+    <div class="job-h"><h3>Acelerik Booking · Reservas y cobro de señal para parques infantiles</h3><span class="when"><a href="https://github.com/cvidaal/acelerik-demo">github.com/cvidaal/acelerik-demo</a></span></div>
+    <ul>
+      <li>API REST en Go (Gin + Huma, con especificación OpenAPI) sobre PostgreSQL con pgx: gestión de reservas con una máquina de estados validada (pendiente, confirmada, cancelada, completada).</li>
+      <li>Cobro de señal con Stripe Checkout y webhooks, con transacciones y bloqueo de fila (SELECT … FOR UPDATE) para evitar pagos duplicados.</li>
+      <li>Tests unitarios table-driven de servicios y handlers; panel de administración en React y TypeScript.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="job-h"><h3>Bot de pedidos por WhatsApp · Cliente de ACELERIK (piloto)</h3><span class="when">Python · FastAPI</span></div>
+    <ul>
+      <li>Recibe mensajes y notas de voz por WhatsApp Cloud API, transcribe los audios y extrae el pedido con un LLM; las reglas de negocio validan cada línea y lo dudoso pasa a revisión humana.</li>
+      <li>Cierre diario con hora límite en Europe/Madrid y hoja de producción; más de 300 tests.</li>
+    </ul>
+  </div>
+
+  <h2>Habilidades técnicas</h2>
+  <dl class="skills">
+    <dt>Backend</dt><dd>Go, Gin, APIs REST, webhooks, GCP Pub/Sub, procesamiento asíncrono, integración de sistemas</dd>
+    <dt>Datos y testing</dt><dd>SQL, PostgreSQL, GORM, pgx, migraciones, tests unitarios con mockery</dd>
+    <dt>Herramientas y otros</dt><dd>Docker, Git, Postman, Python, FastAPI, TypeScript, Node.js, Flutter / Dart</dd>
+  </dl>
+
+  <div class="dos">
+    <div>
+      <h2>Formación</h2>
+      <p><b>CFGS DAM</b> · Kapital Inteligente · 2023 – 2025</p>
+      <p><b>CFGM SMR</b> · IES Ribera del Tajo · 2021 – 2023</p>
+    </div>
+    <div>
+      <h2>Idiomas</h2>
+      <p><b>Español:</b> nativo</p>
+      <p><b>Inglés:</b> A2–B1, en formación</p>
+    </div>
+  </div>
+  <div class="pie">cvidal.dev</div>
+</main>
+</body>
+</html>

@@ -50,10 +50,10 @@ CHROME_PATH="$LOCALAPPDATA/ms-playwright/chromium-1248/chrome-win64/chrome.exe" 
 - **Capas del avatar** (`public/avatar/`): `npm run avatar:bake`. Lee `assets-src/avatar-ref.webp` y escribe `base.webp`, párpados, cejas, labios, `layers.json`, la imagen estática `static.webp` y sus variantes `static-480.webp` y `static-800.webp` (srcset del hero). Los resultados se versionan; vuelve a ejecutarlo solo si cambia la imagen de referencia o la lógica de `scripts/avatar/`.
 - **Imagen og** (`public/og.png`, 1200x630, PNG de paleta < 300 KB para que WhatsApp la admita): `node scripts/make-og.mjs`. Parte de `public/avatar/static.webp`, así que ejecútalo después de `avatar:bake` si este cambia.
 - **Favicons** (`assets-src/face.svg` es la fuente, fondo transparente; `face-nav.webp`/`@2x`/`@3x` (menú, cara sola), `favicon.png` de 192 px, también apple-touch-icon, y `favicon.ico` de 16/32/48): `node scripts/make-favicon.mjs`.
+- **Logos de experiencia** (`src/assets/logos/`, a partir de los originales de `assets-src/logos/`): `node scripts/make-logos.mjs`.
+- **CV en PDF** (`public/CarlosVidal_Backend_CV.pdf`, A4 de una página): edita `assets-src/cv/cv.html` y ejecuta `npm run cv` (falla si el CV no cabe en una página; deja una vista previa en `assets-src/cv/preview.png`).
 
 ## Antes de publicar
-
-- [ ] Añadir `public/CarlosVidal_Backend_CV.pdf` (el botón de CV apunta a `/CarlosVidal_Backend_CV.pdf`).
 - [ ] Rellenar los placeholders, que en producción se ocultan y solo se ven en `npm run dev`: los dos "Qué aprendí", "El problema" de Acelerik y la nota secreta del juego (`juego.notaSecreta`).
 - [ ] Comprobar cómo se despliega: el repositorio no incluye configuración de Vercel, Netlify ni CI. Confirma si `main` se despliega solo antes de fusionar `rediseno-portfolio`.
 - [ ] `npm run check`, `npm test` y `npm run build && npm run test:e2e` en verde (el e2e falla si queda algún `[PLACEHOLDER` en `dist/`).
