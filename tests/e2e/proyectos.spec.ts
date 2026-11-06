@@ -22,8 +22,10 @@ test('las tarjetas enlazan a su caso o a las tiendas', async ({ page }) => {
 test('caso Acelerik: índice, código real y navegación', async ({ page }) => {
   await page.goto('/proyectos/acelerik-booking');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Acelerik');
-  // En producción "El problema" y "Qué aprendí" (pendientes de Carlos) no se publican: 8 - 2 = 6.
-  await expect(page.locator('nav.toc a')).toHaveCount(6);
+  // Las 8 secciones del caso ya tienen texto de Carlos.
+  await expect(page.locator('nav.toc a')).toHaveCount(8);
+  await expect(page.locator('#problema')).toContainText('franjas se solapan');
+  await expect(page.locator('#aprendi')).toContainText('una reserva es un problema de concurrencia');
   await expect(page.locator('pre')).toContainText('pg_advisory_xact_lock');
   await expect(page.locator('body')).not.toContainText(/\bCI\b(?! con GitHub Actions)/);
   await expect(page.getByRole('link', { name: /Bot de pedidos/ })).toHaveAttribute('href', '/proyectos/bot-pedidos-whatsapp');
@@ -33,16 +35,17 @@ test('caso Acelerik: índice, código real y navegación', async ({ page }) => {
 test('caso Bot: índice y sin menciones prohibidas', async ({ page }) => {
   await page.goto('/proyectos/bot-pedidos-whatsapp');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Bot');
-  await expect(page.locator('nav.toc a')).toHaveCount(5);
+  await expect(page.locator('nav.toc a')).toHaveCount(6);
+  await expect(page.locator('#aprendi')).toContainText('la IA propone, el código decide');
   await expect(page.locator('body')).toContainText('más de 300 tests');
   await expect(page.locator('body')).not.toContainText(/Claude|880/);
   await expect(page.getByRole('link', { name: /Acelerik Booking/ }).first()).toHaveAttribute('href', '/proyectos/acelerik-booking');
 });
 
-test('los casos no publican secciones pendientes', async ({ page }) => {
+test('los casos no publican placeholders', async ({ page }) => {
   for (const slug of ['acelerik-booking', 'bot-pedidos-whatsapp']) {
     await page.goto(`/proyectos/${slug}`);
-    await expect(page.locator('body')).not.toContainText(/PLACEHOLDER|confirmar con Carlos|Qué aprendí/);
+    await expect(page.locator('body')).not.toContainText(/PLACEHOLDER|confirmar con Carlos/);
   }
 });
 

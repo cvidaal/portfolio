@@ -20,11 +20,10 @@ secciones:
   - { id: decisiones, label: Decisiones }
   - { id: testing, label: Testing }
   - { id: estado, label: Estado }
-  - { id: aprendi, label: Qué aprendí, pendiente: true }
+  - { id: aprendi, label: Qué aprendí }
 ---
 import Seccion from '../../../components/case/Seccion.astro';
 import Decision from '../../../components/case/Decision.astro';
-import Ph from '../../../components/Ph.astro';
 
 <Seccion id="problema" etiqueta="El problema" titulo="Pedidos por audio que alguien tiene que apuntar a mano">
 
@@ -108,8 +107,8 @@ El bot se desarrolla para una panadería cliente de ACELERIK y está en fase de 
 
 </Seccion>
 
-<Seccion id="aprendi" etiqueta="Qué aprendí" pendiente>
+<Seccion id="aprendi" etiqueta="Qué aprendí">
 
-<Ph text="[PLACEHOLDER: texto de Carlos sobre qué aprendió con el bot de pedidos]" />
+Que con IA lo difícil no es entender el audio, sino decidir qué hacer cuando duda: la IA propone, el código decide y lo que no está claro pasa a una persona. Y que cuando los clientes no van a cambiar sus hábitos, el software tiene que adaptarse a ellos, no al revés.
 
 </Seccion>

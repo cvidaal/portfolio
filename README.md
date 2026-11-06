@@ -54,7 +54,6 @@ CHROME_PATH="$LOCALAPPDATA/ms-playwright/chromium-1248/chrome-win64/chrome.exe" 
 - **CV en PDF** (`public/CarlosVidal_Backend_CV.pdf`, A4 de una página): edita `assets-src/cv/cv.html` y ejecuta `npm run cv` (falla si el CV no cabe en una página; deja una vista previa en `assets-src/cv/preview.png`).
 
 ## Antes de publicar
-- [ ] Rellenar los placeholders, que en producción se ocultan y solo se ven en `npm run dev`: los dos "Qué aprendí", "El problema" de Acelerik y la nota secreta del juego (`juego.notaSecreta`).
 - [ ] Comprobar cómo se despliega: el repositorio no incluye configuración de Vercel, Netlify ni CI. Confirma si `main` se despliega solo antes de fusionar `rediseno-portfolio`.
 - [ ] `npm run check`, `npm test` y `npm run build && npm run test:e2e` en verde (el e2e falla si queda algún `[PLACEHOLDER` en `dist/`).
 

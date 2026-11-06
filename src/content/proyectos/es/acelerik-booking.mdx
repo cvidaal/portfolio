@@ -21,24 +21,23 @@ caso: true
 estado: Demo (acceso bajo petición)
 rol: Diseño y desarrollo en solitario
 secciones:
-  - { id: problema, label: El problema, pendiente: true }
+  - { id: problema, label: El problema }
   - { id: v1, label: La v1 }
   - { id: por-que-go, label: Por qué Go }
   - { id: decisiones, label: Decisiones técnicas }
   - { id: arquitectura, label: Arquitectura }
   - { id: testing, label: Testing }
-  - { id: aprendi, label: Qué aprendí, pendiente: true }
+  - { id: aprendi, label: Qué aprendí }
   - { id: siguiente, label: Siguiente }
 ---
 import Seccion from '../../../components/case/Seccion.astro';
 import Decision from '../../../components/case/Decision.astro';
 import Evo from '../../../components/case/Evo.astro';
 import ArchDiagram from '../../../components/case/ArchDiagram.astro';
-import Ph from '../../../components/Ph.astro';
 
-<Seccion id="problema" etiqueta="El problema" titulo="Cumpleaños gestionados por teléfono y libreta" pendiente>
+<Seccion id="problema" etiqueta="El problema" titulo="Cumpleaños gestionados por teléfono y libreta">
 
-<Ph text="[PLACEHOLDER: confirmar con Carlos: cómo se gestionaban las reservas de cumpleaños antes de la herramienta]" />
+Los parques infantiles gestionan los cumpleaños por teléfono, WhatsApp y una libreta: las franjas se solapan, la señal se cobra a mano y nadie sabe qué queda libre sin preguntar.
 
 </Seccion>
 
@@ -146,9 +145,9 @@ Un único binario (Gin con Huma) expone la API, sirve el frontend compilado y ha
 
 </Seccion>
 
-<Seccion id="aprendi" etiqueta="Qué aprendí" pendiente>
+<Seccion id="aprendi" etiqueta="Qué aprendí">
 
-<Ph text="[PLACEHOLDER: texto de Carlos sobre qué aprendió con Acelerik Booking]" />
+Que una reserva es un problema de concurrencia: si dos familias pulsan a la vez, solo una puede llevarse la plaza, y eso se resuelve en la base de datos, no en la pantalla. También a tratar los pagos como algo que puede llegar dos veces, tarde o nunca. Y que pasar de n8n a código me dio lo que más echaba de menos: poder cambiar cosas sin miedo, porque los tests me avisan.
 
 </Seccion>
 
