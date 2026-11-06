@@ -14,6 +14,11 @@ import Footer from '../components/Footer.astro';
 
 // Sin texto real de Carlos, "Sobre mí" no se publica en producción (solo se muestra en dev).
 const mostrarSobreMi = showPlaceholders || !isPlaceholder(t('sobre.texto'));
+// Los carteles se numeran según las secciones que de verdad se renderizan (sin huecos).
+const num = Object.fromEntries(
+  ['experiencia', 'proyectos', ...(mostrarSobreMi ? ['sobre-mi'] : []), 'contacto']
+    .map((id, i) => [id, String(i + 1).padStart(2, '0')]),
+);
 ---
 <Base title={t('meta.titulo')} description={t('meta.descripcion')} path="/">
   <Nav />
@@ -21,25 +26,25 @@ const mostrarSobreMi = showPlaceholders || !isPlaceholder(t('sobre.texto'));
     <Hero />
 
     <section id="experiencia" aria-label={t('seccion.experiencia')}>
-      <Poster num="01" titulo={t('seccion.experiencia')} />
+      <Poster num={num["experiencia"]} titulo={t('seccion.experiencia')} />
       <Experience />
     </section>
 
     <section id="proyectos" aria-label={t('seccion.proyectos')}>
-      <Poster num="02" titulo={t('seccion.proyectos')} meta={t('seccion.proyectosResumen')} />
+      <Poster num={num["proyectos"]} titulo={t('seccion.proyectos')} meta={t('seccion.proyectosResumen')} />
       <Projects />
       <Stack />
     </section>
 
     {mostrarSobreMi && (
       <section id="sobre-mi" aria-label={t('seccion.sobre')}>
-        <Poster num="03" titulo={t('seccion.sobre')} />
+        <Poster num={num["sobre-mi"]} titulo={t('seccion.sobre')} />
         <About />
       </section>
     )}
 
     <section id="contacto" aria-label={t('seccion.contacto')}>
-      <Poster num="04" titulo={t('seccion.contacto')} />
+      <Poster num={num["contacto"]} titulo={t('seccion.contacto')} />
       <Contact />
     </section>
   </main>

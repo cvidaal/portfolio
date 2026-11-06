@@ -26,6 +26,6 @@ await sharp({ create: { width: W, height: H, channels: 4, background: '#101012' 
     { input: avatar, left: W - AV, top: 0 },
     { input: Buffer.from(svg), left: 0, top: 0 },
   ])
-  .png()
+  .png({ palette: true, colours: 64, compressionLevel: 9, effort: 10 }) // paleta: < 300 KB para que WhatsApp no descarte la imagen
   .toFile(OUT);
 console.log('og.png generado:', OUT);
