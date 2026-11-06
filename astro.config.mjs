@@ -6,4 +6,6 @@ export default defineConfig({
   site: 'https://www.cvidal.dev',
   integrations: [react(), mdx()],
   markdown: { syntaxHighlight: false },
+  // CSS en línea: el sitio es pequeño y así no hay hojas que bloqueen la primera pintura.
+  build: { inlineStylesheets: 'always' },
 });

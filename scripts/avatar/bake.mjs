@@ -102,6 +102,9 @@ const comp = [{ input: Buffer.from(irisSvg), left: 0, top: 0 }];
 const order = [[lidL[0], lids[0]], [lidL[1], lids[1]], [lipL[0], lipUpper], [lipL[1], lipLower], [browL[0], brows[0]], [browL[1], brows[1]]];
 for (const [b, s] of order) comp.push(await crop(b, s));
 await sharp(baseBuf, raw).composite(comp).webp(webp).toFile(join(OUT, 'static.webp'));
+// Variantes más ligeras para el srcset de la <img> del hero (en móvil se pinta a ~400 px).
+const STATIC_WIDTHS = [480, 800];
+for (const w of STATIC_WIDTHS) await sharp(join(OUT, 'static.webp')).resize(w, w).webp(webp).toFile(join(OUT, `static-${w}.webp`));
 
 const layers = {
   size: W,

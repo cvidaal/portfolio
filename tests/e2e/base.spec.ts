@@ -14,3 +14,10 @@ test('404 propia', async ({ page }) => {
   expect(r?.status()).toBe(404);
   await expect(page.getByRole('link', { name: /volver/i })).toHaveAttribute('href', '/');
 });
+
+test('404: noindex y sin canonical', async ({ page }) => {
+  await page.goto('/no-existe');
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+  await expect(page.locator('meta[property="og:url"]')).toHaveCount(0);
+});

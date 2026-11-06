@@ -9,8 +9,10 @@
     "preview": "astro preview",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "lhci": "lhci autorun",
-    "avatar:bake": "node scripts/avatar/bake.mjs"
+    "lhci": "npm run lhci:mobile && npm run lhci:desktop",
+    "avatar:bake": "node scripts/avatar/bake.mjs",
+    "lhci:mobile": "lhci autorun --upload.outputDir=.lighthouseci/mobile",
+    "lhci:desktop": "lhci autorun --collect.settings.preset=desktop --upload.outputDir=.lighthouseci/desktop"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.3",

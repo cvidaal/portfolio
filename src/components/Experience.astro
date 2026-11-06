@@ -3,7 +3,7 @@ import { t } from '../i18n';
 const puntos = ['exp.topdoctors.punto1', 'exp.topdoctors.punto2', 'exp.topdoctors.punto3'] as const;
 ---
 <div class="wrap exp">
-  <article class="job">
+  <article class="job reveal">
     <header>
       <h3>{t('exp.topdoctors.empresa')}</h3>
       <p class="mono meta">{t('exp.topdoctors.puesto')} · {t('exp.topdoctors.fechas')} · {t('exp.topdoctors.lugar')}</p>
@@ -12,7 +12,7 @@ const puntos = ['exp.topdoctors.punto1', 'exp.topdoctors.punto2', 'exp.topdoctor
       {puntos.map((k) => <li>{t(k)}</li>)}
     </ul>
   </article>
-  <article class="job">
+  <article class="job reveal">
     <header>
       <h3>{t('exp.ulandu.empresa')}</h3>
       <p class="mono meta">{t('exp.ulandu.puesto')} · {t('exp.ulandu.fechas')}</p>

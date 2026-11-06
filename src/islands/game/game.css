@@ -32,7 +32,7 @@
 .gb-alerts { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
 .gb-alerts:empty { display: none; }
 .game-incident, .game-hint { margin: 0; padding: 6px 10px; font-weight: 600; font-size: 11.5px; }
-.game-incident { background: var(--accent); color: var(--bg); animation: gb-blink 1s steps(2) 2; }
+.game-incident { background: var(--accent); color: var(--on-accent); animation: gb-blink 1s steps(2) 2; }
 .game-hint { border: 1px dashed var(--accent-hi); color: var(--paper); }
 @keyframes gb-blink { 50% { opacity: .55; } }
 
@@ -81,10 +81,10 @@
 .svc-name { overflow-wrap: anywhere; }
 .svc.down {
   border-color: var(--accent); color: var(--paper); cursor: not-allowed;
-  background: repeating-linear-gradient(-45deg, rgba(228, 37, 27, .28) 0 6px, transparent 6px 12px);
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--accent) 28%, transparent) 0 6px, transparent 6px 12px);
 }
 .svc.down .shape { background: var(--muted); }
-.svc-down { font-size: 10px; font-weight: 600; background: var(--accent); color: var(--bg); padding: 1px 5px; }
+.svc-down { font-size: 10px; font-weight: 600; background: var(--accent); color: var(--on-accent); padding: 1px 5px; }
 .svcs.deploying .svc { animation: gb-deploy .5s ease-out; border-style: dashed; }
 @keyframes gb-deploy { from { transform: translateY(-8px); opacity: .3; } }
 .svc.ok0 { animation: gb-ok0 .35s; } .svc.ok1 { animation: gb-ok1 .35s; }
@@ -100,7 +100,7 @@
   animation: gb-fl .8s ease-out forwards;
 }
 .gb-q > .float { top: 18px; }
-.float.bad { background: var(--accent); color: var(--bg); }
+.float.bad { background: var(--accent); color: var(--on-accent); }
 @keyframes gb-fl { to { transform: translateY(-26px); opacity: 0; } }
 
 .help { margin: 0; font-size: 10.5px; line-height: 1.5; color: var(--muted); }

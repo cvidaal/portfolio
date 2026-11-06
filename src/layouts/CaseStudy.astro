@@ -47,7 +47,7 @@ const tipo = t(`caso.tipo.${d.tipo}` as 'caso.tipo.producto');
     {(d.imagenCaso ?? d.imagen) && (
       <div class="wrap hero">
         <RisoImage src={(d.imagenCaso ?? d.imagen)!} alt={heroAlt} ratio="21 / 8" fit={heroFit} position={heroFit === 'contain' ? 'center' : 'left top'}
-          widths={[640, 1000, 1400]} sizes="(min-width: 1100px) 1004px, 100vw" />
+          widths={[640, 1000, 1400]} sizes="(min-width: 1100px) 1004px, 100vw" priority />
       </div>
     )}
     <div class="wrap cs-body">
@@ -56,7 +56,7 @@ const tipo = t(`caso.tipo.${d.tipo}` as 'caso.tipo.producto');
         <slot />
       </div>
     </div>
-    <nav class="wrap next" aria-label={t('caso.siguiente')}>
+    <nav class="wrap next reveal" aria-label={t('caso.siguiente')}>
       <a class="prev" href="/#proyectos"><span class="mono">← {t('caso.volver')}</span><b>{t('caso.volverTodos')}</b></a>
       <a class="nxt" href={`/proyectos/${siguiente.data.slug}`}><span class="mono">{t('caso.siguiente')} →</span><b>{siguiente.data.titulo}</b></a>
     </nav>
@@ -81,7 +81,7 @@ const tipo = t(`caso.tipo.${d.tipo}` as 'caso.tipo.producto');
   .meta-row div { padding: 12px 14px 0 0; font-size: 12px; min-width: 0; }
   .meta-row dt { color: var(--muted); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
   .meta-row dd { margin: 0; overflow-wrap: anywhere; }
-  .meta-row a { color: var(--accent-hi); display: block; text-underline-offset: 3px; padding: 2px 0; }
+  .meta-row a { color: var(--accent-hi); display: block; text-underline-offset: 3px; padding: 4px 0; } /* >= 24 px de alto: target-size */
   .hero { margin-top: 28px; }
   .hero :global(.riso) { border: 1px solid var(--line); }
   .cs-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 40px 30px; }

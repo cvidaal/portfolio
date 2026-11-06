@@ -6,16 +6,22 @@ import '../styles/global.css';
 import { t } from '../i18n';
 import { THEMES } from '../lib/theme';
 import { SAVE_KEY } from '../lib/save-key';
+// Mismas URL con hash que emiten los @font-face de fontsource: precargarlas evita el salto de layout al cambiar de fuente.
+import fontDisplay from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
+import fontMono400 from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2?url';
+import fontMono600 from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2?url';
 
 interface Props {
   title: string;
   description: string;
   path: string;
   ogImage?: string;
+  /** Páginas que no deben indexarse (404): robots noindex y sin canonical ni og:url. */
+  noindex?: boolean;
 }
 
 const SITE = 'https://www.cvidal.dev';
-const { title, description, path, ogImage = '/og.png' } = Astro.props;
+const { title, description, path, ogImage = '/og.png', noindex = false } = Astro.props;
 const canonical = `${SITE}${path}`;
 const image = ogImage.startsWith('http') ? ogImage : `${SITE}${ogImage}`;
 ---
@@ -26,7 +32,10 @@ const image = ogImage.startsWith('http') ? ogImage : `${SITE}${ogImage}`;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <link rel="preload" href={fontDisplay} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fontMono400} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fontMono600} as="font" type="font/woff2" crossorigin />
     <meta name="theme-color" content="#101012" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -34,7 +43,7 @@ const image = ogImage.startsWith('http') ? ogImage : `${SITE}${ogImage}`;
     <meta property="og:locale" content="es_ES" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {!noindex && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={image} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -52,9 +61,23 @@ const image = ogImage.startsWith('http') ? ogImage : `${SITE}${ogImage}`;
         }
       } catch (e) {}
     </script>
+    <script is:inline>
+      // Apariciones al hacer scroll: solo se ocultan los .reveal si hay JS, IntersectionObserver y movimiento permitido.
+      // Si reveal.ts no llega a ejecutarse en 3 s, se vuelve a mostrar todo.
+      try {
+        var d = document.documentElement;
+        if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+          d.classList.add('js-reveal');
+          setTimeout(function () { if (!window.__reveal) d.classList.remove('js-reveal'); }, 3000);
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body id="top">
     <a class="skip" href="#main">{t("nav.saltar")}</a>
     <slot />
   </body>
 </html>
+<script>
+  import '../scripts/reveal';
+</script>

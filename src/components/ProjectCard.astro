@@ -9,7 +9,7 @@ const d = proyecto.data;
 const conCaso = d.caso;
 const href = `/proyectos/${d.slug}`;
 ---
-<article class:list={['card', { feature: destacada }]}>
+<article class:list={['card', 'reveal', { feature: destacada }]}>
   <span class="num mono" aria-hidden="true">{num}</span>
   {d.imagen && (
     <RisoImage src={d.imagen} alt={altImagen} logo={logo} ratio={destacada ? undefined : '16 / 10'}

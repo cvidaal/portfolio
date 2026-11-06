@@ -10,7 +10,7 @@
         <line x1="0" y1="0" x2="0" y2="7" stroke="#101012" stroke-opacity="0.28" stroke-width="2" />
       </pattern>
       <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-        <path d="M0 0L10 5L0 10z" fill="#E4251B" />
+        <path class="acc-fill" d="M0 0L10 5L0 10z" />
       </marker>
     </defs>
     <g fill="#17171A" stroke="#F1EDE6" stroke-width="1.5">
@@ -19,7 +19,7 @@
       <rect x="520" y="20" width="150" height="50" />
       <rect x="520" y="120" width="150" height="50" />
     </g>
-    <rect x="236" y="46" width="178" height="22" fill="#E4251B" />
+    <rect class="acc-fill" x="236" y="46" width="178" height="22" />
     <rect x="236" y="46" width="178" height="22" fill="url(#hatch)" />
     <g fill="#F1EDE6" font-family="JetBrains Mono, monospace" font-size="12">
       <text x="30" y="100">Web</text>
@@ -30,7 +30,7 @@
       <text x="540" y="50">PostgreSQL</text>
       <text x="540" y="150">Stripe Checkout</text>
     </g>
-    <g stroke="#E4251B" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <g class="acc-stroke" stroke-width="2" fill="none" marker-end="url(#arrow)">
       <path d="M130 95 L228 95" />
       <path d="M420 70 L518 45" />
       <path d="M420 115 L518 140" />
@@ -42,4 +42,7 @@
 <style>
   .arch { margin: 6px 0 0; max-width: 680px; }
   svg { width: 100%; height: auto; display: block; }
+  /* El acento sale del tema (applyTheme re-escribe --accent), no de un color fijo. */
+  .acc-fill { fill: var(--accent); }
+  .acc-stroke { stroke: var(--accent); }
 </style>

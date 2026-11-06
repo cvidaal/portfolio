@@ -13,6 +13,8 @@ const { num, titulo, meta } = Astro.props;
   .poster { background: var(--accent); color: var(--bg); padding: 34px 0 26px; position: relative; overflow: hidden; }
   .poster::after { content: ''; position: absolute; right: -50px; top: -120px; width: 230px; height: 230px; background: repeating-linear-gradient(45deg, rgba(16, 16, 18, 0.9) 0 3px, transparent 3px 10px); border-radius: 50%; pointer-events: none; }
   .wrap { position: relative; z-index: 1; }
+  /* Texto pequeño sobre el acento: --on-accent (>= 4.5:1 en los tres temas). El h2 es texto grande (3:1 basta). */
+  .lbl, .meta { color: var(--on-accent); }
   .lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 10px; }
   h2 { font-size: clamp(44px, 12vw, 118px); line-height: 0.85; letter-spacing: -0.05em; text-transform: uppercase; overflow-wrap: anywhere; }
   .meta { font-size: 12px; font-weight: 600; margin-top: 14px; }

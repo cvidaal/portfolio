@@ -6,7 +6,7 @@ const { id, etiqueta, titulo, pendiente = false } = Astro.props;
 const visible = !pendiente || showPlaceholders;
 ---
 {visible && (
-  <section class="sec" id={id} aria-labelledby={`${id}-t`}>
+  <section class="sec reveal" id={id} aria-labelledby={`${id}-t`}>
     <div class="lbl mono">{etiqueta}</div>
     <h2 id={`${id}-t`}>{titulo ?? etiqueta}</h2>
     <slot />
