@@ -9,7 +9,10 @@ import Game from '../islands/game/Game';
       <p class="bar mono">{t('hero.rol')}</p>
       <div class="btns">
         <a class="btn b1 mono" id="cta-proyectos" href="#proyectos">{t('hero.verProyectos')}</a>
-        <a class="btn b2 mono" id="cta-cv" href={t('cv.href')} download={t('cv.descarga')}>{t('hero.descargarCv')}</a>
+        <a class="btn b2 mono cv-btn" id="cta-cv" href={t('cv.href')} download={t('cv.descarga')} data-cv data-ok={t('cv.ok')}>
+          <svg class="cv-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path class="hoja" d="M3.5 1.5h6l3 3v10h-9z" /><path class="flecha" d="M8 6v5M5.8 8.8 8 11l2.2-2.2" /></svg>
+          <span class="roll"><span class="main">{t('hero.descargarCv')}</span><span class="alt" aria-hidden="true">{t('cv.hoverHero')}</span></span>
+        </a>
       </div>
       <p class="st mono"><i aria-hidden="true"></i>{t('hero.estado')}</p>
       <!-- Entrada al juego (máquina arcade, #play-game) y panel de logros. Sin JS no se puede jugar:
@@ -82,6 +85,12 @@ import Game from '../islands/game/Game';
   .b2 { border: 1px solid #3a3a3e; color: var(--paper); }
   .b1:hover { background: var(--paper); }
   .b2:hover { border-color: var(--paper); }
+  .cv-btn { display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.2s, background 0.2s, transform 0.2s cubic-bezier(0.3, 1.6, 0.5, 1); }
+  .cv-btn:hover, .cv-btn:focus-visible { background: rgba(241, 237, 230, 0.06); border-color: var(--accent-hi); transform: translateY(-2px); }
+  .cv-btn:active { transform: translateY(1px) scale(0.97); }
+  .cv-ico { fill: none; stroke: var(--accent-hi); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: none; overflow: visible; }
+  .cv-btn:hover .flecha, .cv-btn:focus-visible .flecha { animation: cv-baja 0.8s ease-in-out infinite; }
+  @keyframes cv-baja { 0%, 100% { transform: translateY(-1.5px); } 50% { transform: translateY(1.5px); } }
   .st { font-size: 11px; color: var(--muted); margin: 18px 0 0; }
   .st i { display: inline-block; width: 7px; height: 7px; background: var(--accent); margin-right: 7px; }
   @media (min-width: 820px) {

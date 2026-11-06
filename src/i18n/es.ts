@@ -31,6 +31,9 @@ export const es = {
   // CV
   'cv.href': '/CarlosVidal_Backend_CV.pdf',
   'cv.descarga': 'CarlosVidal_Backend_CV.pdf',
+  'cv.hoverNav': '↓ PDF',
+  'cv.hoverHero': '↓ PDF · 1 página',
+  'cv.ok': 'GET /cv → 200 OK',
 
   // Separadores de sección
   'seccion.experiencia': 'Experiencia',
@@ -151,7 +154,8 @@ export const es = {
   'logros.secreto.nombre': 'Lo has visto todo',
   'logros.secreto.desc': 'Consigue los cuatro logros con recompensa',
   'logros.secreto.recompensa': 'Una nota personal de Carlos',
-  'juego.notaSecreta': '[PLACEHOLDER: nota personal de Carlos al desbloquear "Lo has visto todo"]',
+  'juego.notaSecreta':
+    'Nunca te rindas. Empecé diseñando niveles de un videojuego y hoy escribo Go; si has llegado hasta aquí, tú tampoco te rindes. Cuéntame tu récord en carlosvidal.developer@gmail.com. Carlos',
   'juego.notaPendiente': 'Carlos todavía está escribiendo esta nota. Vuelve pronto.',
 
   // Juego: tablero

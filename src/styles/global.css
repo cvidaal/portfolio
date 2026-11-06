@@ -61,3 +61,15 @@ html { scroll-padding-top: var(--nav-h); }
 }
 @keyframes vt-out { to { opacity: 0; } }
 @keyframes vt-in { from { opacity: 0; translate: 0 16px; } }
+
+/* Botones de CV: texto que "rueda" al pasar el ratón y aviso efímero al pulsar (src/scripts/cv-button.ts). */
+.roll { display: inline-grid; overflow: hidden; vertical-align: bottom; }
+.roll > span { grid-area: 1 / 1; transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.2, 1); }
+.roll > .alt { transform: translateY(110%); }
+a:hover > .roll > .main, a:focus-visible > .roll > .main { transform: translateY(-110%); }
+a:hover > .roll > .alt, a:focus-visible > .roll > .alt { transform: none; }
+a[data-cv] { position: relative; }
+.cv-toast { position: absolute; left: 50%; top: -6px; transform: translate(-50%, -100%); white-space: nowrap; font: 600 10.5px var(--font-mono, 'JetBrains Mono', monospace); background: var(--paper); color: var(--bg); padding: 3px 7px; pointer-events: none; z-index: 30; animation: cv-toast 1.4s ease forwards; }
+.cv-toast.abajo { top: auto; bottom: -8px; transform: translate(-50%, 100%); animation-name: cv-toast-abajo; }
+@keyframes cv-toast { 0% { opacity: 0; transform: translate(-50%, -60%); } 15%, 80% { opacity: 1; transform: translate(-50%, -100%); } 100% { opacity: 0; transform: translate(-50%, -150%); } }
+@keyframes cv-toast-abajo { 0% { opacity: 0; transform: translate(-50%, 60%); } 15%, 80% { opacity: 1; transform: translate(-50%, 100%); } 100% { opacity: 0; transform: translate(-50%, 150%); } }

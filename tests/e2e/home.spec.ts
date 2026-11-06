@@ -68,3 +68,19 @@ test('copiar email: dos clics rápidos no dejan la etiqueta atascada', async ({ 
   await expect(btn.locator('.copy-txt')).toHaveText('Email copiado');
   await expect(btn.locator('.copy-txt')).toHaveText('Copiar email', { timeout: 5000 });
 });
+
+test('botones de CV: descargan, ruedan el texto al pasar y avisan con 200 OK al pulsar', async ({ page }) => {
+  await page.route('**/CarlosVidal_Backend_CV.pdf', (r) => r.fulfill({ status: 200, contentType: 'application/pdf', body: '' }));
+  await page.goto('/');
+  const hero = page.locator('#cta-cv');
+  await expect(hero).toHaveAccessibleName('Descargar CV');
+  await hero.hover();
+  await expect(hero.locator('.roll .alt')).toHaveText('↓ PDF · 1 página');
+  await hero.click();
+  await expect(hero.locator('.cv-toast')).toHaveText('GET /cv → 200 OK');
+  await expect(hero.locator('.cv-toast')).toHaveCount(0, { timeout: 3000 });
+  await page.locator('#contacto').scrollIntoViewIfNeeded(); // el menú solo se muestra pasado el hero
+  const nav = page.locator('a.nav-cv');
+  await expect(nav).toHaveAttribute('download', 'CarlosVidal_Backend_CV.pdf');
+  await expect(nav).toHaveAccessibleName('CV');
+});

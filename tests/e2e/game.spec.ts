@@ -400,13 +400,14 @@ test.describe('logros en panel', () => {
     await expect.poll(() => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--acc').trim().toUpperCase())).toBe('#E4251B');
   });
 
-  test('nota secreta oculta en producción si es placeholder', async ({ page }) => {
+  test('nota secreta visible al conseguir todos los logros', async ({ page }) => {
     await withSave(page, { best: 600, unlocked: ['hola', 'racha', 'hooks', 'cero', 'mil', 'secreto'], shades: true, chain: true });
     await page.goto('/');
     await expect(page.locator('.arcade .chip')).toHaveText('LOGROS 6/6');
     const secret = (await openLogros(page)).locator('[data-ach="secreto"]');
     await expect(secret).toContainText('Lo has visto todo');
     await expect(secret.locator('.nota')).toBeVisible();
+    await expect(secret.locator('.nota')).toContainText('Nunca te rindas');
     await expect(page.locator('body')).not.toContainText('PLACEHOLDER');
   });
 
