@@ -19,7 +19,7 @@
   header { background: var(--bg); color: var(--paper); display: flex; gap: 22px; align-items: center; padding: 20px 36px 18px; position: relative; overflow: hidden; }
   header::after { content: ''; position: absolute; right: -40px; top: -60px; width: 190px; height: 190px; border-radius: 50%;
     background: repeating-linear-gradient(45deg, rgba(228,37,27,.85) 0 3px, transparent 3px 10px); }
-  .foto { width: 104px; height: 104px; border-radius: 50%; border: 3px solid var(--acc); background: url('foto-cv.jpg') center 22% / cover; flex: none; }
+  .foto { width: 104px; height: 104px; flex: none; display: block; }
   .kicker { font: 600 9pt 'Mono', monospace; color: var(--acc); letter-spacing: .02em; }
   h1 { margin: 2px 0 2px; font-size: 25pt; line-height: 1; font-weight: 800; letter-spacing: -0.03em; }
   .sub { font-size: 11pt; color: #d7d2ca; margin-bottom: 8px; }
@@ -47,7 +47,7 @@
 </head>
 <body>
 <header>
-  <div class="foto" role="img" aria-label="Foto de Carlos Vidal"></div>
+  <img class="foto" src="foto-circulo.png" width="104" height="104" alt="Foto de Carlos Vidal">
   <div>
     <div class="kicker">// backend developer · go</div>
     <h1>Carlos Vidal Sánchez</h1>
