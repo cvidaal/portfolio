@@ -30,4 +30,28 @@ export function applyTheme(theme: Theme, root: HTMLElement = document.documentEl
   root.style.setProperty('--accent', t.acc);
   root.style.setProperty('--accent-hi', t.hi);
   root.style.setProperty('--avatar-filter', t.filter || 'none');
+  tintFavicon(t.filter);
+}
+
+/** El icono de la pestaña sigue al tema: se repinta favicon.png con el mismo filtro que el avatar. */
+export function tintFavicon(filter: string): void {
+  if (typeof document === 'undefined') return;
+  const links = Array.from(document.querySelectorAll<HTMLLinkElement>('link[rel~="icon"]'));
+  if (!links.length) return;
+  for (const l of links) { if (!l.dataset.original) l.dataset.original = l.href; }
+  if (!filter) { for (const l of links) l.href = l.dataset.original!; return; }
+  const img = new Image();
+  img.onload = () => {
+    try {
+      const c = document.createElement('canvas');
+      c.width = 64; c.height = 64;
+      const ctx = c.getContext('2d');
+      if (!ctx) return;
+      ctx.filter = filter;
+      ctx.drawImage(img, 0, 0, 64, 64);
+      const url = c.toDataURL('image/png');
+      for (const l of links) l.href = url;
+    } catch { /* sin canvas: se queda el icono original */ }
+  };
+  img.src = '/favicon.png';
 }

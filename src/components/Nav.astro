@@ -35,6 +35,10 @@ const { base = '', autoHide = false } = Astro.props;
 )}
 <script>
   import '../scripts/cv-button';
+  import { tintFavicon } from '../lib/theme';
+  // Tema guardado (el <head> ya fijó --avatar-filter): el icono de la pestaña también lo sigue.
+  const filtro = getComputedStyle(document.documentElement).getPropertyValue('--avatar-filter').trim();
+  if (filtro && filtro !== 'none') tintFavicon(filtro);
 </script>
 <style>
   .nav { view-transition-name: site-nav; position: sticky; top: 0; z-index: 20; background: rgba(16, 16, 18, 0.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(6px); transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s; }

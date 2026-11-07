@@ -41,7 +41,7 @@ html { scroll-padding-top: var(--nav-h); }
 .skip:focus { top: 8px; }
 
 /* Tema del avatar: el filtro lo fija applyTheme en --avatar-filter y vale para la <img> estática y para el canvas. */
-#avatar-slot img, #avatar-slot canvas { filter: var(--avatar-filter, none); }
+#avatar-slot img, #avatar-slot canvas, .nav-home img { filter: var(--avatar-filter, none); }
 
 /* Aparición al hacer scroll (src/scripts/reveal.ts). Sin JS, sin IntersectionObserver o con movimiento
    reducido no existe html.js-reveal y los .reveal se ven desde el principio. Se anima con `translate` (no

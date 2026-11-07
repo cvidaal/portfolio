@@ -80,3 +80,10 @@ test('storage bloqueado: la página sigue en rojo sin errores', async ({ page })
   expect((await prop(page, '--acc')).toUpperCase()).toBe('#E4251B'); // el CSS minificado lo normaliza a minúsculas
   expect(errors).toEqual([]);
 });
+
+test('con el tema azul la cara del menú y el icono de la pestaña también cambian', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('pubsub-rush:v1', JSON.stringify({ best: 0, unlocked: ['cero'], theme: 'azul', shades: false, chain: false, progress: { maxCombo: 0, maxHooks: 0, maxScore: 0 } })));
+  await page.goto('/proyectos/acelerik-booking');
+  await expect.poll(() => page.locator('.nav-home img').evaluate((el) => getComputedStyle(el).filter)).toContain('hue-rotate');
+  await expect.poll(() => page.locator('link[rel~="icon"]').first().getAttribute('href')).toMatch(/^data:image\/png/);
+});
