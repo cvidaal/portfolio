@@ -1,13 +1,13 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { t } from '../i18n';
+import { t, ruta } from '../i18n';
 import RisoImage from './RisoImage.astro';
 
 interface Props { proyecto: CollectionEntry<'proyectos'>; num: string; destacada?: boolean; altImagen?: string; logo?: boolean }
 const { proyecto, num, destacada = false, altImagen = '', logo = false } = Astro.props;
 const d = proyecto.data;
 const conCaso = d.caso;
-const href = `/proyectos/${d.slug}`;
+const href = ruta(`/proyectos/${d.slug}`);
 ---
 <article class:list={['card', 'reveal', { feature: destacada }]}>
   <span class="num mono" aria-hidden="true">{num}</span>

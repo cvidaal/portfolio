@@ -3,7 +3,9 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const proyectos = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/proyectos' }),
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/proyectos',
+    // id = ruta con el idioma ('es/acelerik-booking'); sin esto el loader usaría `slug` y chocarían es/en.
+    generateId: ({ entry }) => entry.replace(/\.mdx?$/, '') }),
   schema: ({ image }) =>
     z.object({
       slug: z.string(),

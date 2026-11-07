@@ -8,7 +8,7 @@ const cv = t('cv.href');
 ---
 <div class="wrap contact">
   <div class="term mono reveal" role="group" aria-label={t('contacto.peticion')}>
-    <p class="req"><span class="prompt" aria-hidden="true">$ </span>{t('contacto.peticion')}</p>
+    <p class="req"><span class="prompt" aria-hidden="true">$ </span><span class="cmd">{t('contacto.peticion')}</span></p>
     <p class="res"><span class="ok">{t('contacto.estado')}</span></p>
     <pre>{'{'}
   "email": "<a href={`mailto:${email}`}>{email}</a>",
@@ -41,6 +41,9 @@ const cv = t('cv.href');
 <script>
   import '../scripts/copy-email';
 </script>
+<script>
+  import '../scripts/terminal';
+</script>
 <style>
   .contact { padding-block: 40px 56px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; align-items: start; }
   .term { background: var(--card); border: 1px solid var(--line); padding: 20px 22px; font-size: 13px; min-width: 0; }
@@ -48,6 +51,13 @@ const cv = t('cv.href');
   .prompt { color: var(--accent); }
   .ok { color: var(--accent-hi); font-weight: 600; }
   .res { margin: 4px 0 10px; }
+  /* Terminal que se escribe (src/scripts/terminal.ts): solo con JS y movimiento permitido. */
+  .term.typing .res, .term.typing pre { opacity: 0; }
+  .term.done .res { animation: term-in 0.35s ease both; }
+  .term.done pre { animation: term-in 0.5s 0.25s ease both; }
+  .caret { display: inline-block; width: 0.55em; height: 1.05em; margin-left: 2px; vertical-align: -0.15em; background: var(--accent-hi); animation: caret 0.8s steps(1) infinite; }
+  @keyframes caret { 50% { opacity: 0; } }
+  @keyframes term-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
   pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; color: #d9d4cc; }
   pre a { color: var(--paper); }
   .side { min-width: 0; }

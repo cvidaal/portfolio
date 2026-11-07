@@ -1,10 +1,14 @@
 ---
 // Diagrama de Acelerik Booking en estilo risografía. Solo muestra piezas que existen en backend/cmd/api/main.go.
+import { locale } from '../../i18n';
+const en = locale() === 'en';
 ---
 <figure class="arch">
   <svg viewBox="0 0 680 200" role="img" aria-labelledby="arch-t arch-d">
-    <title id="arch-t">Arquitectura de Acelerik Booking</title>
-    <desc id="arch-d">La web habla con una API en Go con los módulos booking y payment. La API usa PostgreSQL y crea sesiones de Stripe Checkout. Stripe avisa a la API con un webhook firmado.</desc>
+    <title id="arch-t">{en ? 'Acelerik Booking architecture' : 'Arquitectura de Acelerik Booking'}</title>
+    <desc id="arch-d">{en
+      ? 'The web talks to a Go API with the booking and payment modules. The API uses PostgreSQL and creates Stripe Checkout sessions. Stripe notifies the API with a signed webhook.'
+      : 'La web habla con una API en Go con los módulos booking y payment. La API usa PostgreSQL y crea sesiones de Stripe Checkout. Stripe avisa a la API con un webhook firmado.'}</desc>
     <defs>
       <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
         <line x1="0" y1="0" x2="0" y2="7" stroke="#101012" stroke-opacity="0.28" stroke-width="2" />

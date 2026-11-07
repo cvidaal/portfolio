@@ -12,6 +12,11 @@ export const es = {
   'nav.aria': 'Navegación principal',
   'nav.saltar': 'Saltar al contenido',
 
+  // Cambio de idioma
+  'idioma.otro': 'EN',
+  'idioma.cambiar': 'View the site in English',
+  'idioma.ogLocale': 'es_ES',
+
   // Hero
   'hero.nombre1': 'Carlos',
   'hero.nombre2': 'Vidal',
@@ -27,6 +32,7 @@ export const es = {
   'arcade.start': '▶ PULSA START',
   'arcade.logros': 'LOGROS {n}/{total}',
   'arcade.jugar': 'PUB/SUB RUSH: jugar (45 s)',
+  'arcade.verLogros': 'Ver logros · {n}/{total}',
 
   // CV
   'cv.href': '/CarlosVidal_Backend_CV.pdf',
@@ -84,6 +90,7 @@ export const es = {
   // Caso de estudio (plantilla)
   'caso.migas': 'Ruta',
   'caso.inicio': 'cvidal.dev',
+  'caso.migasProyectos': 'proyectos',
   'caso.rol': 'Rol',
   'caso.tipo': 'Tipo',
   'caso.stack': 'Stack',
@@ -99,7 +106,7 @@ export const es = {
   'caso.tipo.practicas': 'Prácticas',
 
   // Sobre mí (spec it2 §5); *texto* se pinta en cursiva
-  'sobre.titular': 'Empecé diseñando mundos. Ahora construyo lo que hay debajo.',
+  'sobre.titular': 'De crear mundos virtuales a construir sistemas reales.',
   'sobre.p1':
     'Pasé más de dos años diseñando niveles de *Aeterna Noctis*. Después hice apps en Flutter y acabé en el backend: hoy escribo Go en Top Doctors e integro sistemas que tienen que funcionar aunque nadie los vea.',
   'sobre.p2':

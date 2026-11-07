@@ -64,7 +64,7 @@ test.describe('sobre mí', () => {
     await page.goto('/');
     const s = page.locator('section#sobre-mi');
     await expect(s).toHaveCount(1);
-    await expect(s.locator('h3')).toHaveText('Empecé diseñando mundos. Ahora construyo lo que hay debajo.');
+    await expect(s.locator('h3')).toHaveText('De crear mundos virtuales a construir sistemas reales.');
     await expect(s).toContainText('Pasé más de dos años diseñando niveles de Aeterna Noctis.');
     await expect(s).toContainText('Del diseño de niveles me traje la manía por el detalle.');
     await expect(s).toContainText('prueban la herramienta nueva el mismo día que sale');

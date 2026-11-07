@@ -1,23 +1,11 @@
 ---
-import { getCollection, render } from 'astro:content';
-import CaseStudy from '../../layouts/CaseStudy.astro';
-import { t } from '../../i18n';
-import Pre from '../../components/case/Pre.astro';
+import CasoPage from '../../components/CasoPage.astro';
+import { setLang } from '../../i18n';
+import { rutasDeCasos } from '../../lib/proyectos';
 
 export async function getStaticPaths() {
-  const todos = (await getCollection('proyectos')).sort((a, b) => a.data.orden - b.data.orden);
-  const casos = todos.filter((p) => p.data.caso);
-  return casos.map((p, i) => ({
-    params: { slug: p.data.slug },
-    props: { proyecto: p, siguiente: casos[(i + 1) % casos.length] },
-  }));
+  return rutasDeCasos('es');
 }
-
-const { proyecto, siguiente } = Astro.props;
-const { Content } = await render(proyecto);
-const esBot = proyecto.data.slug === 'bot-pedidos-whatsapp';
-const heroAlt = t(esBot ? 'proyectos.bot.altLogo' : 'proyectos.ab.altReserva');
+setLang('es');
 ---
-<CaseStudy proyecto={proyecto} siguiente={siguiente} heroAlt={heroAlt} heroFit={esBot ? 'contain' : 'cover'}>
-  <Content components={{ pre: Pre }} />
-</CaseStudy>
+<CasoPage {...Astro.props} />

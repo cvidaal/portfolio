@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createGame, tick } from '../../src/islands/game/engine';
 import { defaultSave } from '../../src/islands/game/storage';
 import { fmt, hintFor, isFirstGame, isTypingTarget, keyToService, progressText } from '../../src/islands/game/ui';
-import { SHARE_URL, shareScore, shareText } from '../../src/islands/game/share';
+import { shareUrl, shareScore, shareText } from '../../src/islands/game/share';
 
 describe('ui del juego', () => {
   it('fmt sustituye variables', () => {
@@ -60,7 +60,7 @@ describe('compartir', () => {
 
   it('texto y URL', () => {
     expect(shareText(120)).toBe(text);
-    expect(SHARE_URL).toBe('https://www.cvidal.dev');
+    expect(shareUrl()).toBe('https://www.cvidal.dev');
   });
 
   it('usa navigator.share si existe', async () => {

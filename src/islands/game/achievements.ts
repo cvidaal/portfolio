@@ -26,14 +26,19 @@ const key = (id: AchId, f: string) => `logros.${id}.${f}` as Key;
 const HAS_REWARD: readonly AchId[] = ['racha', 'hooks', 'cero', 'mil', 'secreto'];
 const METAS: Partial<Record<AchId, number>> = { racha: META_RACHA, hooks: META_HOOKS, mil: META_MIL };
 
-export const ACHIEVEMENTS: { id: AchId; nombre: string; desc: string; recompensa?: string; meta?: number }[] =
-  ACH_IDS.map((id) => ({
+type Achievement = { id: AchId; nombre: string; desc: string; recompensa?: string; meta?: number };
+
+// Textos con getters: se resuelven en el idioma de la página al leerlos (la web tiene ES y EN).
+export const ACHIEVEMENTS: Achievement[] = ACH_IDS.map((id) => {
+  const a = {
     id,
-    nombre: t(key(id, 'nombre')),
-    desc: t(key(id, 'desc')),
-    ...(HAS_REWARD.includes(id) ? { recompensa: t(key(id, 'recompensa')) } : {}),
-    ...(METAS[id] !== undefined ? { meta: METAS[id] } : {}),
-  }));
+    get nombre() { return t(key(id, 'nombre')); },
+    get desc() { return t(key(id, 'desc')); },
+  } as Achievement;
+  if (HAS_REWARD.includes(id)) Object.defineProperty(a, 'recompensa', { get: () => t(key(id, 'recompensa')), enumerable: true });
+  if (METAS[id] !== undefined) a.meta = METAS[id];
+  return a;
+});
 
 const REQUIRED_FOR_SECRET: readonly AchId[] = ['racha', 'hooks', 'cero', 'mil'];
 

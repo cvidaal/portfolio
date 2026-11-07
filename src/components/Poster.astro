@@ -3,7 +3,7 @@ interface Props { num: string; titulo: string; meta?: string }
 const { num, titulo, meta } = Astro.props;
 ---
 <div class="wrap pwrap">
-  <div class="poster">
+  <div class="poster reveal wipe">
     <div class="lbl mono" aria-hidden="true">// {num}</div>
     <h2>{titulo}</h2>
     {meta && <div class="meta mono">{meta}</div>}

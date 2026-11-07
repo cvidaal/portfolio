@@ -31,4 +31,4 @@ dist-ssr
 test-results/
 playwright-report/
 .lighthouseci/
-assets-src/cv/preview.png
+assets-src/cv/preview*.png

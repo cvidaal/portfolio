@@ -1,0 +1,17 @@
+---
+// Página de un caso de estudio; la usan pages/proyectos/[slug] (es) y pages/en/proyectos/[slug].
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import CaseStudy from '../layouts/CaseStudy.astro';
+import { t } from '../i18n';
+import Pre from './case/Pre.astro';
+
+interface Props { proyecto: CollectionEntry<'proyectos'>; siguiente: CollectionEntry<'proyectos'> }
+const { proyecto, siguiente } = Astro.props;
+const { Content } = await render(proyecto);
+const esBot = proyecto.data.slug === 'bot-pedidos-whatsapp';
+const heroAlt = t(esBot ? 'proyectos.bot.altLogo' : 'proyectos.ab.altReserva');
+---
+<CaseStudy proyecto={proyecto} siguiente={siguiente} heroAlt={heroAlt} heroFit={esBot ? 'contain' : 'cover'}>
+  <Content components={{ pre: Pre }} />
+</CaseStudy>

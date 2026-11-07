@@ -1,0 +1,11 @@
+---
+import CasoPage from '../../../components/CasoPage.astro';
+import { setLang } from '../../../i18n';
+import { rutasDeCasos } from '../../../lib/proyectos';
+
+export async function getStaticPaths() {
+  return rutasDeCasos('en');
+}
+setLang('en');
+---
+<CasoPage {...Astro.props} />

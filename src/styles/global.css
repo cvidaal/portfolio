@@ -73,3 +73,17 @@ a[data-cv] { position: relative; }
 .cv-toast.abajo { top: auto; bottom: -8px; transform: translate(-50%, 100%); animation-name: cv-toast-abajo; }
 @keyframes cv-toast { 0% { opacity: 0; transform: translate(-50%, -60%); } 15%, 80% { opacity: 1; transform: translate(-50%, -100%); } 100% { opacity: 0; transform: translate(-50%, -150%); } }
 @keyframes cv-toast-abajo { 0% { opacity: 0; transform: translate(-50%, 60%); } 15%, 80% { opacity: 1; transform: translate(-50%, 100%); } 100% { opacity: 0; transform: translate(-50%, 150%); } }
+
+/* Animaciones de la iteración 3 (solo con JS y movimiento permitido: html.js-reveal). */
+@media screen and (prefers-reduced-motion: no-preference) {
+  /* Carteles: el bloque de color barre de izquierda a derecha y el título sube detrás. */
+  .js-reveal .reveal.wipe:not(.is-in) { opacity: 1; translate: 0 0; clip-path: inset(0 100% 0 0); }
+  .js-reveal .reveal.wipe.is-in { animation: wipe-in 0.75s cubic-bezier(0.7, 0, 0.2, 1) both; }
+  .js-reveal .reveal.wipe.is-in h2 { animation: wipe-title 0.6s 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  /* Código de los casos: aparece de arriba abajo, a saltos, como si se escribiera. */
+  .js-reveal .reveal.code-type:not(.is-in) { opacity: 1; translate: 0 0; clip-path: inset(0 0 100% 0); }
+  .js-reveal .reveal.code-type.is-in { animation: code-type 1.1s steps(12, end) both; }
+}
+@keyframes wipe-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes wipe-title { from { opacity: 0; transform: translateY(35%); } to { opacity: 1; transform: none; } }
+@keyframes code-type { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }

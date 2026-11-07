@@ -5,7 +5,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import RisoImage from '../components/RisoImage.astro';
 import Toc from '../components/case/Toc.astro';
-import { t } from '../i18n';
+import { t, ruta } from '../i18n';
 import { showPlaceholders } from '../lib/placeholder';
 
 interface Props {
@@ -23,12 +23,12 @@ const primeras = palabras.join(' ');
 const tipo = t(`caso.tipo.${d.tipo}` as 'caso.tipo.producto');
 ---
 <Base title={`${d.titulo} · ${t('caso.sufijoTitulo')} · Carlos Vidal`} description={d.titular} path={`/proyectos/${d.slug}`}>
-  <Nav base="/" />
+  <Nav base={ruta('/')} />
   <main id="main">
     <header class="cs-head">
       <div class="wrap">
         <nav class="crumb mono" aria-label={t('caso.migas')}>
-          <a href="/">{t('caso.inicio')}</a> / <a href="/#proyectos"><b>proyectos</b></a> / <span aria-current="page">{d.slug}</span>
+          <a href={ruta('/')}>{t('caso.inicio')}</a> / <a href={`${ruta('/')}#proyectos`}><b>{t('caso.migasProyectos')}</b></a> / <span aria-current="page">{d.slug}</span>
         </nav>
         <span class="tag mono"><i></i>{d.etiqueta}</span>
         <h1>{primeras} <span class="out">{ultima}</span></h1>
@@ -57,8 +57,8 @@ const tipo = t(`caso.tipo.${d.tipo}` as 'caso.tipo.producto');
       </div>
     </div>
     <nav class="wrap next reveal" aria-label={t('caso.siguiente')}>
-      <a class="prev" href="/#proyectos"><span class="mono">← {t('caso.volver')}</span><b>{t('caso.volverTodos')}</b></a>
-      <a class="nxt" href={`/proyectos/${siguiente.data.slug}`}><span class="mono">{t('caso.siguiente')} →</span><b>{siguiente.data.titulo}</b></a>
+      <a class="prev" href={`${ruta('/')}#proyectos`}><span class="mono">← {t('caso.volver')}</span><b>{t('caso.volverTodos')}</b></a>
+      <a class="nxt" href={ruta(`/proyectos/${siguiente.data.slug}`)}><span class="mono">{t('caso.siguiente')} →</span><b>{siguiente.data.titulo}</b></a>
     </nav>
   </main>
   <Footer />

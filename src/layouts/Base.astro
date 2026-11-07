@@ -3,7 +3,7 @@ import '@fontsource-variable/bricolage-grotesque/wght.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/600.css';
 import '../styles/global.css';
-import { t } from '../i18n';
+import { t, locale, ruta } from '../i18n';
 import { THEMES } from '../lib/theme';
 import { SAVE_KEY } from '../lib/save-key';
 // Mismas URL con hash que emiten los @font-face de fontsource: precargarlas evita el salto de layout al cambiar de fuente.
@@ -22,17 +22,22 @@ interface Props {
 
 const SITE = 'https://www.cvidal.dev';
 const { title, description, path, ogImage = '/og.png', noindex = false } = Astro.props;
-const canonical = `${SITE}${path}`;
+// `path` es la ruta sin idioma ('/proyectos/x'); en inglés la página real lleva /en delante.
+const canonical = `${SITE}${ruta(path)}`;
+const alternas = { es: `${SITE}${ruta(path, 'es')}`, en: `${SITE}${ruta(path, 'en')}` };
 const image = ogImage.startsWith('http') ? ogImage : `${SITE}${ogImage}`;
 ---
 <!doctype html>
-<html lang="es">
+<html lang={locale()}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    {!noindex && <link rel="alternate" hreflang="es" href={alternas.es} />}
+    {!noindex && <link rel="alternate" hreflang="en" href={alternas.en} />}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={alternas.es} />}
     <link rel="preload" href={fontDisplay} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={fontMono400} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={fontMono600} as="font" type="font/woff2" crossorigin />
@@ -41,7 +46,7 @@ const image = ogImage.startsWith('http') ? ogImage : `${SITE}${ogImage}`;
     <link rel="icon" type="image/png" href="/favicon.png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/favicon.png" />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={t('idioma.ogLocale')} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {!noindex && <meta property="og:url" content={canonical} />}

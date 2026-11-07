@@ -1,9 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
-import { t } from '../i18n';
+import { t, locale } from '../i18n';
+import { proyectosDe } from '../lib/proyectos';
 import ProjectCard from './ProjectCard.astro';
 
-const proyectos = (await getCollection('proyectos')).sort((a, b) => a.data.orden - b.data.orden);
+const proyectos = await proyectosDe(locale());
 ---
 <div class="wrap projects">
   {proyectos.map((p, i) => (

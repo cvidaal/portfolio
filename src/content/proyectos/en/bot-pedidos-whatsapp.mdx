@@ -1,0 +1,114 @@
+---
+slug: bot-pedidos-whatsapp
+orden: 2
+titulo: WhatsApp order bot
+etiqueta: ACELERIK client · pilot
+tipo: cliente
+titular: Voice notes turned into the 2 a.m. production sheet. The AI proposes, the code decides.
+hechos:
+  - Real ACELERIK client, an industrial bakery.
+  - Orders sent as WhatsApp voice notes turned into a production sheet.
+stack: [Python, FastAPI, WhatsApp Cloud API, LLM, 300+ tests]
+imagen: ../../../assets/proyectos/pani-logo.png
+enlaces: []
+caso: true
+estado: Pilot
+rol: Designed and built solo
+secciones:
+  - { id: problema, label: The problem }
+  - { id: solucion, label: The solution }
+  - { id: decisiones, label: Decisions }
+  - { id: testing, label: Testing }
+  - { id: estado, label: Status }
+  - { id: aprendi, label: What I learned }
+---
+import Seccion from '../../../components/case/Seccion.astro';
+import Decision from '../../../components/case/Decision.astro';
+
+<Seccion id="problema" etiqueta="The problem" titulo="Orders sent as audio that someone has to write down by hand">
+
+Hnos. Sánchez is an industrial bakery with around 30 employees that delivers every morning to bars, restaurants, neighbourhood shops and hotels. Each customer has a usual order and only sends the changes on WhatsApp: "10 more baguettes", "5 fewer", "make it 6".
+
+Until now, someone listens to every voice note, reads the messages and writes it all down by hand. Customers keep using WhatsApp as always: they won't install an app or fill in a form.
+
+</Seccion>
+
+<Seccion id="solucion" etiqueta="The solution" titulo="From a WhatsApp voice note to a sheet per customer">
+
+<ol class="flujo">
+  <li>The WhatsApp Cloud API calls a FastAPI webhook. The signature is verified, the message is stored and the reply goes out immediately.</li>
+  <li>Voice notes are downloaded and transcribed.</li>
+  <li>An LLM proposes the changes with structured output, validated with pydantic.</li>
+  <li>Business rules in code decide what gets recorded, what gets asked back to the customer and what goes to review.</li>
+  <li>The bot replies to the customer, politely, with what it understood and the buttons Correct / Change something.</li>
+  <li>At 2 a.m., Madrid time, the day closes and a PDF sheet is generated with each customer's changes.</li>
+</ol>
+
+<p class="nota">A password-protected web panel lets staff review doubtful cases, link phone numbers and check the sheets. The system doesn't know the usual orders or compute production totals: the sheet lists the changes.</p>
+
+</Seccion>
+
+<Seccion id="decisiones" etiqueta="Decisions" titulo="The AI proposes, the code decides">
+
+<div class="dec">
+<Decision titulo="The model doesn't decide" abierta>
+
+The LLM only returns a proposal: which products, which quantities and how the customer said the day. Dates aren't computed by the model; the code resolves them. If the model's confidence is below the threshold, the message goes to review instead of being recorded.
+
+</Decision>
+<Decision titulo="No message is lost">
+
+The message is stored before it's processed, and the same notification repeated by Meta doesn't duplicate changes. Any processing error sends the message to review instead of dropping it.
+
+</Decision>
+<Decision titulo="Nothing is ever made up">
+
+A product that isn't in the catalogue or a doubtful line isn't recorded: the bot asks the customer or the case goes to review.
+
+</Decision>
+<Decision titulo="The cut-off time and daylight saving">
+
+The delivery day closes at 2 a.m. on that same day, Europe/Madrid. Between midnight and 2 a.m., "tomorrow" still means that same morning's delivery. The March and October clock changes have their own tests.
+
+</Decision>
+<Decision titulo="Several voice notes, one reply">
+
+The bot waits 15 seconds without new messages from that customer and then groups the pending ones to process them together, with a single reply.
+
+</Decision>
+<Decision titulo="Sending only to authorised numbers">
+
+The bot only sends to numbers on an allow list: if it's empty, it writes to nobody. There's also a simulator that feeds fake messages through the same path as WhatsApp.
+
+</Decision>
+</div>
+
+</Seccion>
+
+<Seccion id="testing" etiqueta="Testing" titulo="300+ tests">
+
+300+ tests with pytest. The project requires test-first for dates, changes, rules, phone numbers and the processor.
+
+<ul class="tests">
+  <li>Cut-off time, "tomorrow" after midnight and the March and October clock changes.</li>
+  <li>Accumulating changes (add, subtract, set) and decision rules.</li>
+  <li>Webhook with an invalid signature and a repeated webhook.</li>
+  <li>Waiting for the message grouping window.</li>
+  <li>Sending only to allowed numbers.</li>
+</ul>
+
+<p class="nota">There's also a set of reference cases that uses the real AI and isn't part of the normal test run.</p>
+
+</Seccion>
+
+<Seccion id="estado" etiqueta="Status" titulo="In pilot with a real client">
+
+The bot is being built for a bakery that is an ACELERIK client and is in its pilot phase.
+
+</Seccion>
+
+<Seccion id="aprendi" etiqueta="What I learned">
+
+That with AI the hard part isn't understanding the audio, but deciding what to do when it's unsure: the AI proposes, the code decides and whatever isn't clear goes to a person. And that when customers aren't going to change their habits, the software has to adapt to them, not the other way round.
+
+</Seccion>

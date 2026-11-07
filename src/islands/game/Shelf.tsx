@@ -11,7 +11,7 @@ interface Props {
 }
 
 // En producción nunca se muestra un [PLACEHOLDER]: hasta que Carlos escriba la nota, un mensaje neutro.
-const NOTA = showPlaceholders || !isPlaceholder(t('juego.notaSecreta')) ? t('juego.notaSecreta') : t('juego.notaPendiente');
+const nota = () => (showPlaceholders || !isPlaceholder(t('juego.notaSecreta')) ? t('juego.notaSecreta') : t('juego.notaPendiente'));
 
 export default function Shelf({ save, onChange }: Props) {
   const has = (id: string) => (save.unlocked as string[]).includes(id);
@@ -38,7 +38,7 @@ export default function Shelf({ save, onChange }: Props) {
               {on && a.id === 'hooks' && toggle(t('vitrina.cadenas'), save.chain, () => onChange((s) => ({ ...s, chain: !s.chain })))}
               {on && a.id === 'cero' && theme('azul', t('vitrina.usarAzul'))}
               {on && a.id === 'mil' && theme('verde', t('vitrina.usarVerde'))}
-              {on && a.id === 'secreto' && <p className="nota">{NOTA}</p>}
+              {on && a.id === 'secreto' && <p className="nota">{nota()}</p>}
             </li>
           );
         })}

@@ -2,11 +2,11 @@
 import { t } from '../../i18n';
 import { fmt } from './ui';
 
-export const SHARE_URL = t('juego.url');
+export const shareUrl = (): string => t('juego.url');
 export type ShareResult = 'shared' | 'cancelled' | 'copied' | 'failed';
 
 export const shareText = (score: number): string => fmt(t('juego.compartirTexto'), { n: score });
-export const copyText = (score: number): string => fmt(t('juego.compartirCopia'), { texto: shareText(score), url: SHARE_URL });
+export const copyText = (score: number): string => fmt(t('juego.compartirCopia'), { texto: shareText(score), url: shareUrl() });
 
 async function copy(text: string, nav: Navigator, doc: Document | null): Promise<boolean> {
   try {
@@ -38,7 +38,7 @@ export async function shareScore(
 ): Promise<ShareResult> {
   if (typeof nav.share === 'function') {
     try {
-      await nav.share({ text: shareText(score), url: SHARE_URL });
+      await nav.share({ text: shareText(score), url: shareUrl() });
       return 'shared';
     } catch (e) {
       if ((e as { name?: string })?.name === 'AbortError') return 'cancelled';
