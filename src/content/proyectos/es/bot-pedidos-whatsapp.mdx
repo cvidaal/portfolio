@@ -1,0 +1,114 @@
+---
+slug: bot-pedidos-whatsapp
+orden: 2
+titulo: Bot de pedidos por WhatsApp
+etiqueta: Cliente ACELERIK · en piloto
+tipo: cliente
+titular: Notas de voz convertidas en la hoja de producción de las 02:00. La IA propone, el código decide.
+hechos:
+  - Cliente real de ACELERIK, una panadería industrial.
+  - Pedidos por notas de voz de WhatsApp convertidos en hoja de producción.
+stack: [Python, FastAPI, WhatsApp Cloud API, LLM, más de 300 tests]
+imagen: ../../../assets/proyectos/pani-logo.png
+enlaces: []
+caso: true
+estado: En piloto
+rol: Diseño y desarrollo en solitario
+secciones:
+  - { id: problema, label: El problema }
+  - { id: solucion, label: La solución }
+  - { id: decisiones, label: Decisiones }
+  - { id: testing, label: Testing }
+  - { id: estado, label: Estado }
+  - { id: aprendi, label: Qué aprendí }
+---
+import Seccion from '../../../components/case/Seccion.astro';
+import Decision from '../../../components/case/Decision.astro';
+
+<Seccion id="problema" etiqueta="El problema" titulo="Pedidos por audio que alguien tiene que apuntar a mano">
+
+Hnos. Sánchez es una panadería industrial de unos 30 empleados que reparte cada mañana a bares, restaurantes, tiendas de barrio y hoteles. Cada local tiene un pedido habitual y solo avisa por WhatsApp de los cambios: «10 barras más», «5 menos», «ponme 6».
+
+Hasta ahora, alguien escucha todas las notas de voz, lee los textos y lo apunta a mano. Los clientes siguen usando WhatsApp como siempre: no van a instalar una app ni a rellenar un formulario.
+
+</Seccion>
+
+<Seccion id="solucion" etiqueta="La solución" titulo="De un audio de WhatsApp a una hoja por cliente">
+
+<ol class="flujo">
+  <li>La WhatsApp Cloud API avisa a un webhook de FastAPI. Se verifica la firma, se guarda el mensaje y se responde al instante.</li>
+  <li>Las notas de voz se descargan y se transcriben.</li>
+  <li>Un LLM propone los cambios con salida estructurada, validada con pydantic.</li>
+  <li>Las reglas de negocio en código deciden qué se apunta, qué se pregunta al cliente y qué va a revisión.</li>
+  <li>El bot responde al cliente, de usted, con lo entendido y los botones Correcto / Cambiar algo.</li>
+  <li>A las 02:00, hora de Madrid, se cierra el día y se genera una hoja en PDF con los cambios de cada cliente.</li>
+</ol>
+
+<p class="nota">Un panel web con contraseña permite al personal revisar los casos dudosos, vincular teléfonos y consultar las hojas. El sistema no conoce los pedidos habituales ni calcula totales de producción: la hoja recoge los cambios.</p>
+
+</Seccion>
+
+<Seccion id="decisiones" etiqueta="Decisiones" titulo="La IA propone, el código decide">
+
+<div class="dec">
+<Decision titulo="El modelo no decide" abierta>
+
+El LLM solo devuelve una propuesta: qué productos, qué cantidades y cómo dijo el cliente el día. Las fechas no las calcula el modelo, las resuelve el código. Si la confianza del modelo está por debajo del umbral, el mensaje va a revisión en vez de apuntarse.
+
+</Decision>
+<Decision titulo="Ningún mensaje se pierde">
+
+El mensaje se guarda antes de procesarse y un mismo aviso repetido por Meta no duplica cambios. Cualquier error en el procesado manda el mensaje a revisión en lugar de descartarlo.
+
+</Decision>
+<Decision titulo="Nunca se inventa nada">
+
+Un producto que no está en el catálogo o una línea dudosa no se apunta: el bot pregunta al cliente o el caso va a revisión.
+
+</Decision>
+<Decision titulo="La hora límite y el cambio de hora">
+
+El día de entrega cierra a las 02:00 del propio día, en Europe/Madrid. Entre las 00:00 y las 02:00, «mañana» sigue siendo la entrega de esa misma mañana. El cambio de hora de marzo y octubre tiene sus tests.
+
+</Decision>
+<Decision titulo="Audios seguidos, una sola respuesta">
+
+El bot espera 15 segundos sin mensajes nuevos de ese cliente y entonces agrupa los pendientes para procesarlos juntos, con una sola respuesta.
+
+</Decision>
+<Decision titulo="Envío solo a números autorizados">
+
+El bot solo envía a los números de una lista permitida: si está vacía, no escribe a nadie. Hay además un simulador que mete mensajes falsos por el mismo camino que WhatsApp.
+
+</Decision>
+</div>
+
+</Seccion>
+
+<Seccion id="testing" etiqueta="Testing" titulo="Más de 300 tests">
+
+Más de 300 tests con pytest. El proyecto exige test primero en fechas, cambios, reglas, teléfonos y procesador.
+
+<ul class="tests">
+  <li>Hora límite, «mañana» de madrugada y cambio de hora de marzo y octubre.</li>
+  <li>Acumulación de cambios (sumar, restar, fijar) y reglas de decisión.</li>
+  <li>Webhook con firma inválida y webhook repetido.</li>
+  <li>Espera de la ventana de agrupación de mensajes.</li>
+  <li>Envío solo a números permitidos.</li>
+</ul>
+
+<p class="nota">Hay además un conjunto de casos de referencia que usa la IA real y no forma parte de la ejecución normal.</p>
+
+</Seccion>
+
+<Seccion id="estado" etiqueta="Estado" titulo="En piloto con un cliente real">
+
+El bot se desarrolla para una panadería cliente de ACELERIK y está en fase de piloto.
+
+</Seccion>
+
+<Seccion id="aprendi" etiqueta="Qué aprendí">
+
+Que con IA lo difícil no es entender el audio, sino decidir qué hacer cuando duda: la IA propone, el código decide y lo que no está claro pasa a una persona. Y que cuando los clientes no van a cambiar sus hábitos, el software tiene que adaptarse a ellos, no al revés.
+
+</Seccion>

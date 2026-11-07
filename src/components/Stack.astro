@@ -1,0 +1,16 @@
+---
+import { t } from '../i18n';
+const items = t('stack.items').split('|');
+---
+<div class="wrap stack reveal">
+  <h3 class="lbl mono">{t('stack.titulo')}</h3>
+  <ul class="mono">
+    {items.map((i) => <li>{i}</li>)}
+  </ul>
+</div>
+<style>
+  .stack { padding-block: 8px 48px; }
+  .lbl { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 12px; line-height: 1.6; }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  li { font-size: 11px; font-weight: 600; border: 1px solid #3a3a3e; padding: 4px 9px; }
+</style>

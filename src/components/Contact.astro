@@ -1,0 +1,75 @@
+---
+import { siGithub, siLinkedin } from 'simple-icons';
+import { t } from '../i18n';
+const email = t('contacto.email');
+const linkedin = t('contacto.linkedin');
+const github = t('contacto.github');
+const cv = t('cv.href');
+---
+<div class="wrap contact">
+  <div class="term mono reveal" role="group" aria-label={t('contacto.peticion')}>
+    <p class="req"><span class="prompt" aria-hidden="true">$ </span><span class="cmd">{t('contacto.peticion')}</span></p>
+    <p class="res"><span class="ok">{t('contacto.estado')}</span></p>
+    <pre>{'{'}
+  "email": "<a href={`mailto:${email}`}>{email}</a>",
+  "linkedin": "<a href={linkedin} target="_blank" rel="noopener">{linkedin}</a>",
+  "github": "<a href={github} target="_blank" rel="noopener">{github}</a>"
+{'}'}</pre>
+  </div>
+  <div class="side reveal">
+    <div class="icons">
+      <button type="button" class="ic" data-email={email} data-copied={t('contacto.copiado')} data-error={t('contacto.copiarError')} aria-label={`${t('contacto.nombre.email')}: ${t('contacto.copiar')}`}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14"/><path d="M3 6l9 7 9-7"/></svg>
+        <span class="lbl"><b>{t('contacto.nombre.email')}</b><span class="copy-txt" aria-hidden="true">{t('contacto.copiar')}</span></span>
+      </button>
+      <a class="ic" href={linkedin} target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d={siLinkedin.path}/></svg>
+        <span class="lbl"><b>{t('contacto.nombre.linkedin')}</b><span>{t('contacto.sub.linkedin')}</span></span>
+      </a>
+      <a class="ic" href={github} target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d={siGithub.path}/></svg>
+        <span class="lbl"><b>{t('contacto.nombre.github')}</b><span>{t('contacto.sub.github')}</span></span>
+      </a>
+      <a class="ic" href={cv} download={t('cv.descarga')}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg>
+        <span class="lbl"><b>{t('contacto.nombre.cv')}</b><span>{t('contacto.sub.cv')}</span></span>
+      </a>
+    </div>
+    <span class="sr-only" role="status" aria-live="polite" id="copy-status"></span>
+  </div>
+</div>
+<script>
+  import '../scripts/copy-email';
+</script>
+<script>
+  import '../scripts/terminal';
+</script>
+<style>
+  .contact { padding-block: 40px 56px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; align-items: start; }
+  .term { background: var(--card); border: 1px solid var(--line); padding: 20px 22px; font-size: 13px; min-width: 0; }
+  p { margin: 0; }
+  .prompt { color: var(--accent); }
+  .ok { color: var(--accent-hi); font-weight: 600; }
+  .res { margin: 4px 0 10px; }
+  /* Terminal que se escribe (src/scripts/terminal.ts): solo con JS y movimiento permitido. */
+  .term.typing .res, .term.typing pre { opacity: 0; }
+  .term.done .res { animation: term-in 0.35s ease both; }
+  .term.done pre { animation: term-in 0.5s 0.25s ease both; }
+  .caret { display: inline-block; width: 0.55em; height: 1.05em; margin-left: 2px; vertical-align: -0.15em; background: var(--accent-hi); animation: caret 0.8s steps(1) infinite; }
+  @keyframes caret { 50% { opacity: 0; } }
+  @keyframes term-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; color: #d9d4cc; }
+  pre a { color: var(--paper); }
+  .side { min-width: 0; }
+  .icons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ic { display: flex; gap: 12px; align-items: center; min-height: 56px; box-sizing: border-box; border: 1px solid var(--line); background: var(--card); padding: 12px 14px; text-decoration: none; color: var(--paper); font: inherit; text-align: left; cursor: pointer; transition: border-color .15s, transform .15s; min-width: 0; }
+  .ic:hover { border-color: var(--accent-hi); transform: translateY(-2px); }
+  .ic svg { width: 26px; height: 26px; flex: none; color: var(--accent); }
+  .lbl { min-width: 0; }
+  .lbl b { display: block; font-size: 15px; }
+  .lbl span { display: block; font: 11px var(--font-mono); color: var(--muted); overflow-wrap: anywhere; }
+  .copy-err { display: block; margin-top: 10px; font: 13px var(--font-mono); color: var(--paper); }
+  @media (max-width: 760px) { .contact { grid-template-columns: 1fr; } }
+  @media (max-width: 380px) { .icons { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .ic { transition: none; } .ic:hover { transform: none; } }
+</style>

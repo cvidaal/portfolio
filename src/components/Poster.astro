@@ -1,0 +1,24 @@
+---
+interface Props { num: string; titulo: string; meta?: string }
+const { num, titulo, meta } = Astro.props;
+---
+<div class="wrap pwrap">
+  <div class="poster reveal wipe">
+    <div class="lbl mono" aria-hidden="true">// {num}</div>
+    <h2>{titulo}</h2>
+    {meta && <div class="meta mono">{meta}</div>}
+  </div>
+</div>
+<style>
+  .pwrap { padding-top: 40px; }
+  /* Contenido en el ancho de la página (no a sangre), título <= 64 px y poca altura (spec it2 §3). */
+  .poster { background: var(--accent); color: var(--bg); padding: 14px 20px 12px; position: relative; overflow: hidden; border-radius: 2px; }
+  .poster::after { content: ''; position: absolute; right: -30px; top: -60px; width: 140px; height: 140px; background: repeating-linear-gradient(45deg, rgba(16, 16, 18, 0.9) 0 3px, transparent 3px 9px); border-radius: 50%; pointer-events: none; }
+  /* Texto pequeño sobre el acento: --on-accent (>= 4.5:1 en los tres temas). El h2 es texto grande (3:1 basta). */
+  .lbl, .meta { color: var(--on-accent); position: relative; z-index: 1; }
+  .lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 6px; }
+  h2 { position: relative; z-index: 1; font-size: clamp(34px, 9vw, 56px); line-height: 0.88; letter-spacing: -0.04em; text-transform: uppercase; overflow-wrap: anywhere; }
+  .meta { font-size: 12px; font-weight: 600; margin-top: 10px; }
+  /* Fondo de acento detrás del texto para que las rayas del círculo no lo crucen. */
+  @media (min-width: 760px) { .meta { position: absolute; right: 14px; bottom: 8px; text-align: right; margin: 0; background: var(--accent); padding: 3px 6px; } }
+</style>

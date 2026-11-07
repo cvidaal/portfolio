@@ -1,0 +1,63 @@
+---
+import { t } from '../i18n';
+import { cursiva } from '../lib/cursiva';
+import type { ImageMetadata } from 'astro';
+import logoTopDoctors from '../assets/logos/topdoctors.png';
+import logoUlandu from '../assets/logos/ulandu.png';
+import logoAeternum from '../assets/logos/aeternum.png';
+
+// Orden de la spec it2 §4. Logos oficiales que aportó Carlos (scripts/make-logos.mjs);
+// sin `logo` el hueco muestra las iniciales (nunca una imagen rota ni un logo inventado).
+const trabajos: { id: 'topdoctors' | 'ulandu' | 'aeternum'; lugar?: boolean; enlace?: boolean; logo?: ImageMetadata }[] = [
+  { id: 'topdoctors', lugar: true, logo: logoTopDoctors },
+  { id: 'ulandu', enlace: true, logo: logoUlandu },
+  { id: 'aeternum', logo: logoAeternum },
+];
+const lista = (k: string) => t(k as 'exp.topdoctors.puntos').split('|');
+---
+<div class="wrap exp">
+  {trabajos.map((j) => {
+    const k = (s: string) => `exp.${j.id}.${s}` as 'exp.topdoctors.empresa';
+    return (
+      <article class="job reveal">
+        <div class="logo mono" aria-hidden="true">
+          {j.logo ? <img src={j.logo.src} width="52" height="52" alt="" loading="lazy" decoding="async" /> : t(k('iniciales'))}
+        </div>
+        <div class="body">
+          <header>
+            <h3>{t(k('empresa'))}</h3>
+            <p class="when mono">{t(k('fechas'))}</p>
+          </header>
+          <p class="role mono">{t(k('puesto'))}{j.lugar && ` · ${t('exp.topdoctors.lugar')}`}</p>
+          <p class="lead">{cursiva(t(k('frase'))).map((s) => s.em ? <em>{s.texto}</em> : s.texto)}</p>
+          <ul class="puntos">
+            {lista(k('puntos')).map((p) => <li>{p}</li>)}
+          </ul>
+          {j.enlace && <p class="more"><a class="mono" href="#proyectos">{t('exp.ulandu.enlace')}</a></p>}
+          <ul class="tags mono">
+            {lista(k('etiquetas')).map((e) => <li>{e}</li>)}
+          </ul>
+        </div>
+      </article>
+    );
+  })}
+</div>
+<style>
+  .exp { display: grid; gap: 12px; padding-block: 18px 40px; }
+  .job { display: grid; grid-template-columns: 64px 1fr; gap: 16px; background: var(--card); border: 1px solid var(--line); padding: 16px 18px; }
+  .logo { width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; background: var(--paper); color: #3a3a3a; font-size: 18px; font-weight: 700; letter-spacing: 0.04em; border-radius: 4px; }
+  .logo img { width: 52px; height: 52px; object-fit: contain; display: block; }
+  header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; }
+  h3 { font-size: clamp(22px, 5vw, 28px); letter-spacing: -0.03em; }
+  .when { margin: 0; font-size: 12px; color: var(--muted); }
+  .role { margin: 2px 0 0; font-size: 12px; font-weight: 600; color: var(--accent-hi); }
+  .lead { margin: 10px 0 8px; font-size: 16px; line-height: 1.4; }
+  .puntos { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14px; color: #d9d4cc; }
+  .puntos li::before { content: '→ '; color: var(--accent); font-family: var(--font-mono, 'JetBrains Mono', monospace); }
+  .more { margin: 8px 0 0; }
+  .more a { font-size: 12px; color: var(--accent-hi); }
+  .tags { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px; }
+  .tags li { border: 1px solid var(--line); padding: 2px 8px; color: var(--muted); }
+  .body { min-width: 0; }
+  @media (max-width: 480px) { .job { grid-template-columns: 1fr; gap: 12px; } }
+</style>

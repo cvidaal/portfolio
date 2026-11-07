@@ -1,0 +1,33 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+beforeEach(() => { vi.stubGlobal('window', new EventTarget()); });
+afterEach(() => { vi.unstubAllGlobals(); });
+
+describe('bus', () => {
+  it('emit entrega el detail como CustomEvent en window y on devuelve unsubscribe', async () => {
+    const { emit, on } = await import('../../src/lib/bus');
+    const seen: unknown[] = [];
+    const off = on('avatar:pose', (d) => seen.push(d));
+    const raw: string[] = [];
+    window.addEventListener('avatar:pose', (e) => raw.push((e as CustomEvent).type));
+    emit('avatar:pose', { name: 'grin', ms: 900 });
+    expect(seen).toEqual([{ name: 'grin', ms: 900 }]);
+    expect(raw).toEqual(['avatar:pose']);
+    off();
+    emit('avatar:pose', { name: 'smile', ms: 100 });
+    expect(seen).toHaveLength(1);
+  });
+
+  it('eventos sin detail', async () => {
+    const { emit, on } = await import('../../src/lib/bus');
+    let winks = 0; let opened = 0;
+    on('avatar:wink', () => winks++);
+    let closed = 0;
+    on('game:open', () => opened++);
+    on('game:close', () => closed++);
+    emit('avatar:wink'); emit('game:open'); emit('game:close');
+    expect(winks).toBe(1);
+    expect(opened).toBe(1);
+    expect(closed).toBe(1);
+  });
+});

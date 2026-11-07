@@ -1,0 +1,28 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "npx astro preview --port 4329",
+      "startServerReadyPattern": "localhost:4329",
+      "startServerReadyTimeout": 30000,
+      "url": [
+        "http://localhost:4329/",
+        "http://localhost:4329/proyectos/acelerik-booking",
+        "http://localhost:4329/proyectos/bot-pedidos-whatsapp"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "chromeFlags": "--headless=new --no-sandbox"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["error", { "minScore": 0.9, "aggregationMethod": "median" }],
+        "categories:accessibility": ["error", { "minScore": 0.9, "aggregationMethod": "median" }]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci/reports"
+    }
+  }
+}

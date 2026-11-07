@@ -1,0 +1,51 @@
+---
+// Home completa; la usan pages/index.astro (es) y pages/en/index.astro. El idioma lo fija la página con setLang().
+import Base from '../layouts/Base.astro';
+import { t } from '../i18n';
+import Nav from './Nav.astro';
+import Hero from './Hero.astro';
+import Poster from './Poster.astro';
+import Experience from './Experience.astro';
+import Projects from './Projects.astro';
+import Stack from './Stack.astro';
+import About from './About.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+
+// Los carteles se numeran de forma consecutiva según el orden de las secciones.
+const num = Object.fromEntries(
+  ['experiencia', 'proyectos', 'sobre-mi', 'contacto']
+    .map((id, i) => [id, String(i + 1).padStart(2, '0')]),
+);
+---
+<Base title={t('meta.titulo')} description={t('meta.descripcion')} path="/">
+  <Nav autoHide />
+  <main id="main">
+    <Hero />
+
+    <section id="experiencia" aria-label={t('seccion.experiencia')}>
+      <Poster num={num["experiencia"]} titulo={t('seccion.experiencia')} />
+      <Experience />
+    </section>
+
+    <section id="proyectos" aria-label={t('seccion.proyectos')}>
+      <Poster num={num["proyectos"]} titulo={t('seccion.proyectos')} meta={t('seccion.proyectosResumen')} />
+      <Projects />
+      <Stack />
+    </section>
+
+    <section id="sobre-mi" aria-label={t('seccion.sobre')}>
+      <Poster num={num["sobre-mi"]} titulo={t('seccion.sobre')} />
+      <About />
+    </section>
+
+    <section id="contacto" aria-label={t('seccion.contacto')}>
+      <Poster num={num["contacto"]} titulo={t('seccion.contacto')} />
+      <Contact />
+    </section>
+  </main>
+  <Footer />
+  <script>
+    import "../scripts/nav-reveal";
+  </script>
+</Base>

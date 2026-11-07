@@ -1,0 +1,70 @@
+---
+import { t, locale, ruta, rutaSinIdioma } from '../i18n';
+interface Props {
+  base?: string;
+  /** Home: la barra se oculta mientras el hero está en pantalla (solo con JS). */
+  autoHide?: boolean;
+}
+const { base = '', autoHide = false } = Astro.props;
+// La misma página en el otro idioma.
+const otro = locale() === 'es' ? 'en' : 'es';
+const otraRuta = ruta(rutaSinIdioma(Astro.url.pathname), otro);
+---
+<header class="nav">
+  <nav class="wrap nav-in" aria-label={t('nav.aria')}>
+    <a class="nav-home" href={base || '#top'}><img src="/face-nav.webp" srcset="/face-nav.webp 1x, /face-nav@2x.webp 2x, /face-nav@3x.webp 3x" alt={t('nav.inicio')} width="33" height="40" /></a>
+    <ul class="mono">
+      <li><a href={`${base}#experiencia`}>{t('nav.experiencia')}</a></li>
+      <li><a href={`${base}#proyectos`}>{t('nav.proyectos')}</a></li>
+      <li><a href={`${base}#contacto`}>{t('nav.contacto')}</a></li>
+      <li><a class="nav-lang" href={otraRuta} hreflang={otro} lang={otro} aria-label={t('idioma.cambiar')}>{t('idioma.otro')}</a></li>
+      <li><a class="nav-cv" href={t('cv.href')} download={t('cv.descarga')} data-cv data-cv-toast="abajo" data-ok={t('cv.ok')}><span class="roll"><span class="main">{t('nav.cv')}</span><span class="alt" aria-hidden="true">{t('cv.hoverNav')}</span></span></a></li>
+    </ul>
+  </nav>
+</header>
+{autoHide && (
+  <script is:inline>
+    // Solo con JS: la barra se oculta hasta que nav-reveal.ts la gestione. Sin JS (o si el módulo no llega en 3 s) queda visible.
+    try {
+      if ('IntersectionObserver' in window) {
+        var h = document.querySelector('header.nav');
+        document.documentElement.classList.add('nav-hidden');
+        h.setAttribute('inert', '');
+        setTimeout(function () {
+          if (!window.__navReveal) { document.documentElement.classList.remove('nav-hidden'); h.removeAttribute('inert'); }
+        }, 3000);
+      }
+    } catch (e) {}
+  </script>
+)}
+<script>
+  import '../scripts/cv-button';
+  import { tintFavicon } from '../lib/theme';
+  // Tema guardado (el <head> ya fijó --avatar-filter): el icono de la pestaña también lo sigue.
+  const filtro = getComputedStyle(document.documentElement).getPropertyValue('--avatar-filter').trim();
+  if (filtro && filtro !== 'none') tintFavicon(filtro);
+</script>
+<style>
+  .nav { view-transition-name: site-nav; position: sticky; top: 0; z-index: 20; background: rgba(16, 16, 18, 0.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(6px); transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s; }
+  :global(html.nav-hidden) .nav { transform: translateY(-100%); opacity: 0; visibility: hidden; }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap; gap: 0 8px; min-height: var(--nav-h); }
+  /* La cara va sola (transparente): sin circulo, borde ni fondo. El enlace mantiene un objetivo tactil de 44 px. */
+  .nav-home { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 44px; }
+  .nav-home img { height: 40px; width: auto; display: block; transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1); }
+  .nav-home:hover img, .nav-home:focus-visible img { transform: rotate(-10deg) scale(1.12); }
+  .nav-home:focus-visible { outline-offset: 0; }
+  ul { display: flex; flex-wrap: nowrap; align-items: center; gap: 0 clamp(10px, 3vw, 22px); list-style: none; margin: 0; padding: 0; font-size: 12px; }
+  li { display: flex; align-items: center; }
+  ul a { text-decoration: none; color: var(--muted); padding: 10px 2px; display: inline-block; }
+  ul a:hover { color: var(--paper); }
+  ul a.nav-lang { border: 1px solid #3a3a3e; padding: 4px 7px; color: var(--paper); font-weight: 600; min-height: 26px; display: inline-flex; align-items: center; transition: border-color 0.2s, color 0.2s; }
+  ul a.nav-lang:hover, ul a.nav-lang:focus-visible { border-color: var(--accent-hi); color: var(--accent-hi); }
+  ul a.nav-cv { display: inline-flex; align-items: center; min-height: 26px; line-height: 1.2; color: var(--bg); background: var(--accent-hi); padding: 5px 9px; font-weight: 600; transition: background 0.2s, transform 0.2s cubic-bezier(0.3, 1.6, 0.5, 1); }
+  ul a.nav-cv:hover, ul a.nav-cv:focus-visible { background: var(--paper); color: var(--bg); transform: translateY(-1px) rotate(-2deg); }
+  ul a.nav-cv:active { transform: translateY(1px) scale(0.96); }
+  @media (max-width: 380px) {
+    ul { gap: 0 clamp(2px, 1.2vw, 6px); font-size: 11px; }
+    ul a { padding: 10px 1px; }
+    ul a.nav-cv { padding: 4px 6px; }
+  }
+</style>

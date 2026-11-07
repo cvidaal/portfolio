@@ -1,0 +1,32 @@
+---
+import { t } from '../i18n';
+import { cursiva } from '../lib/cursiva';
+
+const parrafos = ['sobre.p1', 'sobre.p2', 'sobre.p3'] as const;
+const datos = ['ubicacion', 'stack', 'antes', 'fuera'] as const;
+---
+<div class="wrap about reveal">
+  <div class="texto">
+    <h3>{t('sobre.titular')}</h3>
+    {parrafos.map((k) => <p>{cursiva(t(k)).map((s) => s.em ? <em>{s.texto}</em> : s.texto)}</p>)}
+  </div>
+  <dl class="datos mono">
+    {datos.map((d) => (
+      <div>
+        <dt>{t(`sobre.datos.${d}.clave` as 'sobre.datos.stack.clave')}</dt>
+        <dd>{t(`sobre.datos.${d}.valor` as 'sobre.datos.stack.valor')}</dd>
+      </div>
+    ))}
+  </dl>
+</div>
+<style>
+  .about { padding-block: 18px 40px; display: grid; gap: 28px; }
+  h3 { font-size: clamp(26px, 5vw, 36px); letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 18px; max-width: 24ch; }
+  .texto { max-width: 680px; }
+  p { margin: 0 0 14px; font-size: 17px; line-height: 1.55; }
+  .datos { margin: 0; display: grid; gap: 10px; font-size: 13px; align-content: start; border: 1px solid var(--line); background: var(--card); padding: 16px 18px; }
+  .datos div { display: grid; gap: 2px; }
+  dt { color: var(--accent-hi); }
+  dd { margin: 0; color: #d9d4cc; }
+  @media (min-width: 900px) { .about { grid-template-columns: minmax(0, 1fr) 320px; gap: 48px; } }
+</style>

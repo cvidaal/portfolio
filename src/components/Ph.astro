@@ -1,0 +1,9 @@
+---
+import { showPlaceholders } from '../lib/placeholder';
+interface Props { text: string }
+const { text } = Astro.props;
+---
+{showPlaceholders && <span class="ph">{text}</span>}
+<style>
+  .ph { font-family: var(--font-mono, 'JetBrains Mono', monospace); color: #ff3b30; outline: 1px dashed #ff3b30; padding: 0 .25em; }
+</style>

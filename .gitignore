@@ -22,3 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Superpowers scratch
+.superpowers/
+
+# Astro / tests
+.astro/
+test-results/
+playwright-report/
+.lighthouseci/
+assets-src/cv/preview*.png

@@ -1,0 +1,96 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Base from './Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import RisoImage from '../components/RisoImage.astro';
+import Toc from '../components/case/Toc.astro';
+import { t, ruta } from '../i18n';
+import { showPlaceholders } from '../lib/placeholder';
+
+interface Props {
+  proyecto: CollectionEntry<'proyectos'>;
+  siguiente: CollectionEntry<'proyectos'>;
+  heroAlt: string;
+  heroFit?: 'cover' | 'contain';
+}
+const { proyecto, siguiente, heroAlt, heroFit = 'cover' } = Astro.props;
+const d = proyecto.data;
+const secciones = (d.secciones ?? []).filter((s) => showPlaceholders || !s.pendiente);
+const palabras = d.titulo.split(' ');
+const ultima = palabras.pop();
+const primeras = palabras.join(' ');
+const tipo = t(`caso.tipo.${d.tipo}` as 'caso.tipo.producto');
+---
+<Base title={`${d.titulo} · ${t('caso.sufijoTitulo')} · Carlos Vidal`} description={d.titular} path={`/proyectos/${d.slug}`}>
+  <Nav base={ruta('/')} />
+  <main id="main">
+    <header class="cs-head">
+      <div class="wrap">
+        <nav class="crumb mono" aria-label={t('caso.migas')}>
+          <a href={ruta('/')}>{t('caso.inicio')}</a> / <a href={`${ruta('/')}#proyectos`}><b>{t('caso.migasProyectos')}</b></a> / <span aria-current="page">{d.slug}</span>
+        </nav>
+        <span class="tag mono"><i></i>{d.etiqueta}</span>
+        <h1>{primeras} <span class="out">{ultima}</span></h1>
+        <p class="hook">{d.titular}</p>
+        <dl class="meta-row mono">
+          {d.rol && <div><dt>{t('caso.rol')}</dt><dd>{d.rol}</dd></div>}
+          <div><dt>{t('caso.tipo')}</dt><dd>{tipo}</dd></div>
+          <div><dt>{t('caso.stack')}</dt><dd>{d.stack.join(' · ')}</dd></div>
+          {d.estado && <div><dt>{t('caso.estado')}</dt><dd>{d.estado}</dd></div>}
+          {d.enlaces.length > 0 && (
+            <div><dt>{t('caso.enlaces')}</dt><dd>{d.enlaces.map((e) => <a href={e.href} rel="noopener" target="_blank">{e.label}</a>)}</dd></div>
+          )}
+        </dl>
+      </div>
+    </header>
+    {(d.imagenCaso ?? d.imagen) && (
+      <div class="wrap hero">
+        <RisoImage src={(d.imagenCaso ?? d.imagen)!} alt={heroAlt} ratio="21 / 8" fit={heroFit} position={heroFit === 'contain' ? 'center' : 'left top'}
+          widths={[640, 1000, 1400]} sizes="(min-width: 1100px) 1004px, 100vw" priority />
+      </div>
+    )}
+    <div class="wrap cs-body">
+      <Toc secciones={secciones} />
+      <div class="cs-main">
+        <slot />
+      </div>
+    </div>
+    <nav class="wrap next reveal" aria-label={t('caso.siguiente')}>
+      <a class="prev" href={`${ruta('/')}#proyectos`}><span class="mono">← {t('caso.volver')}</span><b>{t('caso.volverTodos')}</b></a>
+      <a class="nxt" href={ruta(`/proyectos/${siguiente.data.slug}`)}><span class="mono">{t('caso.siguiente')} →</span><b>{siguiente.data.titulo}</b></a>
+    </nav>
+  </main>
+  <Footer />
+  <script>
+    import '../scripts/toc-active';
+  </script>
+</Base>
+<style>
+  .cs-head { padding-block: 44px 30px; border-bottom: 1px solid var(--line); }
+  .crumb { font-size: 12px; color: var(--muted); margin-bottom: 22px; }
+  .crumb a { color: var(--muted); text-decoration: none; }
+  .crumb a:hover { color: var(--paper); }
+  .crumb b { color: var(--accent-hi); font-weight: 600; }
+  .tag { display: inline-flex; gap: 8px; align-items: center; font-size: 10.5px; font-weight: 600; color: var(--accent-hi); letter-spacing: 0.06em; text-transform: uppercase; }
+  .tag i { width: 7px; height: 7px; background: var(--accent); display: inline-block; }
+  h1 { margin: 10px 0 12px; font-size: clamp(44px, 12vw, 92px); line-height: 0.88; letter-spacing: -0.05em; overflow-wrap: anywhere; }
+  .out { color: transparent; -webkit-text-stroke: 1.5px var(--paper); }
+  .hook { margin: 0; font-size: clamp(17px, 3vw, 22px); line-height: 1.35; max-width: 760px; }
+  .meta-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); margin: 28px 0 0; border-top: 1px solid var(--line); }
+  .meta-row div { padding: 12px 14px 0 0; font-size: 12px; min-width: 0; }
+  .meta-row dt { color: var(--muted); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+  .meta-row dd { margin: 0; overflow-wrap: anywhere; }
+  .meta-row a { color: var(--accent-hi); display: block; text-underline-offset: 3px; padding: 4px 0; } /* >= 24 px de alto: target-size */
+  .hero { margin-top: 28px; }
+  .hero :global(.riso) { border: 1px solid var(--line); }
+  .cs-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 40px 30px; }
+  .cs-main { counter-reset: sec; min-width: 0; }
+  @media (min-width: 900px) { .cs-body { grid-template-columns: 190px minmax(0, 1fr); gap: 40px; padding-top: 56px; } }
+  .next { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 0 44px; }
+  .next a { text-decoration: none; border: 1px solid var(--line); padding: 12px 16px; flex: 1 1 240px; min-width: 0; }
+  .next a:hover { border-color: var(--paper); }
+  .next .mono { font-size: 12px; font-weight: 600; }
+  .next b { display: block; font-size: 22px; line-height: 1.1; margin-top: 4px; letter-spacing: -0.02em; }
+  .nxt { text-align: right; }
+</style>

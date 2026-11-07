@@ -1,0 +1,101 @@
+---
+import { t } from '../i18n';
+import Game from '../islands/game/Game';
+---
+<section class="hero" id="hero" aria-labelledby="hero-titulo">
+  <div class="wrap hero-in">
+    <div class="txt" id="hero-txt">
+      <h1 id="hero-titulo">{t('hero.nombre1')}<br /><span class="out">{t('hero.nombre2')}</span></h1>
+      <p class="bar mono">{t('hero.rol')}</p>
+      <div class="btns">
+        <a class="btn b1 mono" id="cta-proyectos" href="#proyectos">{t('hero.verProyectos')}</a>
+        <a class="btn b2 mono cv-btn" id="cta-cv" href={t('cv.href')} download={t('cv.descarga')} data-cv data-ok={t('cv.ok')}>
+          <svg class="cv-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path class="hoja" d="M3.5 1.5h6l3 3v10h-9z" /><path class="flecha" d="M8 6v5M5.8 8.8 8 11l2.2-2.2" /></svg>
+          <span class="roll"><span class="main">{t('hero.descargarCv')}</span><span class="alt" aria-hidden="true">{t('cv.hoverHero')}</span></span>
+        </a>
+      </div>
+      <p class="st mono"><i aria-hidden="true"></i>{t('hero.estado')}</p>
+      <!-- Entrada al juego (máquina arcade, #play-game) y panel de logros. Sin JS no se puede jugar:
+           la tarjeta no aparece. Con JS ocupa su hueco desde la primera pintura (sin salto) y se ve al hidratarse. -->
+      <noscript><style>.arcade { display: none !important; }</style></noscript>
+      <Game client:idle />
+    </div>
+    <div class="game-slot" id="game-slot"></div>
+    <div class="avatar" id="avatar-slot">
+      <img src="/avatar/static.webp" srcset="/avatar/static-480.webp 480w, /avatar/static-800.webp 800w, /avatar/static.webp 1254w"
+        sizes="(min-width: 820px) 560px, min(100vw, 420px)" alt={t('hero.avatarAlt')} width="1254" height="1254" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+</section>
+<script>
+  // Monta el avatar animado sin tocar la primera pintura: la <img> estática del HTML queda debajo.
+  // Escritorio con ratón: en idle. Resto: solo si se abre el juego o hay accesorios/tema guardados
+  // (y entonces sin gestos automáticos fuera del juego).
+  import { on } from '../lib/bus';
+  import { needsCompositor, readCosmetics } from '../lib/save-key';
+  import { applyTheme } from '../lib/theme';
+
+  // El tema re-tiñe todo el sitio aunque el avatar aún no se haya montado (el juego emite aquí).
+  on('avatar:cosmetics', (c) => { if (c) applyTheme(c.theme); });
+  const desktop = matchMedia('(min-width: 768px) and (hover: hover)').matches;
+
+  const slot = document.getElementById('avatar-slot');
+  if (slot) {
+    let started = false;
+    const offs: Array<() => void> = [];
+    const start = (auto: boolean) => {
+      if (started) return;
+      started = true;
+      offs.forEach((off) => off());
+      import('../islands/avatar/mount')
+        .then((m) => m.mountAvatar(slot, { auto }))
+        .catch(() => { started = false; }); // si falla, se queda la imagen estática
+    };
+    // El avatar lee <html data-game> al montarse: un game:open durante la carga no se pierde.
+    offs.push(
+      on('game:open', () => start(desktop)),
+      // accesorios o tema activados desde el panel de logros (el avatar los lee del guardado al montarse)
+      on('avatar:cosmetics', (c) => { if (needsCompositor(c)) start(desktop); }),
+    );
+    if (desktop) {
+      const idle = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 200));
+      idle(() => start(true), { timeout: 2500 });
+    } else if (needsCompositor(readCosmetics())) {
+      start(false);
+    }
+  }
+</script>
+<style>
+  .hero { overflow: hidden; }
+  .hero-in { position: relative; display: grid; grid-template-columns: 1fr; padding-block: 28px 20px; align-items: center; }
+  .avatar { position: relative; width: min(100%, 420px); margin: 0 auto; order: -1; -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 99%); mask-image: linear-gradient(to bottom, #000 84%, transparent 99%); }
+  .avatar img { display: block; width: 100%; height: auto; }
+  .txt { position: relative; z-index: 2; }
+  /* juego abierto: el tablero ocupa el sitio del texto (que queda inert + aria-hidden) */
+  .hero.playing .txt { display: none; }
+  .game-slot { position: relative; z-index: 3; min-width: 0; }
+  .game-slot:empty { display: none; }
+  .hero.playing .avatar { width: min(48%, 190px); }
+  h1 { font-size: clamp(56px, 17vw, 72px); line-height: 0.86; letter-spacing: -0.04em; }
+  .out { color: transparent; -webkit-text-stroke: 1.5px var(--paper); }
+  .bar { display: inline-block; background: var(--accent-hi); color: var(--bg); padding: 3px 9px; font-size: 13px; font-weight: 600; margin: 16px 0 20px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn { display: inline-block; padding: 0.7em 1.1em; font-size: 12px; font-weight: 600; text-decoration: none; }
+  .b1 { background: var(--accent-hi); color: var(--bg); }
+  .b2 { border: 1px solid #3a3a3e; color: var(--paper); }
+  .b1:hover { background: var(--paper); }
+  .b2:hover { border-color: var(--paper); }
+  .cv-btn { display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.2s, background 0.2s, transform 0.2s cubic-bezier(0.3, 1.6, 0.5, 1); }
+  .cv-btn:hover, .cv-btn:focus-visible { background: rgba(241, 237, 230, 0.06); border-color: var(--accent-hi); transform: translateY(-2px); }
+  .cv-btn:active { transform: translateY(1px) scale(0.97); }
+  .cv-ico { fill: none; stroke: var(--accent-hi); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: none; overflow: visible; }
+  .cv-btn:hover .flecha, .cv-btn:focus-visible .flecha { animation: cv-baja 0.8s ease-in-out infinite; }
+  @keyframes cv-baja { 0%, 100% { transform: translateY(-1.5px); } 50% { transform: translateY(1.5px); } }
+  .st { font-size: 11px; color: var(--muted); margin: 18px 0 0; }
+  .st i { display: inline-block; width: 7px; height: 7px; background: var(--accent); margin-right: 7px; }
+  @media (min-width: 820px) {
+    .hero-in { grid-template-columns: 1.05fr 1fr; min-height: 560px; padding-block: 40px; }
+    .avatar, .hero.playing .avatar { order: 0; width: 100%; max-width: 560px; margin: 0; }
+    h1 { font-size: clamp(60px, 7.2vw, 80px); }
+  }
+</style>
